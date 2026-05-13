@@ -1,0 +1,281 @@
+project:
+  title: "Selective and Adaptive Precision Islands for Stable LoRA Fine-Tuning"
+  question: "During LoRA fine-tuning of small open LLMs, can selective or adaptively assigned precision islands improve stability, validation quality, memory use, or throughput over standard bf16 mixed precision?"
+  status: active
+  started: "2026-05-13"
+  domain: "mixed precision LLM fine-tuning"
+
+literature:
+  key_papers:
+    - id: "micikevicius2017mixed"
+      title: "Mixed Precision Training"
+      authors: "Micikevicius et al."
+      year: 2017
+      relevance: "Foundational FP16 mixed-precision recipe: low-precision tensors plus FP32 master weights and loss scaling."
+      summary: "literature/mixed_precision_training_2017.md"
+      url: "https://arxiv.org/abs/1710.03740"
+    - id: "kalamkar2019bfloat16"
+      title: "A Study of BFLOAT16 for Deep Learning Training"
+      authors: "Kalamkar et al."
+      year: 2019
+      relevance: "Explains why BF16 is a strong baseline because it preserves FP32-like exponent range."
+      summary: "literature/bfloat16_training_2019.md"
+      url: "https://arxiv.org/abs/1905.12322"
+    - id: "micikevicius2022fp8"
+      title: "FP8 Formats for Deep Learning"
+      authors: "Micikevicius et al."
+      year: 2022
+      relevance: "Defines FP8 format tradeoffs and motivates role-specific precision assignment."
+      summary: "literature/fp8_formats_2022.md"
+      url: "https://arxiv.org/abs/2209.05433"
+    - id: "peng2023fp8lm"
+      title: "FP8-LM: Training FP8 Large Language Models"
+      authors: "Peng et al."
+      year: 2023
+      relevance: "LLM-specific FP8 mixed-precision framework covering gradients, optimizer states, and distributed training."
+      summary: "literature/fp8_lm_2023.md"
+      url: "https://arxiv.org/abs/2310.18313"
+    - id: "lee2024fp8stability"
+      title: "To FP8 and Back Again: Quantifying Reduced Precision Effects on LLM Training Stability"
+      authors: "Lee et al."
+      year: 2024
+      relevance: "Frames reduced precision as a stability and sensitivity problem, not only a final-quality problem."
+      summary: "literature/to_fp8_and_back_2024.md"
+      url: "https://arxiv.org/abs/2405.18710"
+    - id: "ozkara2025stochastic"
+      title: "Stochastic Rounding for LLM Training: Theory and Practice"
+      authors: "Ozkara et al."
+      year: 2025
+      relevance: "Shows rounding behavior and optimizer interaction as important mixed-precision design dimensions."
+      summary: "literature/stochastic_rounding_llm_training_2025.md"
+      url: "https://arxiv.org/abs/2502.20566"
+    - id: "hu2021lora"
+      title: "LoRA: Low-Rank Adaptation of Large Language Models"
+      authors: "Hu et al."
+      year: 2021
+      relevance: "Defines the adapter fine-tuning regime used in H1."
+      summary: "literature/lora_2021.md"
+      url: "https://arxiv.org/abs/2106.09685"
+    - id: "dettmers2023qlora"
+      title: "QLoRA: Efficient Finetuning of Quantized LLMs"
+      authors: "Dettmers et al."
+      year: 2023
+      relevance: "Nearby low-resource LoRA fine-tuning work; included for context but not treated as the main focus."
+      summary: "literature/qlora_2023.md"
+      url: "https://arxiv.org/abs/2305.14314"
+    - id: "zhang2019rmsnorm"
+      title: "Root Mean Square Layer Normalization"
+      authors: "Zhang and Sennrich"
+      year: 2019
+      relevance: "Explains the RMSNorm operation targeted by fp32-norm precision islands."
+      summary: "literature/rmsnorm_2019.md"
+      url: "https://arxiv.org/abs/1910.07467"
+    - id: "dettmers2022llmint8"
+      title: "LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale"
+      authors: "Dettmers et al."
+      year: 2022
+      relevance: "Shows activation-outlier-driven mixed INT8/16-bit inference for LLMs."
+      summary: "literature/llm_int8_2022.md"
+      url: "https://arxiv.org/abs/2208.07339"
+    - id: "xiao2022smoothquant"
+      title: "SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models"
+      authors: "Xiao et al."
+      year: 2022
+      relevance: "Uses activation statistics to enable W8A8 INT8 LLM inference by smoothing outliers."
+      summary: "literature/smoothquant_2022.md"
+      url: "https://arxiv.org/abs/2211.10438"
+    - id: "yao2022zeroquant"
+      title: "ZeroQuant: Efficient and Affordable Post-Training Quantization for Large-Scale Transformers"
+      authors: "Yao et al."
+      year: 2022
+      relevance: "Demonstrates module-aware INT8 and mixed INT4/INT8 Transformer inference policies."
+      summary: "literature/zeroquant_2022.md"
+      url: "https://arxiv.org/abs/2206.01861"
+    - id: "dong2019hawq"
+      title: "HAWQ: Hessian AWare Quantization of Neural Networks with Mixed-Precision"
+      authors: "Dong et al."
+      year: 2019
+      relevance: "Introduces sensitivity-driven mixed-precision layer assignment using Hessian information."
+      summary: "literature/hawq_2019.md"
+      url: "https://arxiv.org/abs/1905.03696"
+    - id: "yao2021hawqv3"
+      title: "HAWQ-V3: Dyadic Neural Network Quantization"
+      authors: "Yao et al."
+      year: 2021
+      relevance: "Frames mixed INT4/INT8 precision assignment as constrained optimization over quality and hardware cost."
+      summary: "literature/hawq_v3_2021.md"
+      url: "https://arxiv.org/abs/2011.10680"
+    - id: "kummer2021adapt"
+      title: "Adaptive Precision Training (AdaPT)"
+      authors: "Kummer et al."
+      year: 2021
+      relevance: "Studies dynamic precision assignment during training rather than only post-training inference."
+      summary: "literature/adapt_adaptive_precision_training_2021.md"
+      url: "https://arxiv.org/abs/2107.13490"
+    - id: "dai2025convergence"
+      title: "Convergence-aware operator-wise mixed-precision training"
+      authors: "Dai et al."
+      year: 2025
+      relevance: "Connects operator-wise precision assignment to convergence preservation."
+      summary: "literature/convergence_aware_operatorwise_mixed_precision_2025.md"
+      url: "https://link.springer.com/article/10.1007/s42514-024-00208-9"
+    - id: "chmiel2025fp4"
+      title: "FP4 All the Way: Fully Quantized Training of LLMs"
+      authors: "Chmiel et al."
+      year: 2025
+      relevance: "Identifies FP4 LLM training design choices and gradient-norm-versus-quantization-noise stability thresholds."
+      summary: "literature/fp4_all_the_way_2025.md"
+      url: "https://arxiv.org/abs/2505.19115"
+    - id: "pan2026snip"
+      title: "SNIP: An Adaptive Mixed Precision Framework for Subbyte Large Language Model Training"
+      authors: "Pan et al."
+      year: 2026
+      relevance: "Closest match to H6: uses activation, gradient, and optimizer statistics to optimize subbyte LLM precision."
+      summary: "literature/snip_adaptive_subbyte_llm_training_2026.md"
+      url: "https://arxiv.org/abs/2602.01410"
+    - id: "zhang2026attnqat"
+      title: "Attn-QAT: 4-Bit Attention With Quantization-Aware Training"
+      authors: "Zhang et al."
+      year: 2026
+      relevance: "Shows attention can be a high-risk FP4 region because of heavy-tailed activations and backward precision assumptions."
+      summary: "literature/attn_qat_2026.md"
+      url: "https://arxiv.org/abs/2603.00040"
+    - id: "ma2024bitnet"
+      title: "The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits"
+      authors: "Ma et al."
+      year: 2024
+      relevance: "Boundary context for native low-bit LLMs; useful contrast with post-hoc adaptive precision assignment."
+      summary: "literature/bitnet_b158_2024.md"
+      url: "https://arxiv.org/abs/2402.17764"
+  open_problems:
+    - "Framework autocast policies are often implicit; project-level dtype probes are needed to verify which LLM modules actually compute at BF16, FP32, TF32, FP16, or FP8."
+    - "The literature does not isolate RMSNorm/LayerNorm dtype during small LoRA fine-tuning, despite normalization being a plausible precision-sensitive operation."
+    - "Reduced-precision LLM work increasingly emphasizes stability, but there is no standard cheap stability benchmark for limited-GPU LoRA pilots."
+    - "Precision islands may matter only under stressed regimes such as high learning rate, long context, tiny batch size, FP16, FP8, or noisy data."
+    - "Module boundary dtype may not reveal internal accumulator dtype, especially for fused kernels or custom normalization implementations."
+    - "Static precision recipes do not explain how to choose per-module or per-operation precision from observed stability signals during a run."
+    - "There is no project-local policy yet for promoting sensitive operations to higher precision or demoting stable operations to lower precision based on activation, gradient, clipping, and loss-delta diagnostics."
+    - "Existing adaptive precision papers either target non-LLM networks, full LLM pretraining, or inference, leaving LoRA fine-tuning transfer uncertain."
+    - "Attention appears high-risk for INT4/FP4 because of heavy-tailed activations and backward-pass precision assumptions, but no lightweight LoRA-specific test exists yet."
+    - "Hardware-realistic low-bit benefits require matching kernels; fake quantization can reveal sensitivity but may not predict throughput or memory wins."
+  evidence_gaps:
+    - "The dtype probe and smoke runs reported by the user show feasibility, but no full 1,000-step H1 run has been completed and analyzed."
+    - "The dtype probe records module input/output/parameter dtype, but not internal RMSNorm reduction accumulator dtype."
+    - "No multi-seed estimate exists for baseline or fp32_norms."
+    - "No stressed setting has been tested, so the pilot may miss precision effects that only appear near instability."
+    - "No comparison exists yet for other precision islands such as fp32 logits/loss, attention softmax, optimizer states, or stochastic rounding."
+    - "No run-to-run variance estimate is available."
+    - "No per-module activation outlier, gradient spike, or quantization error traces exist, so the current runner cannot yet rank precision-island sensitivity."
+    - "No adaptive precision policy has been tested against a matched static policy; any proposed assignment rule is currently a research plan, not evidence."
+    - "No calibration pass has measured per-module loss divergence, update divergence, activation outliers, or gradient-noise ratios for candidate precision assignments."
+    - "No evidence yet shows that LLM.int8/SmoothQuant-style outlier signals predict training-time precision sensitivity in LoRA."
+    - "No local benchmark has established whether INT8/INT4/FP4 candidates are real compute improvements or only emulated perturbations on the available hardware."
+
+hypotheses:
+  - id: H1
+    statement: "Keeping normalization layers in fp32 during bf16 LoRA fine-tuning will reduce instability and improve or preserve validation loss relative to a standard bf16 autocast baseline, with less than 10% throughput overhead."
+    status: active
+    motivation: "RMSNorm/LayerNorm compute statistics over activations and may be more numerically sensitive than most matrix multiplications; they are small enough that fp32 execution may cost little."
+    why_it_matters: "The literature frames mixed precision as a dtype-placement problem, and the project dtype probe showed Qwen RMSNorm module boundaries remain bf16 under the baseline. If norms matter, this is a cheap precision island with low implementation cost."
+    expected_result: "fp32_norms has lower validation NLL or fewer loss/gradient spikes than bf16_baseline, with less than 10% throughput overhead. A meaningful negative result is no stability or quality gain despite verified dtype change."
+    required_experiment: "Run the existing H1 baseline and fp32_norms LoRA scripts for 1,000 optimizer steps on Qwen/Qwen2.5-0.5B and tatsu-lab/alpaca after the dtype probe, using matched seed, dataset split, LoRA targets, batch size, and learning rate."
+    metric: "Primary: held-out validation NLL after 1,000 steps. Secondary: loss-spike count, NaN/Inf count, max grad norm, peak CUDA memory, tokens/sec, and throughput overhead."
+    estimated_compute_cost: "About 2.5 GPU-hours for one baseline/treatment pair at the observed smoke speed, plus roughly 7.5 GPU-hours for a 3-seed confirmation."
+    risk: "BF16 may already be stable enough that no effect appears; the current dtype probe verifies boundary dtypes but not internal RMSNorm accumulator dtype."
+    parent: null
+    priority: high
+  - id: H2
+    statement: "Keeping logits and loss computation in fp32 during bf16 LoRA fine-tuning will reduce numerical instability more than fp32 normalization alone, especially by lowering loss spikes without materially changing throughput."
+    status: pending
+    motivation: "The survey identifies loss computation as a plausible precision-sensitive operation. Cross-entropy involves logits, exponentials/log-sum-exp behavior, and small probability differences, so it may be more sensitive than RMSNorm under BF16."
+    why_it_matters: "If fp32 norms do not help, the next likely precision island is the model output/loss path. This tests whether stability is limited near the objective rather than inside Transformer blocks."
+    expected_result: "fp32 logits/loss matches or improves validation NLL and reduces spike count compared with bf16_baseline, with negligible memory overhead and small throughput overhead."
+    required_experiment: "Add a precision policy that casts logits to fp32 and computes the language modeling loss outside autocast, then compare against bf16_baseline and H1 fp32_norms under the same 1,000-step LoRA setup."
+    metric: "Validation NLL, train loss-spike count, NaN/Inf count, max grad norm, tokens/sec, and peak CUDA memory."
+    estimated_compute_cost: "About 1.25 GPU-hours per 1,000-step run; about 3.75 GPU-hours for a 3-seed follow-up if the first run shows signal."
+    risk: "Transformers may already compute some loss internals in fp32, making the intervention smaller than expected; final-loss differences may be below seed noise."
+    parent: null
+    priority: high
+  - id: H3
+    statement: "Selective fp32 precision islands will matter more in a stressed fine-tuning regime than in the default stable BF16 LoRA regime."
+    status: pending
+    motivation: "The literature and survey suggest reduced-precision failures may be regime-dependent, appearing under high learning rate, long context, small batch size, FP16, or other near-instability conditions."
+    why_it_matters: "A null result under the default recipe would not necessarily refute precision islands. Stress testing can reveal whether they expand the safe operating envelope."
+    expected_result: "Under a mild stress condition such as 2x learning rate or longer sequence length, bf16_baseline shows more loss spikes or worse validation NLL, while fp32_norms or fp32 logits/loss reduces the instability."
+    required_experiment: "Run a small stress matrix after H1: bf16_baseline versus the best precision island at baseline learning rate and 2x learning rate, optionally repeating with longer sequence length if memory allows."
+    metric: "Instability threshold measured by loss-spike count, NaN/Inf count, max grad norm, completion rate, validation NLL, and throughput."
+    estimated_compute_cost: "About 5 GPU-hours for a 2-policy x 2-learning-rate matrix at 1,000 steps each; halve the budget with 500-step exploratory runs."
+    risk: "Stress may be too mild to reveal differences or too strong for all policies to fail; careful calibration may consume pilot time."
+    parent: null
+    priority: medium
+  - id: H4
+    statement: "Single-seed smoke results will overstate certainty; run-to-run variance will be comparable to or larger than the effect size of fp32_norms in the default BF16 LoRA setting."
+    status: pending
+    motivation: "Recent reduced-precision LLM work emphasizes robustness across seeds and hyperparameters, and the current project has only one smoke seed."
+    why_it_matters: "The pilot should avoid treating tiny validation-loss differences as meaningful if they are within seed noise. This hypothesis makes variance estimation part of the scientific method."
+    expected_result: "Across three seeds, fp32_norms and bf16_baseline have overlapping validation NLL distributions unless a stability event occurs in one policy but not the other."
+    required_experiment: "Repeat H1 with seeds 42, 43, and 44 using the same data split procedure and compare mean, standard deviation, and per-seed paired deltas."
+    metric: "Per-seed validation NLL delta, mean and standard deviation of validation NLL, loss-spike count, NaN/Inf count, and throughput overhead."
+    estimated_compute_cost: "About 7.5 GPU-hours for three paired baseline/treatment runs at the observed smoke speed."
+    risk: "Three seeds may still be underpowered, but more seeds may exceed the 2-week pilot budget."
+    parent: null
+    priority: medium
+  - id: H5
+    statement: "The current dtype probe is insufficient to prove internal compute dtype; instrumenting RMSNorm internals will reveal whether boundary bf16 tensors are reduced in bf16 or temporarily upcast during the actual RMSNorm calculation."
+    status: pending
+    motivation: "The survey identifies internal-versus-boundary dtype as a central evidence gap. The current probe observes module inputs, outputs, and parameters, but not reduction accumulator dtype."
+    why_it_matters: "If Qwen RMSNorm internally upcasts despite bf16 boundaries, H1's treatment may be less meaningful. If it truly reduces in bf16, H1 is better motivated."
+    expected_result: "A targeted RMSNorm micro-probe confirms whether baseline Qwen2RMSNorm reduction arithmetic stays bf16 or upcasts to fp32, and whether the fp32_norms wrapper changes that internal path."
+    required_experiment: "Add an RMSNorm-specific instrumentation or monkey-patched reference RMSNorm that logs dtype at square, mean, rsqrt, multiplication, and output steps for one forward pass, without training."
+    metric: "Observed dtype at each RMSNorm internal operation, plus max absolute output difference between baseline and reference fp32 RMSNorm on the same activation sample."
+    estimated_compute_cost: "Less than 10 minutes on one GPU or CPU; no training required."
+    risk: "Monkey-patching may diverge from optimized/fused implementation details; results may be implementation-specific to the installed Transformers/PyTorch versions."
+    parent: null
+    priority: high
+  - id: H6
+    statement: "A stability-signal-driven precision policy can assign higher precision to sensitive operations and lower precision to tolerant operations while preserving validation loss and reducing memory or improving throughput relative to hand-selected static precision islands."
+    status: active
+    motivation: "H1 through H3 test hand-selected precision islands. The broader research direction is to replace manual dtype placement with a measurable policy using gradient spikes, activation outliers, quantization error, clipping/saturation rate, loss deltas, NaN/Inf incidence, and throughput/memory impact."
+    why_it_matters: "If precision can be assigned from observed stability signals, the project moves from testing one-off fp32 islands toward an automatic mixed-precision policy for limited-GPU LoRA fine-tuning."
+    expected_result: "The adaptive policy keeps normalization, logits/loss, and attention softmax at bf16 or fp32 when sensitivity is high, while allowing lower precision for tolerant projection paths. It should match the best static policy on validation NLL and instability counts while improving memory or throughput."
+    required_experiment: "First complete H1 and add per-module instrumentation. Then run a short calibration pass that temporarily perturbs candidate islands, records stability signals and loss deltas, derives a static precision assignment, and compares that assignment against bf16_baseline, fp32_norms, and any best H2/H3 policy. A signal-only smoke probe now exists and must be expanded to bf16, all modules, more batches, and perturbation loss-delta checks."
+    metric: "Primary: validation NLL delta versus bf16_baseline and best static policy. Secondary: loss-spike count, NaN/Inf count, max grad norm, per-module activation outlier score, quantization error, clipping/saturation rate, peak CUDA memory, tokens/sec, and policy decision trace."
+    estimated_compute_cost: "About 1 GPU-hour for instrumentation and calibration smokes, then 2-5 GPU-hours for matched 500- to 1,000-step comparisons depending on how many candidate policies are retained."
+    risk: "Per-module signals may be noisy at small scale, lower-precision kernels may not produce real speedups on the RTX 4050, and aggressive candidates such as int4 attention softmax may be numerically invalid during training."
+    parent: H1
+    dependencies:
+      - H1
+      - H2
+      - H3
+      - H5
+    priority: high
+
+experiments:
+  proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
+  baseline_value: null
+  best_value: null
+  total_runs: 0
+  trajectory:
+    - experiment_id: "h6_smoke_signals_seed42"
+      hypothesis: "H6"
+      type: "signal_only_calibration_smoke"
+      metric_value: 1.7697092294692993
+      metric_name: "mean_calibration_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 10.444058656692505
+      change_summary: "Added non-invasive per-module stability-signal probe; first eight modules produced a policy trace with layer-0 input RMSNorm promoted to fp32 and seven projections kept at bf16."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/smoke_signals_seed42/stability_signals.json"
+
+outer_loop:
+  cycle: 0
+  last_direction: "deepen H6 instrumentation after H1 calibration"
+  last_reflection: "The refreshed literature phase strengthens H6: the closest external template is adaptive subbyte LLM training with activation, gradient, optimizer-state, loss-divergence, and update-divergence signals. The first local H6 signal-only smoke confirms that per-module outlier and fake-quantization probes can produce a frozen policy trace. It is still too small and fp32-only to support an adaptive policy; the next methodological gap is a fuller bf16 calibration across all candidate modules plus perturbation loss-delta checks before freezing a policy for matched training."
+
+workspace:
+  findings: "findings.md"
+  log: "research-log.md"
+  literature_dir: "literature/"
+  experiments_dir: "experiments/"
+  to_human_dir: "to_human/"
+  paper_dir: "paper/"

@@ -1,0 +1,202 @@
+[
+  {
+    "module": "base_model.model.model.layers.0.self_attn.q_proj",
+    "role": "attention_projection",
+    "assigned_precision": "bf16",
+    "reason": "projection appears sensitive under activation probe",
+    "signals": {
+      "module": "base_model.model.model.layers.0.self_attn.q_proj",
+      "role": "attention_projection",
+      "class": "Linear",
+      "observations": 1,
+      "dtypes": [
+        "torch.float32"
+      ],
+      "input_outlier_score_mean": 24.831933975219727,
+      "input_outlier_score_max": 24.831933975219727,
+      "output_outlier_score_mean": 10.153440475463867,
+      "output_outlier_score_max": 10.153440475463867,
+      "input_int8_rel_mse_mean": 0.0031784861348569393,
+      "output_int8_rel_mse_mean": 0.0005013159243389964,
+      "output_int4_rel_mse_mean": 0.10648195445537567,
+      "output_int8_saturation_mean": 8.719308243598789e-05,
+      "output_int4_saturation_mean": 0.0011160714784637094,
+      "finite_fraction_min": 1.0
+    }
+  },
+  {
+    "module": "base_model.model.model.layers.0.self_attn.k_proj",
+    "role": "attention_projection",
+    "assigned_precision": "bf16",
+    "reason": "projection appears sensitive under activation probe",
+    "signals": {
+      "module": "base_model.model.model.layers.0.self_attn.k_proj",
+      "role": "attention_projection",
+      "class": "Linear",
+      "observations": 1,
+      "dtypes": [
+        "torch.float32"
+      ],
+      "input_outlier_score_mean": 24.831933975219727,
+      "input_outlier_score_max": 24.831933975219727,
+      "output_outlier_score_mean": 4.02101469039917,
+      "output_outlier_score_max": 4.02101469039917,
+      "input_int8_rel_mse_mean": 0.0031784861348569393,
+      "output_int8_rel_mse_mean": 7.169494347181171e-05,
+      "output_int4_rel_mse_mean": 0.020798133686184883,
+      "output_int8_saturation_mean": 0.0050048828125,
+      "output_int4_saturation_mean": 0.0157470703125,
+      "finite_fraction_min": 1.0
+    }
+  },
+  {
+    "module": "base_model.model.model.layers.0.self_attn.v_proj",
+    "role": "attention_projection",
+    "assigned_precision": "bf16",
+    "reason": "projection appears sensitive under activation probe",
+    "signals": {
+      "module": "base_model.model.model.layers.0.self_attn.v_proj",
+      "role": "attention_projection",
+      "class": "Linear",
+      "observations": 1,
+      "dtypes": [
+        "torch.float32"
+      ],
+      "input_outlier_score_mean": 24.831933975219727,
+      "input_outlier_score_max": 24.831933975219727,
+      "output_outlier_score_mean": 10.3064603805542,
+      "output_outlier_score_max": 10.3064603805542,
+      "input_int8_rel_mse_mean": 0.0031784861348569393,
+      "output_int8_rel_mse_mean": 0.000548533396795392,
+      "output_int4_rel_mse_mean": 0.16173744201660156,
+      "output_int8_saturation_mean": 0.0003662109375,
+      "output_int4_saturation_mean": 0.0006103515625,
+      "finite_fraction_min": 1.0
+    }
+  },
+  {
+    "module": "base_model.model.model.layers.0.self_attn.o_proj",
+    "role": "attention_projection",
+    "assigned_precision": "bf16",
+    "reason": "projection appears sensitive under activation probe",
+    "signals": {
+      "module": "base_model.model.model.layers.0.self_attn.o_proj",
+      "role": "attention_projection",
+      "class": "Linear",
+      "observations": 1,
+      "dtypes": [
+        "torch.float32"
+      ],
+      "input_outlier_score_mean": 15.418349266052246,
+      "input_outlier_score_max": 15.418349266052246,
+      "output_outlier_score_mean": 35.9192008972168,
+      "output_outlier_score_max": 35.9192008972168,
+      "input_int8_rel_mse_mean": 0.0012253524037078023,
+      "output_int8_rel_mse_mean": 0.006644241977483034,
+      "output_int4_rel_mse_mean": 0.2949238121509552,
+      "output_int8_saturation_mean": 1.743861685099546e-05,
+      "output_int4_saturation_mean": 0.00013950893480796367,
+      "finite_fraction_min": 1.0
+    }
+  },
+  {
+    "module": "base_model.model.model.layers.0.mlp.gate_proj",
+    "role": "mlp_projection",
+    "assigned_precision": "bf16",
+    "reason": "projection appears sensitive under activation probe",
+    "signals": {
+      "module": "base_model.model.model.layers.0.mlp.gate_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "observations": 1,
+      "dtypes": [
+        "torch.float32"
+      ],
+      "input_outlier_score_mean": 18.764860153198242,
+      "input_outlier_score_max": 18.764860153198242,
+      "output_outlier_score_mean": 9.205869674682617,
+      "output_outlier_score_max": 9.205869674682617,
+      "input_int8_rel_mse_mean": 0.0018230422865599394,
+      "output_int8_rel_mse_mean": 0.00043848578934557736,
+      "output_int4_rel_mse_mean": 0.13646933436393738,
+      "output_int8_saturation_mean": 3.212376668670913e-06,
+      "output_int4_saturation_mean": 9.637129551265389e-06,
+      "finite_fraction_min": 1.0
+    }
+  },
+  {
+    "module": "base_model.model.model.layers.0.mlp.up_proj",
+    "role": "mlp_projection",
+    "assigned_precision": "bf16",
+    "reason": "projection appears sensitive under activation probe",
+    "signals": {
+      "module": "base_model.model.model.layers.0.mlp.up_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "observations": 1,
+      "dtypes": [
+        "torch.float32"
+      ],
+      "input_outlier_score_mean": 18.764860153198242,
+      "input_outlier_score_max": 18.764860153198242,
+      "output_outlier_score_mean": 12.452903747558594,
+      "output_outlier_score_max": 12.452903747558594,
+      "input_int8_rel_mse_mean": 0.0018230422865599394,
+      "output_int8_rel_mse_mean": 0.0007995176129043102,
+      "output_int4_rel_mse_mean": 0.25109192728996277,
+      "output_int8_saturation_mean": 3.212376668670913e-06,
+      "output_int4_saturation_mean": 3.212376668670913e-06,
+      "finite_fraction_min": 1.0
+    }
+  },
+  {
+    "module": "base_model.model.model.layers.0.mlp.down_proj",
+    "role": "mlp_projection",
+    "assigned_precision": "bf16",
+    "reason": "projection appears sensitive under activation probe",
+    "signals": {
+      "module": "base_model.model.model.layers.0.mlp.down_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "observations": 1,
+      "dtypes": [
+        "torch.float32"
+      ],
+      "input_outlier_score_mean": 72.95480346679688,
+      "input_outlier_score_max": 72.95480346679688,
+      "output_outlier_score_mean": 13.285014152526855,
+      "output_outlier_score_max": 13.285014152526855,
+      "input_int8_rel_mse_mean": 0.021842872723937035,
+      "output_int8_rel_mse_mean": 0.0009085520869120955,
+      "output_int4_rel_mse_mean": 0.22682389616966248,
+      "output_int8_saturation_mean": 1.743861685099546e-05,
+      "output_int4_saturation_mean": 6.975446740398183e-05,
+      "finite_fraction_min": 1.0
+    }
+  },
+  {
+    "module": "base_model.model.model.layers.0.input_layernorm",
+    "role": "norm",
+    "assigned_precision": "fp32",
+    "reason": "high-sensitivity reduction/output path",
+    "signals": {
+      "module": "base_model.model.model.layers.0.input_layernorm",
+      "role": "norm",
+      "class": "Qwen2RMSNorm",
+      "observations": 1,
+      "dtypes": [
+        "torch.float32"
+      ],
+      "input_outlier_score_mean": 6.043172359466553,
+      "input_outlier_score_max": 6.043172359466553,
+      "output_outlier_score_mean": 24.831933975219727,
+      "output_outlier_score_max": 24.831933975219727,
+      "input_int8_rel_mse_mean": 0.00018857428221963346,
+      "output_int8_rel_mse_mean": 0.0031784861348569393,
+      "output_int4_rel_mse_mean": 0.3024251163005829,
+      "output_int8_saturation_mean": 1.743861685099546e-05,
+      "output_int4_saturation_mean": 1.743861685099546e-05,
+      "finite_fraction_min": 1.0
+    }
+  }
+]

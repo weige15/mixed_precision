@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments and local config
+.env
+.env.*
+.venv/
+venv/
+env/
+
+# Jupyter and editor state
+.ipynb_checkpoints/
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large model/training artifacts
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+checkpoint*/
+checkpoints/
+runs/
+wandb/
+mlruns/
+
+# Local cache and generated outputs
+.cache/
+tmp/
+*.log
+
+# Keep small research result JSON/JSONL files tracked, but avoid bulky raw dumps.
+data/raw/
+data/cache/
