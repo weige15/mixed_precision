@@ -1,6 +1,6 @@
 project:
-  title: "Selective and Adaptive Precision Islands for Stable LoRA Fine-Tuning"
-  question: "During LoRA fine-tuning of small open LLMs, can selective or adaptively assigned precision islands improve stability, validation quality, memory use, or throughput over standard bf16 mixed precision?"
+  title: "Calibration-Guided Precision Assignment for Stable LoRA Fine-Tuning"
+  question: "Before LoRA fine-tuning, can a short precision check identify which model modules are precision-sensitive, so a frozen mixed-precision policy can match bf16 validation quality while saving resources or expanding the stable fine-tuning envelope?"
   status: active
   started: "2026-05-13"
   domain: "mixed precision LLM fine-tuning"
@@ -158,10 +158,11 @@ literature:
     - "Existing adaptive precision papers either target non-LLM networks, full LLM pretraining, or inference, leaving LoRA fine-tuning transfer uncertain."
     - "Attention appears high-risk for INT4/FP4 because of heavy-tailed activations and backward-pass precision assumptions, but no lightweight LoRA-specific test exists yet."
     - "Hardware-realistic low-bit benefits require matching kernels; fake quantization can reveal sensitivity but may not predict throughput or memory wins."
+    - "It remains unclear whether a short pre-training calibration pass can predict training-time precision sensitivity well enough to guide a useful frozen policy."
   evidence_gaps:
-    - "The dtype probe and smoke runs reported by the user show feasibility, but no full 1,000-step H1 run has been completed and analyzed."
-    - "The dtype probe records module input/output/parameter dtype, but not internal RMSNorm reduction accumulator dtype."
-    - "No multi-seed estimate exists for baseline or fp32_norms."
+    - "H1 now has a matched seed-42 1,000-step baseline/treatment comparison. fp32_norms improves validation NLL by only 0.00425 absolute (about 0.20%) with no stability events in either run, so the result is inconclusive under the locked 1% decision rule."
+    - "H5 resolved the main RMSNorm implementation question for the installed Qwen2RMSNorm source: its forward path casts hidden_states to float32 before pow/mean/rsqrt. The H5 run itself executed on CPU because CUDA was unavailable at probe time, but this source-level finding combines with the earlier CUDA boundary probe to suggest baseline bf16 boundaries do not imply bf16 RMSNorm reduction arithmetic."
+    - "A three-seed bf16 baseline estimate exists, but matched fp32_norms runs are available only for seed 42. The bf16 baseline seed spread is larger than the seed-42 fp32_norms delta."
     - "No stressed setting has been tested, so the pilot may miss precision effects that only appear near instability."
     - "No comparison exists yet for other precision islands such as fp32 logits/loss, attention softmax, optimizer states, or stochastic rounding."
     - "No run-to-run variance estimate is available."
@@ -170,14 +171,15 @@ literature:
     - "No calibration pass has measured per-module loss divergence, update divergence, activation outliers, or gradient-noise ratios for candidate precision assignments."
     - "No evidence yet shows that LLM.int8/SmoothQuant-style outlier signals predict training-time precision sensitivity in LoRA."
     - "No local benchmark has established whether INT8/INT4/FP4 candidates are real compute improvements or only emulated perturbations on the available hardware."
+    - "The central H6 idea is now simplified to a quick precision check before training: measure module sensitivity, freeze a policy, then compare against bf16. The first signal-only probe exists, but no perturbation-calibrated policy has been frozen or trained yet."
 
 hypotheses:
   - id: H1
     statement: "Keeping normalization layers in fp32 during bf16 LoRA fine-tuning will reduce instability and improve or preserve validation loss relative to a standard bf16 autocast baseline, with less than 10% throughput overhead."
-    status: active
+    status: inconclusive_seed42
     motivation: "RMSNorm/LayerNorm compute statistics over activations and may be more numerically sensitive than most matrix multiplications; they are small enough that fp32 execution may cost little."
     why_it_matters: "The literature frames mixed precision as a dtype-placement problem, and the project dtype probe showed Qwen RMSNorm module boundaries remain bf16 under the baseline. If norms matter, this is a cheap precision island with low implementation cost."
-    expected_result: "fp32_norms has lower validation NLL or fewer loss/gradient spikes than bf16_baseline, with less than 10% throughput overhead. A meaningful negative result is no stability or quality gain despite verified dtype change."
+    expected_result: "fp32_norms has lower validation NLL or fewer loss/gradient spikes than bf16_baseline, with less than 10% throughput overhead. Seed 42 did not meet this bar: validation NLL improved by about 0.20%, neither run had loss spikes or NaN/Inf events, throughput overhead was about 0.83%, and the result is below the locked 1% support threshold."
     required_experiment: "Run the existing H1 baseline and fp32_norms LoRA scripts for 1,000 optimizer steps on Qwen/Qwen2.5-0.5B and tatsu-lab/alpaca after the dtype probe, using matched seed, dataset split, LoRA targets, batch size, and learning rate."
     metric: "Primary: held-out validation NLL after 1,000 steps. Secondary: loss-spike count, NaN/Inf count, max grad norm, peak CUDA memory, tokens/sec, and throughput overhead."
     estimated_compute_cost: "About 2.5 GPU-hours for one baseline/treatment pair at the observed smoke speed, plus roughly 7.5 GPU-hours for a 3-seed confirmation."
@@ -187,6 +189,7 @@ hypotheses:
   - id: H2
     statement: "Keeping logits and loss computation in fp32 during bf16 LoRA fine-tuning will reduce numerical instability more than fp32 normalization alone, especially by lowering loss spikes without materially changing throughput."
     status: pending
+    role_for_H6: "conditional_static_island_ablation"
     motivation: "The survey identifies loss computation as a plausible precision-sensitive operation. Cross-entropy involves logits, exponentials/log-sum-exp behavior, and small probability differences, so it may be more sensitive than RMSNorm under BF16."
     why_it_matters: "If fp32 norms do not help, the next likely precision island is the model output/loss path. This tests whether stability is limited near the objective rather than inside Transformer blocks."
     expected_result: "fp32 logits/loss matches or improves validation NLL and reduces spike count compared with bf16_baseline, with negligible memory overhead and small throughput overhead."
@@ -199,6 +202,7 @@ hypotheses:
   - id: H3
     statement: "Selective fp32 precision islands will matter more in a stressed fine-tuning regime than in the default stable BF16 LoRA regime."
     status: pending
+    role_for_H6: "conditional_stress_test"
     motivation: "The literature and survey suggest reduced-precision failures may be regime-dependent, appearing under high learning rate, long context, small batch size, FP16, or other near-instability conditions."
     why_it_matters: "A null result under the default recipe would not necessarily refute precision islands. Stress testing can reveal whether they expand the safe operating envelope."
     expected_result: "Under a mild stress condition such as 2x learning rate or longer sequence length, bf16_baseline shows more loss spikes or worse validation NLL, while fp32_norms or fp32 logits/loss reduces the instability."
@@ -211,6 +215,7 @@ hypotheses:
   - id: H4
     statement: "Single-seed smoke results will overstate certainty; run-to-run variance will be comparable to or larger than the effect size of fp32_norms in the default BF16 LoRA setting."
     status: pending
+    role_for_H6: "validation_ablation_after_policy_exists"
     motivation: "Recent reduced-precision LLM work emphasizes robustness across seeds and hyperparameters, and the current project has only one smoke seed."
     why_it_matters: "The pilot should avoid treating tiny validation-loss differences as meaningful if they are within seed noise. This hypothesis makes variance estimation part of the scientific method."
     expected_result: "Across three seeds, fp32_norms and bf16_baseline have overlapping validation NLL distributions unless a stability event occurs in one policy but not the other."
@@ -222,10 +227,11 @@ hypotheses:
     priority: medium
   - id: H5
     statement: "The current dtype probe is insufficient to prove internal compute dtype; instrumenting RMSNorm internals will reveal whether boundary bf16 tensors are reduced in bf16 or temporarily upcast during the actual RMSNorm calculation."
-    status: pending
+    status: completed_source_validated
+    role_for_H6: "required_dtype_validity_check"
     motivation: "The survey identifies internal-versus-boundary dtype as a central evidence gap. The current probe observes module inputs, outputs, and parameters, but not reduction accumulator dtype."
     why_it_matters: "If Qwen RMSNorm internally upcasts despite bf16 boundaries, H1's treatment may be less meaningful. If it truly reduces in bf16, H1 is better motivated."
-    expected_result: "A targeted RMSNorm micro-probe confirms whether baseline Qwen2RMSNorm reduction arithmetic stays bf16 or upcasts to fp32, and whether the fp32_norms wrapper changes that internal path."
+    expected_result: "Completed for the installed Qwen2RMSNorm implementation: the forward source casts hidden_states to float32 before pow/mean/rsqrt. The executed H5 probe ran on CPU because CUDA was unavailable, so it validated source/reference behavior rather than a live CUDA bf16 internal trace."
     required_experiment: "Add an RMSNorm-specific instrumentation or monkey-patched reference RMSNorm that logs dtype at square, mean, rsqrt, multiplication, and output steps for one forward pass, without training."
     metric: "Observed dtype at each RMSNorm internal operation, plus max absolute output difference between baseline and reference fp32 RMSNorm on the same activation sample."
     estimated_compute_cost: "Less than 10 minutes on one GPU or CPU; no training required."
@@ -233,29 +239,82 @@ hypotheses:
     parent: null
     priority: high
   - id: H6
-    statement: "A stability-signal-driven precision policy can assign higher precision to sensitive operations and lower precision to tolerant operations while preserving validation loss and reducing memory or improving throughput relative to hand-selected static precision islands."
+    statement: "A short pre-training calibration pass can identify which model modules are precision-sensitive, enabling a frozen mixed-precision policy that matches bf16 LoRA validation quality while reducing resource cost or expanding the stable fine-tuning envelope."
     status: active
-    motivation: "H1 through H3 test hand-selected precision islands. The broader research direction is to replace manual dtype placement with a measurable policy using gradient spikes, activation outliers, quantization error, clipping/saturation rate, loss deltas, NaN/Inf incidence, and throughput/memory impact."
-    why_it_matters: "If precision can be assigned from observed stability signals, the project moves from testing one-off fp32 islands toward an automatic mixed-precision policy for limited-GPU LoRA fine-tuning."
-    expected_result: "The adaptive policy keeps normalization, logits/loss, and attention softmax at bf16 or fp32 when sensitivity is high, while allowing lower precision for tolerant projection paths. It should match the best static policy on validation NLL and instability counts while improving memory or throughput."
-    required_experiment: "First complete H1 and add per-module instrumentation. Then run a short calibration pass that temporarily perturbs candidate islands, records stability signals and loss deltas, derives a static precision assignment, and compares that assignment against bf16_baseline, fp32_norms, and any best H2/H3 policy. A signal-only smoke probe now exists and must be expanded to bf16, all modules, more batches, and perturbation loss-delta checks."
-    metric: "Primary: validation NLL delta versus bf16_baseline and best static policy. Secondary: loss-spike count, NaN/Inf count, max grad norm, per-module activation outlier score, quantization error, clipping/saturation rate, peak CUDA memory, tokens/sec, and policy decision trace."
+    plain_language_question: "Can we quickly test a model before fine-tuning, find the fragile parts, and spend high precision only where it matters?"
+    motivation: "H1 showed that a hand-picked fp32 normalization island is a weak intervention for Qwen LoRA, partly because Qwen2RMSNorm already upcasts internally. The broader research direction is therefore to replace hand-written dtype rules with a simple measured calibration step."
+    why_it_matters: "If precision can be assigned from a short check rather than intuition, limited-GPU LoRA fine-tuning can become more systematic: sensitive modules stay safe, tolerant modules become resource-saving candidates, and stable-envelope claims can be tested directly."
+    expected_result: "The calibration-derived policy identifies high-risk modules that should stay bf16/fp32 and low-risk projection modules that can be tested as lower-precision candidates. A successful frozen policy matches bf16 validation NLL within 1%, does not increase instability events, and either improves resource use or survives a stronger stress setting than bf16."
+    required_experiment: "Run a quick calibration pass before training, collect per-module sensitivity signals and one-island perturbation loss deltas, freeze a policy, then compare that policy against bf16_baseline and the weak fp32_norms static anchor. H2, H3, and H4 remain conditional ablations used only if the policy needs a stronger static anchor, a stressed regime, or variance confirmation."
+    metric: "Primary: final validation NLL delta versus bf16_baseline after fixed-step LoRA training. Secondary: loss-spike count, NaN/Inf count, max grad norm, per-module activation outlier score, fake-quantization error, perturbation loss delta, clipping/saturation rate, peak CUDA memory, tokens/sec, and policy decision trace."
     estimated_compute_cost: "About 1 GPU-hour for instrumentation and calibration smokes, then 2-5 GPU-hours for matched 500- to 1,000-step comparisons depending on how many candidate policies are retained."
     risk: "Per-module signals may be noisy at small scale, lower-precision kernels may not produce real speedups on the RTX 4050, and aggressive candidates such as int4 attention softmax may be numerically invalid during training."
-    parent: H1
+    parent: null
     dependencies:
       - H1
+      - H5
+    optional_ablation_hypotheses:
       - H2
       - H3
-      - H5
+      - H4
     priority: high
 
 experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
-  baseline_value: null
-  best_value: null
-  total_runs: 0
+  baseline_value: 2.0906627424955366
+  best_value: 2.086417777657509
+  total_runs: 6
   trajectory:
+    - experiment_id: "h1_baseline_bf16_seed42"
+      hypothesis: "H1"
+      type: "training_baseline"
+      metric_value: 2.0906627424955366
+      metric_name: "final_eval_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 11703.238661289215
+      change_summary: "Protocol-faithful bf16 LoRA baseline for Qwen/Qwen2.5-0.5B on Alpaca, seed 42; no loss spikes or NaN/Inf events."
+      artifact: "experiments/h1-selective-fp32-norms/results/h1_baseline_bf16_seed42/summary.json"
+    - experiment_id: "h1_fp32_norms_seed42"
+      hypothesis: "H1"
+      type: "training_treatment"
+      metric_value: 2.086417777657509
+      metric_name: "final_eval_loss"
+      baseline: 2.0906627424955366
+      delta: -0.004244964838027508
+      wall_time_sec: 11832.98452425003
+      change_summary: "Matched fp32_norms treatment for seed 42. Validation loss improved by about 0.20%, below the locked 1% support threshold; throughput overhead was about 0.83%, with no stability events."
+      artifact: "experiments/h1-selective-fp32-norms/results/h1_fp32_norms_seed42/summary.json"
+    - experiment_id: "h1_baseline_bf16_seed43"
+      hypothesis: "H4"
+      type: "baseline_variance_check"
+      metric_value: 2.0687621785849335
+      metric_name: "final_eval_loss"
+      baseline: 2.0906627424955366
+      delta: -0.02190056391060317
+      wall_time_sec: 10858.508111000061
+      change_summary: "Additional bf16 baseline seed showing run-to-run variation larger than the seed-42 fp32_norms delta."
+      artifact: "experiments/h1-selective-fp32-norms/results/h1_baseline_bf16_seed43/summary.json"
+    - experiment_id: "h1_baseline_bf16_seed44"
+      hypothesis: "H4"
+      type: "baseline_variance_check"
+      metric_value: 2.0959309116601945
+      metric_name: "final_eval_loss"
+      baseline: 2.0906627424955366
+      delta: 0.005268169164657884
+      wall_time_sec: 10750.819204807281
+      change_summary: "Additional bf16 baseline seed showing run-to-run variation larger than the seed-42 fp32_norms delta."
+      artifact: "experiments/h1-selective-fp32-norms/results/h1_baseline_bf16_seed44/summary.json"
+    - experiment_id: "h5_rmsnorm_internal_dtype"
+      hypothesis: "H5"
+      type: "dtype_validity_probe"
+      metric_value: 0.0
+      metric_name: "max_abs_diff_reference_vs_actual"
+      baseline: null
+      delta: null
+      wall_time_sec: null
+      change_summary: "Targeted RMSNorm micro-probe recorded Qwen2RMSNorm forward source and reference operation dtypes. The installed implementation casts hidden_states to float32 before pow/mean/rsqrt; the executed probe ran on CPU because CUDA was unavailable, and reference output matched actual output exactly."
+      artifact: "experiments/h1-selective-fp32-norms/results/h5_rmsnorm_internal_dtype.json"
     - experiment_id: "h6_smoke_signals_seed42"
       hypothesis: "H6"
       type: "signal_only_calibration_smoke"
@@ -268,9 +327,9 @@ experiments:
       artifact: "experiments/h6-adaptive-precision-assignment/results/smoke_signals_seed42/stability_signals.json"
 
 outer_loop:
-  cycle: 0
-  last_direction: "deepen H6 instrumentation after H1 calibration"
-  last_reflection: "The refreshed literature phase strengthens H6: the closest external template is adaptive subbyte LLM training with activation, gradient, optimizer-state, loss-divergence, and update-divergence signals. The first local H6 signal-only smoke confirms that per-module outlier and fake-quantization probes can produce a frozen policy trace. It is still too small and fp32-only to support an adaptive policy; the next methodological gap is a fuller bf16 calibration across all candidate modules plus perturbation loss-delta checks before freezing a policy for matched training."
+  cycle: 2
+  last_direction: "simplify H6 around a quick pre-training precision check and make it the main project question"
+  last_reflection: "The research trunk is now streamlined: before LoRA fine-tuning, run a short precision check, identify fragile modules, freeze a mixed-precision policy, and compare against bf16. H1 remains useful as a weak static anchor and cautionary example: hand-picked fp32 norms barely moved validation loss and likely changed less than expected because Qwen2RMSNorm already upcasts internally. The next decisive H6 step is not another hand-picked island; it is perturbation-calibrated module ranking, where activation outliers and fake-quantization error are tested against one-island loss deltas before any policy is trusted. Resource improvements must be treated carefully because fake quantization is a sensitivity probe, not proof of real hardware speedup."
 
 workspace:
   findings: "findings.md"

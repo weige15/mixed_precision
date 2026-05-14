@@ -1,0 +1,84 @@
+{
+  "model_name": "Qwen/Qwen2.5-0.5B",
+  "device": "cpu",
+  "requested_dtype": "torch.bfloat16",
+  "autocast_enabled": false,
+  "seq_len": 512,
+  "module": "model.layers.0.input_layernorm",
+  "class": "Qwen2RMSNorm",
+  "boundary": {
+    "input": {
+      "dtype": "torch.float32",
+      "shape": [
+        1,
+        512,
+        896
+      ],
+      "device": "cpu"
+    },
+    "output": {
+      "dtype": "torch.float32",
+      "shape": [
+        1,
+        512,
+        896
+      ],
+      "device": "cpu"
+    },
+    "weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        896
+      ],
+      "device": "cpu"
+    }
+  },
+  "reference_trace": [
+    {
+      "op": "input",
+      "dtype": "torch.float32",
+      "shape": "(1, 512, 896)"
+    },
+    {
+      "op": "hidden_states.float()",
+      "dtype": "torch.float32",
+      "shape": "(1, 512, 896)"
+    },
+    {
+      "op": "pow_2",
+      "dtype": "torch.float32",
+      "shape": "(1, 512, 896)"
+    },
+    {
+      "op": "mean_last_dim",
+      "dtype": "torch.float32",
+      "shape": "(1, 512, 1)"
+    },
+    {
+      "op": "rsqrt_variance_plus_eps",
+      "dtype": "torch.float32",
+      "shape": "(1, 512, 1)"
+    },
+    {
+      "op": "multiply_by_rsqrt",
+      "dtype": "torch.float32",
+      "shape": "(1, 512, 896)"
+    },
+    {
+      "op": "restore_input_dtype",
+      "dtype": "torch.float32",
+      "shape": "(1, 512, 896)"
+    },
+    {
+      "op": "weight_multiply",
+      "dtype": "torch.float32",
+      "shape": "(1, 512, 896)"
+    }
+  ],
+  "reference_matches_actual": {
+    "max_abs_diff": 0.0,
+    "mean_abs_diff": 0.0
+  },
+  "forward_source": "    def forward(self, hidden_states: torch.Tensor) -> torch.Tensor:\n        input_dtype = hidden_states.dtype\n        hidden_states = hidden_states.to(torch.float32)\n        variance = hidden_states.pow(2).mean(-1, keepdim=True)\n        hidden_states = hidden_states * torch.rsqrt(variance + self.variance_epsilon)\n        return self.weight * hidden_states.to(input_dtype)\n",
+  "interpretation": "If the forward source and reference trace cast hidden_states to float32 before pow/mean/rsqrt, then baseline boundary bf16 tensors do not imply bf16 RMSNorm reduction arithmetic."
+}

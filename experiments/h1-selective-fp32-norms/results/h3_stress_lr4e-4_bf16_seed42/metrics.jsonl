@@ -1,0 +1,1 @@
+{"step": 1, "train_loss": 2.097801076248288, "eval_loss": null, "grad_norm": 3.731314182281494, "step_time_sec": 13.978620529174805, "tokens": 5312, "tokens_per_sec": 380.0088849191746, "peak_cuda_memory_gib": 4.499124050140381, "nan_or_inf_count": 0, "loss_spike_count": 0}

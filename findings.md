@@ -2,19 +2,27 @@
 
 ## Research Question
 
-During LoRA fine-tuning of small open LLMs, can selective or adaptively assigned precision islands improve stability, validation quality, memory use, or throughput over standard bf16 mixed precision?
+Before LoRA fine-tuning, can a short precision check identify which model modules are precision-sensitive, so a frozen mixed-precision policy can match bf16 validation quality while saving resources or expanding the stable fine-tuning envelope?
 
 ## Current Understanding
 
-The initial working assumption is that blanket bf16 mixed precision may already be strong for small LoRA fine-tuning, but some operations may be disproportionately sensitive to reduced precision. Normalization layers are the first candidate because they compute activation statistics, have low computational cost compared with matrix multiplications, and can be kept in fp32 without changing the model architecture or dataset.
+The initial working assumption was that blanket bf16 mixed precision may already be strong for small LoRA fine-tuning, but some operations may be disproportionately sensitive to reduced precision. The first matched H1 run supports the "bf16 is already strong here" part more than the "fp32 norms are a useful static island" part: fp32 norms produce only a small seed-42 validation-loss improvement, with no stability events in either policy.
 
-The broader research direction is adaptive precision assignment from stability signals. In that framing, H1 is the first calibration experiment rather than the final goal: it tests whether one manually chosen sensitive island matters. A later adaptive policy should use measured activation outliers, gradient spikes, loss deltas, quantization error, clipping or saturation rate, NaN/Inf incidence, memory, and throughput to decide which operations should be promoted to higher precision or demoted to lower precision.
+The broader research direction is now simplified as a pre-training precision check. In plain terms: quickly test the model before fine-tuning, find the fragile modules, spend high precision only where it matters, freeze that choice, and then fine-tune. H6 is the trunk hypothesis. H1 is now a weak static anchor and cautionary example rather than the central story. H5 is important because dtype claims need internal-compute validation. H2, H3, and H4 are useful conditional ablations, but they are not blockers for the first H6 policy experiment.
+
+The next H6 policy should use measured activation outliers, local perturbation loss deltas, quantization error, clipping or saturation rate, NaN/Inf incidence, memory, and throughput to decide which operations should be kept safe and which are candidates for lower precision.
 
 The refreshed literature suggests three especially useful signal families for H6. First, LLM.int8() and SmoothQuant indicate that activation outliers are a strong predictor of INT8 sensitivity. Second, FP4 training and Attn-QAT suggest low-bit training is limited by quantization noise, rounding, heavy-tailed attention activations, and hidden backward-pass precision assumptions. Third, HAWQ, HAWQ-V3, convergence-aware mixed precision, and SNIP frame precision assignment as constrained optimization over predicted quality loss and hardware cost.
 
 ## Key Results
 
-No main H1 experiment result exists yet. H1 is protocol-locked as the first experiment, and H6 has been added as a follow-on adaptive precision assignment hypothesis.
+H1 has a matched seed-42 1,000-step result. The bf16 baseline reaches final validation NLL `2.09066`, train-only throughput `457.06` tokens/sec, peak CUDA memory `4.5319 GiB`, zero loss spikes, and zero NaN/Inf events. The fp32_norms treatment reaches final validation NLL `2.08642`, train-only throughput `453.27` tokens/sec, peak CUDA memory `4.5469 GiB`, zero loss spikes, and zero NaN/Inf events.
+
+The seed-42 fp32_norms delta is `-0.00425` validation NLL, about `0.20%` relative improvement, with about `0.83%` train-throughput overhead and about `0.33%` peak-memory overhead. Under the locked H1 decision rule, this is inconclusive rather than supportive because the quality delta is below 1% and there are no instability events to remove.
+
+The extra bf16 baseline seeds show that baseline run-to-run variation is larger than the seed-42 fp32_norms gain: seed 43 reaches `2.06876`, and seed 44 reaches `2.09593`. This strengthens the caution behind H4 even before matched fp32_norms seeds 43 and 44 are available.
+
+H5 now explains why H1 may have little effect. The targeted RMSNorm internal probe recorded the installed `Qwen2RMSNorm.forward` source, which casts `hidden_states` to `float32` before `pow`, `mean`, and `rsqrt`, then casts the normalized activations back to the input dtype before multiplying by the norm weight. The executed H5 run used CPU because CUDA was unavailable at probe time, but its reference implementation matched actual module output exactly (`max_abs_diff = 0.0`). Combined with the earlier CUDA boundary probe showing bf16 module inputs/outputs, the likely interpretation is that baseline Qwen RMSNorm already performs its reduction arithmetic in fp32 even when its boundary tensors are bf16.
 
 The first H6 signal-only smoke probe completed on 2026-05-13. It ran Qwen/Qwen2.5-0.5B on one Alpaca calibration batch with sequence length 64, fp32 dtype, and the first eight candidate modules. The probe wrote `stability_signals.json` and `policy_trace.json` under `experiments/h6-adaptive-precision-assignment/results/smoke_signals_seed42/`. It observed mean calibration loss `1.7697`, zero NaN/Inf events, and peak CUDA memory `2.1825 GiB`.
 
@@ -22,12 +30,18 @@ Under the conservative H6 decision rule, the smoke policy promoted layer-0 input
 
 ## Patterns and Insights
 
-- Static precision islands are a prerequisite for adaptive assignment: without baseline and treatment traces, the adaptive policy has no calibrated notion of sensitivity.
+- The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.
+- Static precision islands are a prerequisite for adaptive assignment, but not every static-island hypothesis is mandatory. H6 needs at least one matched static anchor, currently H1, plus dtype-validity evidence from H5.
+- H1 seed 42 is now best interpreted as a weak static anchor: fp32 norms are feasible and cheap, but they do not yet show a meaningful benefit over bf16 in the default stable regime.
+- H5 weakens the original mechanistic rationale for H1. If Qwen2RMSNorm already upcasts internally, the fp32_norms wrapper changes boundary/call behavior less than expected and should not be treated as a strong precision intervention.
+- The default bf16 LoRA recipe appears stable at the current scale. Absence of spikes/NaNs in both H1 policies means stability-sensitive precision effects may require stressed settings or perturbation-based H6 probes to become measurable.
+- Baseline seed variation is already larger than the fp32_norms seed-42 delta, so future claims need paired seeds or a stronger effect size.
 - The current runner already logs useful run-level stability signals: loss spikes, NaN/Inf count, max gradient norm, peak memory, and train-only throughput.
 - H6 now has initial per-module signal instrumentation for activation outliers, fake-quantization error, saturation, finite checks, and policy trace generation.
 - INT8/INT4 inference papers are useful for signal design but should not be treated as direct evidence for training-time LoRA stability.
 - Attention and logits/loss should be handled conservatively under subbyte precision because the literature flags heavy-tailed activations and backward precision assumptions as instability sources.
 - The first H6 smoke suggests early-layer activation outlier scores can be large enough that naive int8/int4 demotion would be unsafe without perturbation loss-delta checks.
+- The central unresolved question is predictive validity: do the cheap calibration signals actually predict one-island loss deltas and later training outcomes?
 
 ## Lessons and Constraints
 
@@ -37,14 +51,19 @@ Under the conservative H6 decision rule, the smoke policy promoted layer-0 input
 - Aggressive low-precision candidates should be staged conservatively. Projection paths are better first targets for int8/int4 exploration than normalization reductions or attention softmax.
 - Adaptive decisions must be frozen before final validation comparison. Otherwise the policy can overfit to the observed result.
 - Signal-only calibration should be treated as a ranking/prior. It needs perturbation loss deltas before it can justify an adaptive training policy.
+- The policy must be frozen after calibration and before training. Otherwise, it becomes an exploratory tuning procedure rather than a test of whether the short precision check predicts sensitivity.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
+- Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.
+- H2 should be run only if H6 needs a stronger logits/loss static anchor. H3 should be run only if the default bf16 regime is too stable to reveal meaningful policy differences. H4 should be run after a candidate H6 policy exists, not before.
+- A single-line H3 stress artifact exists, but it is incomplete and should not be interpreted as evidence.
 
 ## Open Questions
 
-- Does fp32 normalization measurably reduce loss spikes or validation loss compared with standard bf16 autocast?
-- Is any quality or stability gain large enough to justify throughput overhead?
+- Does fp32 normalization produce a paired multi-seed effect, or is the seed-42 improvement entirely within ordinary seed noise?
+- Does the lack of H1 instability mean the default regime is too stable, or that norms are simply not the sensitive operation?
 - If H1 is inconclusive, should the next precision island be logits/loss computation, attention softmax, optimizer state precision, or a stressed fp16 setting?
 - Which per-module signals best predict precision sensitivity during LoRA fine-tuning?
+- Can a short pre-training precision check rank fragile and tolerant modules well enough to choose a frozen policy?
 - Does the H6 signal ranking remain stable across bf16 autocast, longer sequence length, more batches, and seeds 42-44?
 - Do one-island perturbation loss deltas agree with the activation outlier and fake-quantization-error ranking?
 - Can a short calibration pass derive a precision assignment that matches the best static policy while improving memory or throughput?
@@ -52,4 +71,12 @@ Under the conservative H6 decision rule, the smoke policy promoted layer-0 input
 
 ## Optimization Trajectory
 
-No training trajectory yet. The first H6 calibration artifact is a signal-only smoke run, not an optimizer-step result. The first training trajectory point will be the bf16 baseline from H1.
+The first training trajectory points are now available:
+
+- H1 bf16 baseline seed 42: final validation NLL `2.09066`
+- H1 fp32_norms seed 42: final validation NLL `2.08642`
+- H1 bf16 baseline seed 43: final validation NLL `2.06876`
+- H1 bf16 baseline seed 44: final validation NLL `2.09593`
+- H5 RMSNorm internal dtype probe: Qwen2RMSNorm source/reference path uses fp32 for reduction operations; reference and actual outputs matched with max absolute difference `0.0` on the CPU probe.
+
+The H6 calibration artifact remains signal-only and should be plotted separately from optimizer-step training results.

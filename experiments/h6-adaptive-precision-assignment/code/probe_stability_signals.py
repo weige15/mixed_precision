@@ -21,6 +21,9 @@ from dataclasses import dataclass, field
 from typing import Any
 
 
+MAX_STATS_ELEMENTS = 1_000_000
+
+
 def require_packages() -> None:
     missing = []
     for name in ("torch", "transformers", "datasets", "peft", "numpy", "tqdm"):
@@ -153,6 +156,16 @@ def first_tensor(obj: Any) -> Any | None:
     return None
 
 
+def bounded_1d_sample(tensor: Any, max_elements: int = MAX_STATS_ELEMENTS) -> Any:
+    """Return a deterministic bounded 1D view/sample for large activation tensors."""
+
+    flat = tensor.reshape(-1)
+    if flat.numel() <= max_elements:
+        return flat
+    stride = math.ceil(flat.numel() / max_elements)
+    return flat[::stride][:max_elements]
+
+
 def module_role(name: str, module: Any) -> str | None:
     class_name = module.__class__.__name__.lower()
     leaf = name.rsplit(".", 1)[-1].lower()
@@ -171,7 +184,7 @@ def module_role(name: str, module: Any) -> str | None:
 def fake_quant_stats(tensor: Any, bits: int) -> dict[str, float]:
     import torch
 
-    x = tensor.detach().float()
+    x = bounded_1d_sample(tensor.detach()).float()
     finite_mask = torch.isfinite(x)
     if not bool(finite_mask.all()):
         x = x[finite_mask]
@@ -201,7 +214,7 @@ def fake_quant_stats(tensor: Any, bits: int) -> dict[str, float]:
 def tensor_stats(tensor: Any) -> dict[str, float | int | str]:
     import torch
 
-    x = tensor.detach().float()
+    x = bounded_1d_sample(tensor.detach()).float()
     finite_mask = torch.isfinite(x)
     finite_fraction = float(finite_mask.float().mean().item()) if x.numel() else 1.0
     if not bool(finite_mask.all()):
@@ -222,15 +235,17 @@ def tensor_stats(tensor: Any) -> dict[str, float | int | str]:
     abs_x = torch.abs(x)
     rms = torch.sqrt(torch.mean(x * x)).clamp_min(1e-12)
     abs_max = torch.max(abs_x)
+    abs_p99 = torch.quantile(abs_x, 0.99)
     return {
         "dtype": str(tensor.dtype),
         "numel": int(tensor.numel()),
+        "sampled_numel": int(x.numel()),
         "finite_fraction": finite_fraction,
         "mean": float(torch.mean(x).item()),
         "std": float(torch.std(x, unbiased=False).item()),
         "rms": float(rms.item()),
         "abs_max": float(abs_max.item()),
-        "abs_p99": float(torch.quantile(abs_x, 0.99).item()),
+        "abs_p99": float(abs_p99.item()),
         "outlier_score": float((abs_max / rms).item()),
     }
 

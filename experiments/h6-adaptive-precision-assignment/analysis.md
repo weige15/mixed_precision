@@ -1,5 +1,23 @@
 # H6 Analysis
 
+## 2026-05-14 Brainstorm Integration
+
+The H6 research question has been simplified around a quick precision check before LoRA fine-tuning:
+
+> Can we quickly test the model before fine-tuning, find the fragile modules, and spend high precision only where it matters?
+
+This framing is stronger than a generic "adaptive precision assignment" claim because it makes the central test concrete. The project must show that a short calibration pass predicts module-level precision sensitivity well enough to freeze a useful policy before training.
+
+The current H1/H5 results motivate this pivot. H1 found fp32 norms to be an inconclusive static island under the default bf16 LoRA regime, and H5 suggests Qwen2RMSNorm already performs its reduction arithmetic in fp32 internally. Therefore, the next useful research step is not another hand-picked fp32 island. It is a predictive-validity test:
+
+1. Collect cheap per-module signals such as activation outliers and fake-quantization error.
+2. Perturb one island at a time and measure local loss deltas.
+3. Check whether the cheap signals predict the perturbation deltas.
+4. Freeze a policy using only calibration evidence.
+5. Compare the frozen policy against bf16.
+
+This keeps the research accessible: the "precision check" is the method, the perturbation deltas are the validation of the method, and the frozen policy comparison is the final practical test.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.
