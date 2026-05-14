@@ -63,10 +63,9 @@ python experiments/h6-adaptive-precision-assignment/code/probe_stability_signals
 
 Then repeat with seeds 43 and 44 if the policy trace is stable enough to justify a comparison run.
 
-After that, implement perturbation calibration:
+After that, run perturbation calibration:
 
 ```bash
-# planned interface; not implemented yet
 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
 python experiments/h6-adaptive-precision-assignment/code/probe_precision_perturbations.py \
   --model-name Qwen/Qwen2.5-0.5B \
@@ -75,6 +74,9 @@ python experiments/h6-adaptive-precision-assignment/code/probe_precision_perturb
   --seq-len 512 \
   --batch-size 1 \
   --calibration-batches 4 \
+  --dataset-size 128 \
+  --dtype bf16 \
+  --bits 8 \
   --candidate-policy experiments/h6-adaptive-precision-assignment/results/calibration_bf16_seed42/policy_trace.json \
   --output-dir experiments/h6-adaptive-precision-assignment/results/perturbation_bf16_seed42
 ```
