@@ -32,6 +32,10 @@ The fuller H6 Stage 1 calibration now exists for bf16 seeds 42, 43, and 44. Each
 
 The signal-only policy is very conservative. All 96 attention projections remain bf16 in all seeds; all 49 norm/logit paths are promoted to fp32; and almost every MLP projection remains bf16. The strongest high-risk modules are stable across seeds, especially `layers.2.mlp.down_proj`, `layers.3.mlp.down_proj`, and `layers.21.mlp.down_proj`, which show extreme activation outlier scores and int8 relative MSE well above the current candidate threshold. A relaxed screen identifies only four plausible low-risk projection modules for perturbation testing: `layers.23.mlp.gate_proj`, `layers.23.mlp.up_proj`, `layers.22.mlp.gate_proj`, and `layers.22.mlp.up_proj`.
 
+The first Stage 2 perturbation probe on seed 42 gives positive evidence for H6 on MLP projections. Fake int8 output perturbation of the three high-risk MLP down projections caused large mean loss increases: `+0.2867` for `layers.21.mlp.down_proj`, `+0.2228` for `layers.2.mlp.down_proj`, and `+0.1491` for `layers.3.mlp.down_proj`. The four relaxed low-risk MLP candidates had near-zero mean loss deltas between about `-0.0042` and `+0.0070`. Across the 7 MLP projection perturbations, max outlier score correlates with absolute loss delta at about `0.91`, and max int8 relative MSE correlates at about `0.81`.
+
+The norm/logit controls did not show large output-quantization loss deltas, despite Stage 1 marking them as sensitive. This should not be overread: output fake quantization is not the same as reducing internal RMSNorm reduction arithmetic or loss-computation precision. The norm/logit result mainly says the current Stage 2 perturbation design is best suited to projection-output sensitivity.
+
 ## Patterns and Insights
 
 - The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.
@@ -47,6 +51,7 @@ The signal-only policy is very conservative. All 96 attention projections remain
 - The first H6 smoke suggests early-layer activation outlier scores can be large enough that naive int8/int4 demotion would be unsafe without perturbation loss-delta checks.
 - The central unresolved question is predictive validity: do the cheap calibration signals actually predict one-island loss deltas and later training outcomes?
 - The three-seed bf16 calibration is stable enough to proceed to perturbation tests. It is not rich enough to freeze a resource-saving policy because almost no modules are robust low-precision candidates under the current thresholds.
+- Stage 2 now supports the predictive-validity story for MLP projections: high Stage 1 outlier/error signals map to large int8 perturbation loss deltas, while relaxed low-risk late-layer gate/up projections have near-zero deltas.
 
 ## Lessons and Constraints
 
@@ -58,6 +63,7 @@ The signal-only policy is very conservative. All 96 attention projections remain
 - Signal-only calibration should be treated as a ranking/prior. It needs perturbation loss deltas before it can justify an adaptive training policy.
 - The policy must be frozen after calibration and before training. Otherwise, it becomes an exploratory tuning procedure rather than a test of whether the short precision check predicts sensitivity.
 - Do not train an H6 policy yet. The correct next step is one-island perturbation loss-delta testing on a small selected panel: borderline tolerant modules, extreme high-risk modules, and representative norm/logits paths.
+- After seed-42 Stage 2, the immediate next step is replication on seeds 43 and 44. If the same late-layer gate/up modules remain low-delta, freeze a narrow H6 candidate policy around those modules only.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
 - Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.
 - H2 should be run only if H6 needs a stronger logits/loss static anchor. H3 should be run only if the default bf16 regime is too stable to reveal meaningful policy differences. H4 should be run after a candidate H6 policy exists, not before.
@@ -71,10 +77,11 @@ The signal-only policy is very conservative. All 96 attention projections remain
 - Which per-module signals best predict precision sensitivity during LoRA fine-tuning?
 - Can a short pre-training precision check rank fragile and tolerant modules well enough to choose a frozen policy?
 - Does the H6 signal ranking remain stable across bf16 autocast, longer sequence length, more batches, and seeds 42-44?
-- Do one-island perturbation loss deltas agree with the activation outlier and fake-quantization-error ranking?
+- Do one-island perturbation loss deltas agree with the activation outlier and fake-quantization-error ranking across seeds 43 and 44, not just seed 42?
 - Can a short calibration pass derive a precision assignment that matches the best static policy while improving memory or throughput?
 - Are int8 or int4 candidates real compute improvements on the available RTX 4050, or only fake-quant research probes?
 - Are the four relaxed low-risk candidates actually harmless under one-island perturbation, or are the signal thresholds still missing important training-time sensitivity?
+- Would a frozen policy that only demotes `layers.22/23.mlp.gate_proj` and `layers.22/23.mlp.up_proj` preserve validation quality during 300-500 LoRA steps?
 
 ## Optimization Trajectory
 

@@ -263,7 +263,7 @@ experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
   baseline_value: 2.0906627424955366
   best_value: 2.086417777657509
-  total_runs: 9
+  total_runs: 10
   trajectory:
     - experiment_id: "h1_baseline_bf16_seed42"
       hypothesis: "H1"
@@ -355,11 +355,21 @@ experiments:
       wall_time_sec: 6.3860437870025635
       change_summary: "Fuller bf16 calibration over 218 modules. Decisions: 96 attention projections bf16, 72 MLP projections bf16, 49 norms fp32, 1 logits fp32; zero NaN/Inf events."
       artifact: "experiments/h6-adaptive-precision-assignment/results/calibration_bf16_seed44/stability_signals.json"
+    - experiment_id: "h6_perturbation_bf16_seed42"
+      hypothesis: "H6"
+      type: "one_island_perturbation"
+      metric_value: 0.28673356771469116
+      metric_name: "max_abs_mean_loss_delta"
+      baseline: 1.7513138055801392
+      delta: 0.28673356771469116
+      wall_time_sec: 2.9047858715057373
+      change_summary: "First Stage 2 fake-int8 output perturbation panel. High-risk MLP down projections had large positive loss deltas (+0.2867, +0.2228, +0.1491), while relaxed low-risk late-layer MLP gate/up candidates had near-zero deltas. MLP-only correlations: max outlier vs abs loss delta about 0.91, max int8 relative MSE about 0.81."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/perturbation_bf16_seed42/perturbation_results.json"
 
 outer_loop:
-  cycle: 3
-  last_direction: "proceed from stable signal-only H6 calibration to perturbation-calibrated module ranking"
-  last_reflection: "The three-seed H6 bf16 calibration is stable but conservative. It observed 218 modules per seed with zero NaN/Inf events and identical decisions for 217/218 modules. The high-risk end is consistent across seeds, with extreme outliers in layers.2.mlp.down_proj, layers.3.mlp.down_proj, layers.21.mlp.down_proj, and several norm paths. However, the conservative policy yields almost no low-precision candidates: all attention projections remain bf16, all norms/logits are fp32, and only layers.23.mlp.gate_proj becomes an int8 candidate in seed 42 alone. Therefore the project should not train a frozen H6 policy yet. The next step is one-island perturbation testing on a small panel: four relaxed low-risk MLP candidates, three extreme high-risk MLP down projections, and representative norm/logits controls. The key question is whether cheap signal-only rankings predict perturbation loss deltas."
+  cycle: 4
+  last_direction: "replicate H6 perturbation panel on seeds 43 and 44, then freeze only a narrow late-layer MLP candidate policy if deltas stay small"
+  last_reflection: "The first H6 Stage 2 perturbation probe is positive evidence for the core precision-check idea on MLP projections. The three Stage-1 high-risk MLP down projections have large int8 perturbation loss deltas, while the relaxed low-risk late-layer gate/up projections have near-zero deltas. For the seven MLP projection perturbations, Stage 1 max outlier score and max int8 relative MSE correlate strongly with absolute loss delta. Norm/logit controls show small output-quantization deltas, but this should not be treated as proof that internal norm or loss computation can be reduced because the perturbation target is different. Next step: replicate the same Stage 2 panel on seeds 43 and 44. If the low-risk modules remain low-delta, freeze a minimal policy that only demotes layers.22/23 MLP gate/up outputs for a short 300-500 step training comparison."
 
 workspace:
   findings: "findings.md"

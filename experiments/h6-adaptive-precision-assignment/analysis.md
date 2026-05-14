@@ -43,6 +43,33 @@ Using a relaxed screening rule of mean outlier score below 20 and mean int8 rela
 
 Interpretation: Stage 1 gives a strong negative message against naive low-precision demotion. Most projections look sensitive under the current signals, and the conservative policy does not yet produce a resource-saving policy. This does not refute H6; it says the next step must be perturbation validation, not training a policy directly. The perturbation experiment should test a small panel: the four tolerant candidates above, the three extreme high-risk modules, and representative norm/logits paths.
 
+## 2026-05-15 Stage 2 Perturbation Probe
+
+The first Stage 2 perturbation probe ran on seed 42 with bf16 autocast, sequence length 512, batch size 1, and 4 calibration batches. It used fake int8 output quantization one module at a time, with no weight updates. Baseline mean loss over the four batches was `1.7513`.
+
+The result supports the core H6 predictive-validity claim for MLP projections. The three modules Stage 1 ranked as extreme high-risk had the largest positive loss deltas:
+
+| module | Stage 1 signal | int8 perturbation loss delta |
+|---|---:|---:|
+| `layers.21.mlp.down_proj` | outlier `776.7`, int8 rel MSE `0.1068` | `+0.2867` |
+| `layers.2.mlp.down_proj` | outlier `909.7`, int8 rel MSE `0.0161` | `+0.2228` |
+| `layers.3.mlp.down_proj` | outlier `906.2`, int8 rel MSE `0.0171` | `+0.1491` |
+
+The relaxed low-risk MLP candidates had near-zero loss deltas:
+
+| module | Stage 1 signal | int8 perturbation loss delta |
+|---|---:|---:|
+| `layers.23.mlp.up_proj` | outlier `13.7`, int8 rel MSE `0.00084` | `+0.0070` |
+| `layers.22.mlp.up_proj` | outlier `15.5`, int8 rel MSE `0.00094` | `-0.0042` |
+| `layers.23.mlp.gate_proj` | outlier `11.9`, int8 rel MSE `0.00069` | `-0.0035` |
+| `layers.22.mlp.gate_proj` | outlier `15.5`, int8 rel MSE `0.00094` | `-0.0010` |
+
+Simple correlation checks are encouraging. Across all 10 perturbations, max outlier score correlates with absolute loss delta at about `0.72`, and max int8 relative MSE correlates at about `0.77`. Restricting to MLP projections, the correlations are stronger: about `0.91` for max outlier score and `0.81` for max int8 relative MSE.
+
+The norm/logit controls are more nuanced. Stage 1 marked layer-4 norms and `lm_head` as fp32-sensitive, but output fake-int8 perturbation produced small local loss deltas: `-0.0047`, `-0.0034`, and `+0.0026`. This does not prove norms/logits are safe to demote. It shows that the current perturbation target, output fake quantization, is not equivalent to reducing the internal reduction or loss-computation arithmetic. Norm/logit sensitivity needs a different perturbation design if it remains scientifically important.
+
+Interpretation: H6 now has its first positive evidence. Cheap Stage 1 signals predict which MLP projection outputs are harmed by int8 perturbation. The next step is to repeat Stage 2 for seeds 43 and 44, then freeze only a narrow candidate policy around the consistently low-delta late-layer MLP gate/up projections.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.
