@@ -12,6 +12,13 @@ import time
 from contextlib import nullcontext
 from typing import Any
 
+H6_LATE_MLP_INT8_MODULES = {
+    "base_model.model.model.layers.22.mlp.gate_proj",
+    "base_model.model.model.layers.22.mlp.up_proj",
+    "base_model.model.model.layers.23.mlp.gate_proj",
+    "base_model.model.model.layers.23.mlp.up_proj",
+}
+
 
 def require_packages() -> None:
     missing = []
@@ -32,7 +39,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model-name", default="Qwen/Qwen2.5-0.5B")
     parser.add_argument("--dataset-name", default="tatsu-lab/alpaca")
-    parser.add_argument("--precision-policy", required=True, choices=["bf16_baseline", "fp32_norms"])
+    parser.add_argument(
+        "--precision-policy",
+        required=True,
+        choices=["bf16_baseline", "fp32_norms", "h6_late_mlp_int8_candidate"],
+    )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--max-steps", type=int, default=100)
     parser.add_argument("--seq-len", type=int, default=512)
@@ -161,6 +172,46 @@ def apply_fp32_norms(model: Any) -> list[str]:
     return wrapped
 
 
+def fake_quant_dequant_ste(tensor: Any, bits: int = 8) -> Any:
+    import torch
+
+    if not torch.is_tensor(tensor) or not tensor.is_floating_point():
+        return tensor
+    qmax = float((2 ** (bits - 1)) - 1)
+    max_abs = tensor.detach().abs().amax()
+    if float(max_abs.item()) == 0.0:
+        return tensor
+    scale = max_abs / qmax
+    quantized = torch.clamp(torch.round(tensor / scale), -qmax, qmax) * scale
+    return tensor + (quantized - tensor).detach()
+
+
+def fake_quant_output(output: Any, bits: int = 8) -> Any:
+    if isinstance(output, tuple):
+        return tuple(fake_quant_output(item, bits) for item in output)
+    if isinstance(output, list):
+        return [fake_quant_output(item, bits) for item in output]
+    if isinstance(output, dict):
+        return {key: fake_quant_output(value, bits) for key, value in output.items()}
+    return fake_quant_dequant_ste(output, bits)
+
+
+def apply_h6_late_mlp_int8_candidate(model: Any) -> list[str]:
+    hooked = []
+    for name, module in model.named_modules():
+        if name not in H6_LATE_MLP_INT8_MODULES:
+            continue
+        if module.__class__.__name__.lower() != "linear":
+            raise SystemExit(f"H6 candidate target is not a Linear module: {name} ({module.__class__.__name__})")
+        module.register_forward_hook(lambda _module, _inputs, output: fake_quant_output(output, bits=8))
+        hooked.append(name)
+
+    missing = sorted(H6_LATE_MLP_INT8_MODULES - set(hooked))
+    if missing:
+        raise SystemExit("H6 candidate module(s) not found:\n" + "\n".join(missing))
+    return sorted(hooked)
+
+
 def infer_lora_targets(model: Any) -> list[str]:
     candidates = {"q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"}
     found = set()
@@ -253,10 +304,13 @@ def main() -> None:
     model.train()
 
     wrapped_norms: list[str] = []
+    h6_int8_modules: list[str] = []
     if args.precision_policy == "fp32_norms":
         wrapped_norms = apply_fp32_norms(model)
         if not wrapped_norms:
             raise SystemExit("precision-policy fp32_norms requested, but no RMSNorm/LayerNorm-like modules were found.")
+    elif args.precision_policy == "h6_late_mlp_int8_candidate":
+        h6_int8_modules = apply_h6_late_mlp_int8_candidate(model)
 
     trainable_params = [param for param in model.parameters() if param.requires_grad]
     optimizer = torch.optim.AdamW(trainable_params, lr=args.learning_rate)
@@ -388,6 +442,9 @@ def main() -> None:
         "bf16_autocast": use_bf16,
         "lora_targets": lora_targets,
         "fp32_norm_wrapped_modules": wrapped_norms,
+        "h6_fake_int8_output_modules": h6_int8_modules,
+        "h6_fake_int8_bits": 8 if h6_int8_modules else None,
+        "h6_fake_int8_gradient": "straight_through_estimator" if h6_int8_modules else None,
         "final_train_loss": loss_history[-1] if loss_history else None,
         "final_eval_loss": final_eval_loss,
         "max_grad_norm": max_grad_norm,
