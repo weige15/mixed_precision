@@ -18,6 +18,31 @@ The current H1/H5 results motivate this pivot. H1 found fp32 norms to be an inco
 
 This keeps the research accessible: the "precision check" is the method, the perturbation deltas are the validation of the method, and the frozen policy comparison is the final practical test.
 
+## 2026-05-14 BF16 Calibration Across Seeds
+
+Stage 1 calibration completed for seeds 42, 43, and 44 using bf16 autocast, sequence length 512, batch size 1, and 8 calibration batches per seed. Each run observed 218 candidate modules on CUDA with zero NaN/Inf events and peak CUDA memory `2.7303 GiB`.
+
+Run-level summary:
+
+| seed | mean calibration loss | NaN/Inf | elapsed sec | role-level policy counts |
+|---:|---:|---:|---:|---|
+| 42 | `2.0182` | `0` | `6.42` | attention projections: 96 bf16; MLP projections: 71 bf16 + 1 int8 candidate; norms: 49 fp32; logits: 1 fp32 |
+| 43 | `2.1414` | `0` | `6.14` | attention projections: 96 bf16; MLP projections: 72 bf16; norms: 49 fp32; logits: 1 fp32 |
+| 44 | `2.3657` | `0` | `6.39` | attention projections: 96 bf16; MLP projections: 72 bf16; norms: 49 fp32; logits: 1 fp32 |
+
+The policy decisions are highly stable across seeds: 217 of 218 common modules received the same assignment in all three runs. The only unstable assignment was `layers.23.mlp.gate_proj`, which was an `int8_candidate` for seed 42 but remained `bf16` for seeds 43 and 44. It is therefore a borderline candidate, not a safe frozen-policy decision.
+
+The strongest high-risk modules are also stable across seeds. The top activation-outlier paths include `layers.2.mlp.down_proj`, `layers.3.mlp.down_proj`, `layers.21.mlp.down_proj`, and the layer 4-7 norm paths. For example, `layers.2.mlp.down_proj` has a mean outlier score around `909.7` across seeds and mean int8 relative MSE around `0.016`, far above the current int8 candidate threshold.
+
+Using a relaxed screening rule of mean outlier score below 20 and mean int8 relative MSE below `1e-3`, only four projection modules look plausibly tolerant enough to test next:
+
+- `layers.23.mlp.gate_proj`
+- `layers.23.mlp.up_proj`
+- `layers.22.mlp.gate_proj`
+- `layers.22.mlp.up_proj`
+
+Interpretation: Stage 1 gives a strong negative message against naive low-precision demotion. Most projections look sensitive under the current signals, and the conservative policy does not yet produce a resource-saving policy. This does not refute H6; it says the next step must be perturbation validation, not training a policy directly. The perturbation experiment should test a small panel: the four tolerant candidates above, the three extreme high-risk modules, and representative norm/logits paths.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.

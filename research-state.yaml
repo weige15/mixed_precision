@@ -167,8 +167,8 @@ literature:
     - "No comparison exists yet for other precision islands such as fp32 logits/loss, attention softmax, optimizer states, or stochastic rounding."
     - "No run-to-run variance estimate is available."
     - "No per-module activation outlier, gradient spike, or quantization error traces exist, so the current runner cannot yet rank precision-island sensitivity."
-    - "No adaptive precision policy has been tested against a matched static policy; any proposed assignment rule is currently a research plan, not evidence."
-    - "No calibration pass has measured per-module loss divergence, update divergence, activation outliers, or gradient-noise ratios for candidate precision assignments."
+    - "The H6 Stage 1 bf16 calibration pass now measures activation outliers and fake-quantization error across 218 modules for seeds 42, 43, and 44. It does not yet measure one-island loss divergence, update divergence, or whether these signals predict training outcomes."
+    - "No adaptive precision policy has been tested against a matched static policy; the three-seed signal-only calibration is stable but too conservative to freeze a resource-saving policy."
     - "No evidence yet shows that LLM.int8/SmoothQuant-style outlier signals predict training-time precision sensitivity in LoRA."
     - "No local benchmark has established whether INT8/INT4/FP4 candidates are real compute improvements or only emulated perturbations on the available hardware."
     - "The central H6 idea is now simplified to a quick precision check before training: measure module sensitivity, freeze a policy, then compare against bf16. The first signal-only probe exists, but no perturbation-calibrated policy has been frozen or trained yet."
@@ -263,7 +263,7 @@ experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
   baseline_value: 2.0906627424955366
   best_value: 2.086417777657509
-  total_runs: 6
+  total_runs: 9
   trajectory:
     - experiment_id: "h1_baseline_bf16_seed42"
       hypothesis: "H1"
@@ -325,11 +325,41 @@ experiments:
       wall_time_sec: 10.444058656692505
       change_summary: "Added non-invasive per-module stability-signal probe; first eight modules produced a policy trace with layer-0 input RMSNorm promoted to fp32 and seven projections kept at bf16."
       artifact: "experiments/h6-adaptive-precision-assignment/results/smoke_signals_seed42/stability_signals.json"
+    - experiment_id: "h6_calibration_bf16_seed42"
+      hypothesis: "H6"
+      type: "signal_only_calibration"
+      metric_value: 2.0181933790445328
+      metric_name: "mean_calibration_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 6.421704530715942
+      change_summary: "Fuller bf16 calibration over 218 modules. Decisions: 96 attention projections bf16, 71 MLP projections bf16, 1 MLP int8 candidate, 49 norms fp32, 1 logits fp32; zero NaN/Inf events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/calibration_bf16_seed42/stability_signals.json"
+    - experiment_id: "h6_calibration_bf16_seed43"
+      hypothesis: "H6"
+      type: "signal_only_calibration"
+      metric_value: 2.1414137482643127
+      metric_name: "mean_calibration_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 6.142521381378174
+      change_summary: "Fuller bf16 calibration over 218 modules. Decisions: 96 attention projections bf16, 72 MLP projections bf16, 49 norms fp32, 1 logits fp32; zero NaN/Inf events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/calibration_bf16_seed43/stability_signals.json"
+    - experiment_id: "h6_calibration_bf16_seed44"
+      hypothesis: "H6"
+      type: "signal_only_calibration"
+      metric_value: 2.365745961666107
+      metric_name: "mean_calibration_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 6.3860437870025635
+      change_summary: "Fuller bf16 calibration over 218 modules. Decisions: 96 attention projections bf16, 72 MLP projections bf16, 49 norms fp32, 1 logits fp32; zero NaN/Inf events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/calibration_bf16_seed44/stability_signals.json"
 
 outer_loop:
-  cycle: 2
-  last_direction: "simplify H6 around a quick pre-training precision check and make it the main project question"
-  last_reflection: "The research trunk is now streamlined: before LoRA fine-tuning, run a short precision check, identify fragile modules, freeze a mixed-precision policy, and compare against bf16. H1 remains useful as a weak static anchor and cautionary example: hand-picked fp32 norms barely moved validation loss and likely changed less than expected because Qwen2RMSNorm already upcasts internally. The next decisive H6 step is not another hand-picked island; it is perturbation-calibrated module ranking, where activation outliers and fake-quantization error are tested against one-island loss deltas before any policy is trusted. Resource improvements must be treated carefully because fake quantization is a sensitivity probe, not proof of real hardware speedup."
+  cycle: 3
+  last_direction: "proceed from stable signal-only H6 calibration to perturbation-calibrated module ranking"
+  last_reflection: "The three-seed H6 bf16 calibration is stable but conservative. It observed 218 modules per seed with zero NaN/Inf events and identical decisions for 217/218 modules. The high-risk end is consistent across seeds, with extreme outliers in layers.2.mlp.down_proj, layers.3.mlp.down_proj, layers.21.mlp.down_proj, and several norm paths. However, the conservative policy yields almost no low-precision candidates: all attention projections remain bf16, all norms/logits are fp32, and only layers.23.mlp.gate_proj becomes an int8 candidate in seed 42 alone. Therefore the project should not train a frozen H6 policy yet. The next step is one-island perturbation testing on a small panel: four relaxed low-risk MLP candidates, three extreme high-risk MLP down projections, and representative norm/logits controls. The key question is whether cheap signal-only rankings predict perturbation loss deltas."
 
 workspace:
   findings: "findings.md"

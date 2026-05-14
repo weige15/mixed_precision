@@ -79,6 +79,29 @@ python experiments/h6-adaptive-precision-assignment/code/probe_precision_perturb
   --output-dir experiments/h6-adaptive-precision-assignment/results/perturbation_bf16_seed42
 ```
 
+Recommended perturbation panel based on the three-seed Stage 1 calibration:
+
+High-risk controls:
+
+- `base_model.model.model.layers.2.mlp.down_proj`
+- `base_model.model.model.layers.3.mlp.down_proj`
+- `base_model.model.model.layers.21.mlp.down_proj`
+
+Borderline/low-risk candidates:
+
+- `base_model.model.model.layers.23.mlp.gate_proj`
+- `base_model.model.model.layers.23.mlp.up_proj`
+- `base_model.model.model.layers.22.mlp.gate_proj`
+- `base_model.model.model.layers.22.mlp.up_proj`
+
+Reduction/output controls:
+
+- `base_model.model.model.layers.4.input_layernorm`
+- `base_model.model.model.layers.4.post_attention_layernorm`
+- `base_model.model.lm_head`
+
+Do not freeze a training policy from Stage 1 alone. The current signal-only policy is stable but too conservative: it leaves all attention projections at bf16, promotes all norms/logits to fp32, and finds only one seed-specific int8 candidate.
+
 ## Locked Decision Rule
 
 A module is considered sensitive if it has non-finite activations, activation outlier score at least 12, or fake-int8 relative MSE at least `1e-3`. Norm and logits modules are promoted to fp32 when sensitive. Projection modules are considered int8 candidates only if outlier score is below 12 and int8 relative MSE is below `1e-3`. MLP projection modules are only marked as int4 candidates when output int4 relative MSE is below `5e-3`.

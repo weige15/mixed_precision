@@ -28,6 +28,10 @@ The first H6 signal-only smoke probe completed on 2026-05-13. It ran Qwen/Qwen2.
 
 Under the conservative H6 decision rule, the smoke policy promoted layer-0 input RMSNorm to `fp32` and kept the seven observed projection modules at `bf16`. The largest early signals were `mlp.down_proj` input outlier score `72.95`, `self_attn.o_proj` output outlier score `35.92`, and `input_layernorm` output int8 relative MSE `0.00318`. This is instrumentation evidence, not final adaptive-policy evidence.
 
+The fuller H6 Stage 1 calibration now exists for bf16 seeds 42, 43, and 44. Each run used sequence length 512, 8 calibration batches, all 218 candidate modules, CUDA bf16 autocast, and zero NaN/Inf events. Policy decisions are highly stable: 217 of 218 common modules received the same assignment across all three seeds. The only unstable assignment was `layers.23.mlp.gate_proj`, which was an int8 candidate for seed 42 but bf16 for seeds 43 and 44.
+
+The signal-only policy is very conservative. All 96 attention projections remain bf16 in all seeds; all 49 norm/logit paths are promoted to fp32; and almost every MLP projection remains bf16. The strongest high-risk modules are stable across seeds, especially `layers.2.mlp.down_proj`, `layers.3.mlp.down_proj`, and `layers.21.mlp.down_proj`, which show extreme activation outlier scores and int8 relative MSE well above the current candidate threshold. A relaxed screen identifies only four plausible low-risk projection modules for perturbation testing: `layers.23.mlp.gate_proj`, `layers.23.mlp.up_proj`, `layers.22.mlp.gate_proj`, and `layers.22.mlp.up_proj`.
+
 ## Patterns and Insights
 
 - The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.
@@ -42,6 +46,7 @@ Under the conservative H6 decision rule, the smoke policy promoted layer-0 input
 - Attention and logits/loss should be handled conservatively under subbyte precision because the literature flags heavy-tailed activations and backward precision assumptions as instability sources.
 - The first H6 smoke suggests early-layer activation outlier scores can be large enough that naive int8/int4 demotion would be unsafe without perturbation loss-delta checks.
 - The central unresolved question is predictive validity: do the cheap calibration signals actually predict one-island loss deltas and later training outcomes?
+- The three-seed bf16 calibration is stable enough to proceed to perturbation tests. It is not rich enough to freeze a resource-saving policy because almost no modules are robust low-precision candidates under the current thresholds.
 
 ## Lessons and Constraints
 
@@ -52,6 +57,7 @@ Under the conservative H6 decision rule, the smoke policy promoted layer-0 input
 - Adaptive decisions must be frozen before final validation comparison. Otherwise the policy can overfit to the observed result.
 - Signal-only calibration should be treated as a ranking/prior. It needs perturbation loss deltas before it can justify an adaptive training policy.
 - The policy must be frozen after calibration and before training. Otherwise, it becomes an exploratory tuning procedure rather than a test of whether the short precision check predicts sensitivity.
+- Do not train an H6 policy yet. The correct next step is one-island perturbation loss-delta testing on a small selected panel: borderline tolerant modules, extreme high-risk modules, and representative norm/logits paths.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
 - Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.
 - H2 should be run only if H6 needs a stronger logits/loss static anchor. H3 should be run only if the default bf16 regime is too stable to reveal meaningful policy differences. H4 should be run after a candidate H6 policy exists, not before.
@@ -68,6 +74,7 @@ Under the conservative H6 decision rule, the smoke policy promoted layer-0 input
 - Do one-island perturbation loss deltas agree with the activation outlier and fake-quantization-error ranking?
 - Can a short calibration pass derive a precision assignment that matches the best static policy while improving memory or throughput?
 - Are int8 or int4 candidates real compute improvements on the available RTX 4050, or only fake-quant research probes?
+- Are the four relaxed low-risk candidates actually harmless under one-island perturbation, or are the signal thresholds still missing important training-time sensitivity?
 
 ## Optimization Trajectory
 
