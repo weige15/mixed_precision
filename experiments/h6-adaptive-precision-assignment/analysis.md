@@ -70,6 +70,32 @@ The norm/logit controls are more nuanced. Stage 1 marked layer-4 norms and `lm_h
 
 Interpretation: H6 now has replicated positive evidence. Cheap Stage 1 signals, especially activation outlier score, predict which MLP projection outputs are harmed by int8 perturbation. The next step is to freeze a narrow candidate policy around the consistently low-delta late-layer MLP gate/up projections and run a short training comparison against bf16.
 
+## 2026-05-15 Stage 3 Narrow Policy Training
+
+A matched 500-step seed-42 training comparison tested bf16 baseline against the frozen H6 late-layer MLP int8 candidate policy. The H6 policy applied straight-through fake int8 output quantization only to `layers.22/23.mlp.gate_proj` and `layers.22/23.mlp.up_proj`.
+
+| metric | bf16 baseline | H6 narrow policy | delta |
+|---|---:|---:|---:|
+| final eval loss | `1.62949` | `1.63112` | `+0.00163` (`+0.10%`) |
+| final train loss | `1.40481` | `1.40745` | `+0.00264` |
+| max grad norm | `4.09634` | `4.09257` | `-0.00377` |
+| loss spikes | `0` | `0` | `0` |
+| NaN/Inf events | `0` | `0` | `0` |
+| peak CUDA memory GiB | `2.77945` | `2.77884` | `-0.00061` |
+| train tokens/sec | `455.14` | `393.86` | `-13.47%` |
+
+Interpretation: the first frozen H6 policy is quality-preserving under the locked 1% validation-loss gate and does not add instability. This is an important positive result because the perturbation-selected modules remained harmless during actual LoRA updates, not just in no-update forward probes. However, the implementation is a Python-level fake-quant hook, so the measured throughput regression is not evidence against hardware-realistic low precision; it only shows the emulation is slower. H6 currently supports the sensitivity-prediction claim, not yet a resource-saving claim.
+
+The H6 narrow-policy treatment has now also completed for seeds 43 and 44, but the matched 500-step bf16 controls for those seeds are not present under the expected results directory. The three H6 treatment runs are stable:
+
+| seed | final eval loss | final train loss | max grad norm | loss spikes | NaN/Inf | train tokens/sec |
+|---:|---:|---:|---:|---:|---:|---:|
+| 42 | `1.63112` | `1.40745` | `4.0926` | `0` | `0` | `393.86` |
+| 43 | `1.63621` | `1.75036` | `4.6385` | `0` | `0` | `433.89` |
+| 44 | `1.63493` | `1.64997` | `6.1208` | `0` | `0` | `433.79` |
+
+Across the three H6 treatment seeds, final eval loss has mean `1.63409` and standard deviation `0.00265`, with zero loss spikes and zero NaN/Inf events. This strengthens the stability side of the H6 result. It does not replace the missing paired controls: to claim multi-seed quality matching, run 500-step bf16 baselines for seeds 43 and 44 with the same train/eval split and settings.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.
