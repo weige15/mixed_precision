@@ -5,6 +5,10 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 RUNNER="${ROOT_DIR}/experiments/h1-selective-fp32-norms/code/run_lora_precision.py"
 RESULTS_DIR="${ROOT_DIR}/experiments/h6-adaptive-precision-assignment/results"
 
+if [[ -n "${GPU_ID:-}" ]]; then
+  export CUDA_VISIBLE_DEVICES="${GPU_ID}"
+fi
+
 SEEDS="${SEEDS:-42}"
 MAX_STEPS="${MAX_STEPS:-500}"
 LEARNING_RATE="${LEARNING_RATE:-4e-4}"
