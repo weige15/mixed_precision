@@ -42,7 +42,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--precision-policy",
         required=True,
-        choices=["bf16_baseline", "fp32_norms", "h6_late_mlp_int8_candidate"],
+        choices=["bf16_baseline", "fp32_norms", "h6_late_mlp_int8_candidate", "h6_custom_int8"],
+    )
+    parser.add_argument(
+        "--fake-int8-modules",
+        nargs="*",
+        default=None,
+        help="Exact module names or unique suffixes to fake-int8 when --precision-policy=h6_custom_int8.",
     )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--max-steps", type=int, default=100)
@@ -196,20 +202,47 @@ def fake_quant_output(output: Any, bits: int = 8) -> Any:
     return fake_quant_dequant_ste(output, bits)
 
 
-def apply_h6_late_mlp_int8_candidate(model: Any) -> list[str]:
+def resolve_module_targets(model: Any, requested: list[str]) -> list[str]:
+    named_modules = dict(model.named_modules())
+    resolved = []
+    for target in requested:
+        if target in named_modules:
+            resolved.append(target)
+            continue
+        matches = [name for name in named_modules if name.endswith(target)]
+        if len(matches) == 1:
+            resolved.append(matches[0])
+            continue
+        if not matches:
+            raise SystemExit(f"Requested fake-int8 module not found: {target}")
+        raise SystemExit(
+            "Requested fake-int8 module suffix is ambiguous: "
+            + target
+            + "\nMatches:\n"
+            + "\n".join(sorted(matches))
+        )
+    return sorted(set(resolved))
+
+
+def apply_fake_int8_modules(model: Any, requested: list[str]) -> list[str]:
     hooked = []
+    targets = set(resolve_module_targets(model, requested))
     for name, module in model.named_modules():
-        if name not in H6_LATE_MLP_INT8_MODULES:
+        if name not in targets:
             continue
         if module.__class__.__name__.lower() != "linear":
             raise SystemExit(f"H6 candidate target is not a Linear module: {name} ({module.__class__.__name__})")
         module.register_forward_hook(lambda _module, _inputs, output: fake_quant_output(output, bits=8))
         hooked.append(name)
 
-    missing = sorted(H6_LATE_MLP_INT8_MODULES - set(hooked))
+    missing = sorted(targets - set(hooked))
     if missing:
         raise SystemExit("H6 candidate module(s) not found:\n" + "\n".join(missing))
     return sorted(hooked)
+
+
+def apply_h6_late_mlp_int8_candidate(model: Any) -> list[str]:
+    return apply_fake_int8_modules(model, sorted(H6_LATE_MLP_INT8_MODULES))
 
 
 def infer_lora_targets(model: Any) -> list[str]:
@@ -311,6 +344,10 @@ def main() -> None:
             raise SystemExit("precision-policy fp32_norms requested, but no RMSNorm/LayerNorm-like modules were found.")
     elif args.precision_policy == "h6_late_mlp_int8_candidate":
         h6_int8_modules = apply_h6_late_mlp_int8_candidate(model)
+    elif args.precision_policy == "h6_custom_int8":
+        if not args.fake_int8_modules:
+            raise SystemExit("--precision-policy h6_custom_int8 requires at least one --fake-int8-modules target.")
+        h6_int8_modules = apply_fake_int8_modules(model, args.fake_int8_modules)
 
     trainable_params = [param for param in model.parameters() if param.requires_grad]
     optimizer = torch.optim.AdamW(trainable_params, lr=args.learning_rate)
