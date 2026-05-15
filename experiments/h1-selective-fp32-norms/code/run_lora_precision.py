@@ -42,7 +42,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--precision-policy",
         required=True,
-        choices=["bf16_baseline", "fp32_norms", "h6_late_mlp_int8_candidate", "h6_custom_int8"],
+        choices=[
+            "bf16_baseline",
+            "fp32_norms",
+            "h6_late_mlp_int8_candidate",
+            "h6_custom_int8",
+            "qlora_4bit_nf4",
+        ],
     )
     parser.add_argument(
         "--fake-int8-modules",
@@ -169,6 +175,10 @@ def is_norm_module(name: str, module: Any) -> bool:
     return "rmsnorm" in haystack or "layernorm" in haystack or ".norm" in haystack or " norm" in haystack
 
 
+def is_linear_like(module: Any) -> bool:
+    return "linear" in module.__class__.__name__.lower()
+
+
 def apply_fp32_norms(model: Any) -> list[str]:
     wrapped = []
     for name, module in model.named_modules():
@@ -230,7 +240,7 @@ def apply_fake_int8_modules(model: Any, requested: list[str]) -> list[str]:
     for name, module in model.named_modules():
         if name not in targets:
             continue
-        if module.__class__.__name__.lower() != "linear":
+        if not is_linear_like(module):
             raise SystemExit(f"H6 candidate target is not a Linear module: {name} ({module.__class__.__name__})")
         module.register_forward_hook(lambda _module, _inputs, output: fake_quant_output(output, bits=8))
         hooked.append(name)
@@ -250,14 +260,14 @@ def infer_lora_targets(model: Any) -> list[str]:
     found = set()
     for name, module in model.named_modules():
         leaf = name.rsplit(".", 1)[-1]
-        if leaf in candidates and module.__class__.__name__.lower() == "linear":
+        if leaf in candidates and is_linear_like(module):
             found.add(leaf)
     if found:
         return sorted(found)
     fallback = set()
     for name, module in model.named_modules():
         leaf = name.rsplit(".", 1)[-1]
-        if module.__class__.__name__.lower() == "linear" and "lm_head" not in name:
+        if is_linear_like(module) and "lm_head" not in name:
             fallback.add(leaf)
     if not fallback:
         raise SystemExit("Could not infer LoRA target linear modules for this model.")
@@ -296,10 +306,10 @@ def evaluate(model: Any, loader: Any, device: str, autocast_ctx: Any, max_batche
 def main() -> None:
     require_packages()
     import torch
-    from peft import LoraConfig, get_peft_model
+    from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
     from torch.utils.data import DataLoader
     from tqdm.auto import tqdm
-    from transformers import AutoModelForCausalLM, AutoTokenizer, DataCollatorForLanguageModeling
+    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, DataCollatorForLanguageModeling
 
     args = parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
@@ -311,18 +321,43 @@ def main() -> None:
     load_dtype = torch.bfloat16 if use_bf16 else torch.float32
     if device == "cuda":
         torch.cuda.reset_peak_memory_stats()
+    if args.precision_policy == "qlora_4bit_nf4" and device != "cuda":
+        raise SystemExit("precision-policy qlora_4bit_nf4 requires CUDA for bitsandbytes 4-bit training.")
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_name, trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model_name,
-        torch_dtype=load_dtype,
-        trust_remote_code=True,
-    )
+    quantization_config = None
+    qlora_config: dict[str, Any] | None = None
+    if args.precision_policy == "qlora_4bit_nf4":
+        quantization_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_compute_dtype=torch.bfloat16 if use_bf16 else torch.float16,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_use_double_quant=True,
+        )
+        qlora_config = {
+            "load_in_4bit": True,
+            "bnb_4bit_compute_dtype": "bfloat16" if use_bf16 else "float16",
+            "bnb_4bit_quant_type": "nf4",
+            "bnb_4bit_use_double_quant": True,
+        }
+
+    from_pretrained_kwargs: dict[str, Any] = {
+        "torch_dtype": load_dtype,
+        "trust_remote_code": True,
+    }
+    if quantization_config is not None:
+        from_pretrained_kwargs["quantization_config"] = quantization_config
+        from_pretrained_kwargs["device_map"] = {"": 0}
+
+    model = AutoModelForCausalLM.from_pretrained(args.model_name, **from_pretrained_kwargs)
     model.config.use_cache = False
-    model.to(device)
+    if quantization_config is None:
+        model.to(device)
+    else:
+        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=False)
 
     lora_targets = infer_lora_targets(model)
     lora_config = LoraConfig(
@@ -477,6 +512,7 @@ def main() -> None:
         "eval_max_batches": args.eval_max_batches,
         "device": device,
         "bf16_autocast": use_bf16,
+        "qlora_config": qlora_config,
         "lora_targets": lora_targets,
         "fp32_norm_wrapped_modules": wrapped_norms,
         "h6_fake_int8_output_modules": h6_int8_modules,
