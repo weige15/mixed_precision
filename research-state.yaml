@@ -168,7 +168,7 @@ literature:
     - "No run-to-run variance estimate is available."
     - "Per-module activation outlier and quantization-error traces now exist for H6, but gradient spike traces and update-divergence probes are still missing."
     - "The H6 Stage 1 bf16 calibration pass now measures activation outliers and fake-quantization error across 218 modules for seeds 42, 43, and 44. Stage 2 one-island perturbation probes now test a selected module panel across the same three seeds."
-    - "The first adaptive precision policy has been tested against a matched static bf16 policy for 500 steps on seed 42. It preserved validation quality and stability but did not improve resource cost under Python-level fake quantization. H6 treatment runs also exist for seeds 43 and 44, but their matched 500-step bf16 controls are missing."
+    - "The first adaptive precision policy has been tested against matched static bf16 policies for 500 steps on seeds 42, 43, and 44. It preserved validation quality and stability but did not improve resource cost under Python-level fake quantization."
     - "Evidence now shows that LLM.int8/SmoothQuant-style activation outlier signals predict forward perturbation sensitivity for MLP projection outputs in this LoRA setting. It does not yet prove training-time update sensitivity."
     - "The current H6 fake-int8 path is an emulation for sensitivity testing and is slower than bf16. A hardware-realistic low-precision implementation is still needed before any resource-saving claim."
     - "The central H6 idea is now simplified to a quick precision check before training: measure module sensitivity, freeze a policy, then compare against bf16. Signal-only, perturbation, and first frozen-policy training artifacts now exist."
@@ -263,7 +263,7 @@ experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
   baseline_value: 2.0906627424955366
   best_value: 2.086417777657509
-  total_runs: 16
+  total_runs: 18
   trajectory:
     - experiment_id: "h1_baseline_bf16_seed42"
       hypothesis: "H1"
@@ -405,31 +405,51 @@ experiments:
       wall_time_sec: 2357.118381023407
       change_summary: "Frozen H6 narrow policy applying straight-through fake int8 output quantization to layers.22/23 MLP gate/up projections. Eval loss degraded by only 0.10%, inside the 1% gate, with zero instability events. Throughput was 13.5% slower due to Python-level fake quantization."
       artifact: "experiments/h6-adaptive-precision-assignment/results/train_h6_late_mlp_int8_seed42_500/summary.json"
+    - experiment_id: "h6_train_bf16_baseline_seed43_500"
+      hypothesis: "H6"
+      type: "training_baseline"
+      metric_value: 1.6344434737637639
+      metric_name: "final_eval_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 1952.6474177837372
+      change_summary: "Matched 500-step bf16 control for H6 seed 43. It had zero loss spikes, zero NaN/Inf events, peak memory 2.7794 GiB, and train throughput 456.10 tokens/sec."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_bf16_baseline_seed43_500/summary.json"
     - experiment_id: "h6_train_late_mlp_int8_seed43_500"
       hypothesis: "H6"
       type: "training_treatment"
       metric_value: 1.636213602118194
       metric_name: "final_eval_loss"
+      baseline: 1.6344434737637639
+      delta: 0.0017701283544300823
+      wall_time_sec: 2051.877355337143
+      change_summary: "Frozen H6 narrow policy treatment replication for seed 43. Final eval loss degraded by 0.108% relative to matched bf16 and stayed inside the 1% gate, with zero loss spikes and zero NaN/Inf events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_h6_late_mlp_int8_seed43_500/summary.json"
+    - experiment_id: "h6_train_bf16_baseline_seed44_500"
+      hypothesis: "H6"
+      type: "training_baseline"
+      metric_value: 1.6324703741371631
+      metric_name: "final_eval_loss"
       baseline: null
       delta: null
-      wall_time_sec: 2051.877355337143
-      change_summary: "Frozen H6 narrow policy treatment replication for seed 43. Final eval loss was 1.63621 with zero loss spikes and zero NaN/Inf events. Matched 500-step bf16 control is still missing."
-      artifact: "experiments/h6-adaptive-precision-assignment/results/train_h6_late_mlp_int8_seed43_500/summary.json"
+      wall_time_sec: 2044.5998842716217
+      change_summary: "Matched 500-step bf16 control for H6 seed 44. It had zero loss spikes, zero NaN/Inf events, peak memory 2.7794 GiB, and train throughput 429.79 tokens/sec."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_bf16_baseline_seed44_500/summary.json"
     - experiment_id: "h6_train_late_mlp_int8_seed44_500"
       hypothesis: "H6"
       type: "training_treatment"
       metric_value: 1.6349321462213993
       metric_name: "final_eval_loss"
-      baseline: null
-      delta: null
+      baseline: 1.6324703741371631
+      delta: 0.0024617720842361634
       wall_time_sec: 2037.9676790237427
-      change_summary: "Frozen H6 narrow policy treatment replication for seed 44. Final eval loss was 1.63493 with zero loss spikes and zero NaN/Inf events. Matched 500-step bf16 control is still missing."
+      change_summary: "Frozen H6 narrow policy treatment replication for seed 44. Final eval loss degraded by 0.151% relative to matched bf16 and stayed inside the 1% gate, with zero loss spikes and zero NaN/Inf events."
       artifact: "experiments/h6-adaptive-precision-assignment/results/train_h6_late_mlp_int8_seed44_500/summary.json"
 
 outer_loop:
   cycle: 6
-  last_direction: "run the missing 500-step bf16 controls for seeds 43 and 44, then complete the paired multi-seed H6 quality comparison"
-  last_reflection: "The frozen H6 narrow-policy treatment now runs stably across seeds 42, 43, and 44. Treatment final eval losses are tightly clustered at 1.63112, 1.63621, and 1.63493, with zero loss spikes and zero NaN/Inf events in all three runs. This strengthens the stability side of H6 and suggests the selected late-layer MLP modules are not causing update-time failures. However, only seed 42 currently has a matched 500-step bf16 control in the H6 results directory. The paired multi-seed quality claim therefore remains incomplete until bf16 controls for seeds 43 and 44 are run."
+  last_direction: "choose the next H6 branch: hardware-realistic low precision for resource savings, or stressed-regime tests for stable-envelope expansion"
+  last_reflection: "The paired H6 narrow-policy 500-step comparison is now complete across seeds 42, 43, and 44. H6 eval loss degradation is consistently tiny: +0.100%, +0.108%, and +0.151%, with a mean paired degradation of +0.120%, all well inside the locked 1% quality gate. Both bf16 and H6 have zero total loss spikes and zero total NaN/Inf events across the three seeds. This supports the central H6 quality-preserving sensitivity-assignment claim: a short calibration plus perturbation pass selected modules that remained safe during actual LoRA updates. The resource-cost claim remains unresolved because the current H6 policy uses Python fake-quant hooks: memory is effectively unchanged and mean train throughput is about 5.8% lower. Next step should either implement a hardware-realistic low-precision path or test whether H6 expands the stable fine-tuning envelope under a stressed setting."
 
 workspace:
   findings: "findings.md"

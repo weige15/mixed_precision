@@ -86,15 +86,17 @@ A matched 500-step seed-42 training comparison tested bf16 baseline against the 
 
 Interpretation: the first frozen H6 policy is quality-preserving under the locked 1% validation-loss gate and does not add instability. This is an important positive result because the perturbation-selected modules remained harmless during actual LoRA updates, not just in no-update forward probes. However, the implementation is a Python-level fake-quant hook, so the measured throughput regression is not evidence against hardware-realistic low precision; it only shows the emulation is slower. H6 currently supports the sensitivity-prediction claim, not yet a resource-saving claim.
 
-The H6 narrow-policy treatment has now also completed for seeds 43 and 44, but the matched 500-step bf16 controls for those seeds are not present under the expected results directory. The three H6 treatment runs are stable:
+The paired 500-step comparison is now complete for seeds 42, 43, and 44:
 
-| seed | final eval loss | final train loss | max grad norm | loss spikes | NaN/Inf | train tokens/sec |
-|---:|---:|---:|---:|---:|---:|---:|
-| 42 | `1.63112` | `1.40745` | `4.0926` | `0` | `0` | `393.86` |
-| 43 | `1.63621` | `1.75036` | `4.6385` | `0` | `0` | `433.89` |
-| 44 | `1.63493` | `1.64997` | `6.1208` | `0` | `0` | `433.79` |
+| seed | bf16 eval loss | H6 eval loss | H6 delta | H6 rel delta | instability |
+|---:|---:|---:|---:|---:|---|
+| 42 | `1.62949` | `1.63112` | `+0.00163` | `+0.100%` | none in either run |
+| 43 | `1.63444` | `1.63621` | `+0.00177` | `+0.108%` | none in either run |
+| 44 | `1.63247` | `1.63493` | `+0.00246` | `+0.151%` | none in either run |
 
-Across the three H6 treatment seeds, final eval loss has mean `1.63409` and standard deviation `0.00265`, with zero loss spikes and zero NaN/Inf events. This strengthens the stability side of the H6 result. It does not replace the missing paired controls: to claim multi-seed quality matching, run 500-step bf16 baselines for seeds 43 and 44 with the same train/eval split and settings.
+Across seeds, the mean paired eval-loss delta is `+0.00195`, or `+0.120%` relative, with every seed well inside the locked 1% quality gate. BF16 eval loss has mean `1.63213` and standard deviation `0.00249`; H6 eval loss has mean `1.63409` and standard deviation `0.00265`. Both policies have zero total loss spikes and zero total NaN/Inf events across all three seeds.
+
+The cost story is still not positive under the current emulation. H6 changes peak memory by only `-0.00061 GiB` and has mean train-throughput delta `-5.80%`, with high seed-to-seed variation (`-13.47%`, `-4.87%`, `+0.93%`). Because this policy uses Python-level fake quantization hooks, these speed and memory numbers should not be treated as hardware-realistic low-precision performance. The supported claim is now: calibration-guided precision selection preserved bf16 validation quality and stability across three seeds for the selected late-layer MLP modules.
 
 ## 2026-05-13 Smoke Calibration
 

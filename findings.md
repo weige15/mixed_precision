@@ -38,7 +38,7 @@ The norm/logit controls did not show large output-quantization loss deltas, desp
 
 The first frozen H6 policy training test is positive on quality and stability but negative on emulated speed. A matched 500-step seed-42 comparison gives bf16 final eval loss `1.62949` and H6 late-layer MLP fake-int8 final eval loss `1.63112`, a `+0.00163` absolute degradation or about `+0.10%` relative. This is inside the locked 1% quality gate. Both runs had zero loss spikes and zero NaN/Inf events, and max grad norm was essentially unchanged. Peak memory was also essentially unchanged. Train throughput fell from `455.14` to `393.86` tokens/sec, a `13.47%` slowdown, because the current policy uses Python-level fake-quant hooks rather than hardware-supported low-precision kernels.
 
-The H6 narrow-policy treatment has now run for seeds 42, 43, and 44. The treatment eval losses are tightly clustered: `1.63112`, `1.63621`, and `1.63493`, with mean `1.63409` and standard deviation `0.00265`. All three treatment runs have zero loss spikes and zero NaN/Inf events. This supports treatment stability across seeds. The paired multi-seed quality claim is still incomplete because matched 500-step bf16 controls for seeds 43 and 44 are not present in the H6 results directory.
+The H6 narrow-policy comparison is now paired across seeds 42, 43, and 44. BF16 eval losses were `1.62949`, `1.63444`, and `1.63247`; H6 eval losses were `1.63112`, `1.63621`, and `1.63493`. The paired H6 deltas were `+0.00163`, `+0.00177`, and `+0.00246`, corresponding to relative degradations of `+0.100%`, `+0.108%`, and `+0.151%`. The mean paired degradation is `+0.00195`, or `+0.120%`, with every seed inside the locked 1% quality gate. Both policies had zero total loss spikes and zero total NaN/Inf events across the three seeds. The current fake-quant implementation still does not provide a resource-saving result: peak memory is effectively unchanged, and mean train throughput is about `5.8%` lower with substantial per-seed variation.
 
 ## Patterns and Insights
 
@@ -56,7 +56,7 @@ The H6 narrow-policy treatment has now run for seeds 42, 43, and 44. The treatme
 - The central unresolved question is predictive validity: do the cheap calibration signals actually predict one-island loss deltas and later training outcomes?
 - The three-seed bf16 calibration is stable enough to proceed to perturbation tests. It is not rich enough to freeze a resource-saving policy because almost no modules are robust low-precision candidates under the current thresholds.
 - Stage 2 now replicates the predictive-validity story for MLP projections across seeds 42-44: high Stage 1 outlier signals map to large int8 perturbation loss deltas, while relaxed low-risk late-layer gate/up projections have near-zero deltas.
-- Stage 3 shows the perturbation-selected low-risk modules remain stable during actual 500-step LoRA updates across seeds 42-44. The quality-preservation claim is paired only for seed 42 until matched bf16 controls for seeds 43 and 44 are available.
+- Stage 3 shows the perturbation-selected low-risk modules preserve bf16 validation quality and stability during actual 500-step LoRA updates across seeds 42-44. The quality-preservation claim is now paired across three seeds.
 
 ## Lessons and Constraints
 
@@ -68,7 +68,7 @@ The H6 narrow-policy treatment has now run for seeds 42, 43, and 44. The treatme
 - Signal-only calibration should be treated as a ranking/prior. It needs perturbation loss deltas before it can justify an adaptive training policy.
 - The policy must be frozen after calibration and before training. Otherwise, it becomes an exploratory tuning procedure rather than a test of whether the short precision check predicts sensitivity.
 - The perturbation panel is now replicated enough to freeze the first narrow H6 policy. Keep high-risk down projections, attention projections, norms, and logits conservative; only test demoting the consistently low-delta `layers.22/23.mlp.gate_proj` and `layers.22/23.mlp.up_proj` paths.
-- The first 500-step LoRA paired comparison is complete for seed 42, and H6 treatment runs are complete for seeds 43 and 44. The immediate next step is to run the missing 500-step bf16 controls for seeds 43 and 44.
+- The 500-step LoRA paired comparison is complete across seeds 42-44. The next decision is whether to implement hardware-realistic low precision for resource claims or to stress the regime to test whether calibration-guided precision expands the stable fine-tuning envelope.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
 - Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.
 - H2 should be run only if H6 needs a stronger logits/loss static anchor. H3 should be run only if the default bf16 regime is too stable to reveal meaningful policy differences. H4 should be run after a candidate H6 policy exists, not before.
@@ -82,7 +82,7 @@ The H6 narrow-policy treatment has now run for seeds 42, 43, and 44. The treatme
 - Which per-module signals best predict precision sensitivity during LoRA fine-tuning?
 - Can a short pre-training precision check rank fragile and tolerant modules well enough to choose a frozen policy?
 - Does the H6 signal ranking remain stable across bf16 autocast, longer sequence length, more batches, and seeds 42-44?
-- Does the frozen narrow H6 candidate policy preserve validation quality across seeds 43 and 44, not just seed 42?
+- Can the H6 policy produce real resource savings with hardware-supported low-precision kernels, or is the current result limited to sensitivity assignment under emulation?
 - Can a short calibration pass derive a precision assignment that matches the best static policy while improving memory or throughput?
 - Are int8 or int4 candidates real compute improvements on the available RTX 4050, or only fake-quant research probes?
 - Are the four relaxed low-risk candidates actually harmless under one-island perturbation, or are the signal thresholds still missing important training-time sensitivity?
