@@ -447,9 +447,9 @@ experiments:
       artifact: "experiments/h6-adaptive-precision-assignment/results/train_h6_late_mlp_int8_seed44_500/summary.json"
 
 outer_loop:
-  cycle: 6
-  last_direction: "choose the next H6 branch: hardware-realistic low precision for resource savings, or stressed-regime tests for stable-envelope expansion"
-  last_reflection: "The paired H6 narrow-policy 500-step comparison is now complete across seeds 42, 43, and 44. H6 eval loss degradation is consistently tiny: +0.100%, +0.108%, and +0.151%, with a mean paired degradation of +0.120%, all well inside the locked 1% quality gate. Both bf16 and H6 have zero total loss spikes and zero total NaN/Inf events across the three seeds. This supports the central H6 quality-preserving sensitivity-assignment claim: a short calibration plus perturbation pass selected modules that remained safe during actual LoRA updates. The resource-cost claim remains unresolved because the current H6 policy uses Python fake-quant hooks: memory is effectively unchanged and mean train throughput is about 5.8% lower. Next step should either implement a hardware-realistic low-precision path or test whether H6 expands the stable fine-tuning envelope under a stressed setting."
+  cycle: 7
+  last_direction: "screen H6.1 SNIP-style budgeted policy expansion before investing in hardware-realistic low-precision kernels"
+  last_reflection: "The paired H6 narrow-policy result supports calibration-guided quality-preserving sensitivity assignment but not resource savings. H6.1 is now locked and implemented as a minimal SNIP-style expansion: aggregate existing calibration and perturbation artifacts into conservative risk scores, anchor k=4 to the validated late-layer MLP policy, and test wider k=8/16/24 fake-int8 MLP gate/up policies. A one-step CUDA smoke confirmed the generated k=4 module list resolves and trains. Next inner-loop step: run the seed-42 500-step width sweep, then replicate only the best safe wider policy on seeds 43 and 44."
 
 workspace:
   findings: "findings.md"

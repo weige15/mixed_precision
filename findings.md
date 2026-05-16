@@ -40,6 +40,8 @@ The first frozen H6 policy training test is positive on quality and stability bu
 
 The H6 narrow-policy comparison is now paired across seeds 42, 43, and 44. BF16 eval losses were `1.62949`, `1.63444`, and `1.63247`; H6 eval losses were `1.63112`, `1.63621`, and `1.63493`. The paired H6 deltas were `+0.00163`, `+0.00177`, and `+0.00246`, corresponding to relative degradations of `+0.100%`, `+0.108%`, and `+0.151%`. The mean paired degradation is `+0.00195`, or `+0.120%`, with every seed inside the locked 1% quality gate. Both policies had zero total loss spikes and zero total NaN/Inf events across the three seeds. The current fake-quant implementation still does not provide a resource-saving result: peak memory is effectively unchanged, and mean train throughput is about `5.8%` lower with substantial per-seed variation.
 
+H6.1 is now implemented as the next policy-expansion branch. The SNIP-style policy builder aggregates seed 42-44 calibration signals and perturbation deltas, ranks eligible MLP `gate_proj`/`up_proj` modules by conservative risk, anchors `k=4` to the already validated late-layer policy, and emits frozen `k=4/8/16/24` module lists for `h6_custom_int8` training. A one-step CUDA smoke confirmed the generated `k=4` list resolves to the validated four modules and trains without NaN/Inf. The next real experiment is a seed-42 500-step width sweep over `k=8`, `k=16`, and `k=24` against matched bf16, followed by seed 43/44 replication only for the best safe wider policy.
+
 ## Patterns and Insights
 
 - The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.
@@ -69,6 +71,7 @@ The H6 narrow-policy comparison is now paired across seeds 42, 43, and 44. BF16 
 - The policy must be frozen after calibration and before training. Otherwise, it becomes an exploratory tuning procedure rather than a test of whether the short precision check predicts sensitivity.
 - The perturbation panel is now replicated enough to freeze the first narrow H6 policy. Keep high-risk down projections, attention projections, norms, and logits conservative; only test demoting the consistently low-delta `layers.22/23.mlp.gate_proj` and `layers.22/23.mlp.up_proj` paths.
 - The 500-step LoRA paired comparison is complete across seeds 42-44. The next decision is whether to implement hardware-realistic low precision for resource claims or to stress the regime to test whether calibration-guided precision expands the stable fine-tuning envelope.
+- The H6.1 SNIP-style expansion should be treated as a budgeted policy test, not a full SNIP reproduction. Keep the current four-module policy as the anchor and evaluate whether wider `k=8/16/24` MLP gate/up policies preserve the 1% validation-loss gate.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
 - Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.
 - H2 should be run only if H6 needs a stronger logits/loss static anchor. H3 should be run only if the default bf16 regime is too stable to reveal meaningful policy differences. H4 should be run after a candidate H6 policy exists, not before.
@@ -87,6 +90,7 @@ The H6 narrow-policy comparison is now paired across seeds 42, 43, and 44. BF16 
 - Are int8 or int4 candidates real compute improvements on the available RTX 4050, or only fake-quant research probes?
 - Are the four relaxed low-risk candidates actually harmless under one-island perturbation, or are the signal thresholds still missing important training-time sensitivity?
 - Does the narrow candidate policy provide any real resource saving on available hardware, or only a sensitivity-ranking result under fake quantization?
+- How wide can the SNIP-style H6.1 fake-int8 MLP gate/up policy become before validation loss or stability degrades?
 
 ## Optimization Trajectory
 

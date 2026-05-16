@@ -97,6 +97,68 @@ H6 is refuted for this pilot regime if the derived policy worsens validation NLL
 4. Write a policy trace file that records each island, signal values, precision decision, and reason. Completed for the signal-only probe; perturbation reasons still need loss-delta evidence.
 5. Compare `bf16_baseline`, `fp32_norms`, and the derived adaptive policy under matched training conditions. Add H2/H3/H4 only if the H6 evidence needs a stronger static anchor, stressed regime, or variance confirmation.
 
+## H6.1 Protocol: SNIP-Style Budgeted Policy Expansion
+
+### Hypothesis
+
+A SNIP-style multi-signal risk score can expand the current four-module H6 late-MLP fake-int8 policy to a wider budgeted set of low-risk MLP projection outputs while preserving validation loss within 1% of matched bf16 and without increasing instability events.
+
+Plain-language version: after the quick precision check finds which modules look fragile, rank the remaining projection modules by measured risk and demote only the safest `k` modules.
+
+### Motivation
+
+The current H6 policy is intentionally narrow: it demotes only `layers.22/23.mlp.gate_proj` and `layers.22/23.mlp.up_proj`. This preserves quality across seeds and stress settings, but it is too small to make a credible resource-saving claim. The next experiment should test whether the calibration evidence can safely support a larger demotion budget.
+
+This is SNIP-inspired, not a full SNIP reproduction. SNIP is used here as a design pattern: compute a per-module saliency or risk score before training, sort candidates under a fixed budget, freeze the policy, and then validate the selected policy under matched training.
+
+### Candidate Set
+
+Use only MLP `gate_proj` and `up_proj` modules for the first expansion. Exclude:
+
+- `down_proj`, because Stage 2 found several high-risk down projections with large perturbation loss deltas.
+- attention projections, because the literature and current signals flag attention as a high-risk low-bit region.
+- norms and logits, because output fake quantization is not equivalent to reducing their internal arithmetic precision.
+
+### Scoring Rule
+
+For each candidate module, aggregate calibration signals across seeds 42, 43, and 44:
+
+```text
+risk =
+  normalized(max activation outlier score)
+  + normalized(max int8 relative MSE)
+  + normalized(max int4 relative MSE)
+  + normalized(max int8 saturation rate)
+  + finite-value penalty
+  + perturbation-loss penalty when available
+```
+
+The score is conservative: maxima across seeds are preferred over means when deciding safety. Available perturbation loss deltas dominate the score, but modules without perturbation measurements are still ranked by calibration signals so the policy can propose wider budgets.
+
+### Frozen Policy Budgets
+
+Generate candidate policies for `k = 4, 8, 16, 24` demoted MLP gate/up modules:
+
+- `k=4` should reproduce the current late-layer H6 policy or a close equivalent.
+- `k=8` is the first meaningful expansion.
+- `k=16` and `k=24` test how quickly quality degrades as the policy becomes more aggressive.
+
+### Decision Rule
+
+H6.1 is supported if a wider policy, preferably `k >= 8`, preserves final validation loss within 1% of matched bf16 across the seed-42 500-step screen, then across seeds 43 and 44 for the best candidate, with zero added NaN/Inf or loss-spike events.
+
+H6.1 is inconclusive if only `k=4` remains safe or wider policies are quality-preserving but still provide no real throughput or memory path.
+
+H6.1 is refuted for this pilot setting if `k=8` or larger consistently violates the 1% validation-loss gate or introduces instability without evidence of resource benefit.
+
+### Execution Plan
+
+1. Build the SNIP-style score table from existing Stage 1 calibration and Stage 2 perturbation artifacts.
+2. Write frozen module lists for `k = 4, 8, 16, 24`.
+3. Run a seed-42 500-step screen comparing bf16 against each policy.
+4. Replicate only the best safe wider policy on seeds 43 and 44.
+5. If no wider policy is safe, pivot toward hardware-realistic kernels for the already-supported narrow policy or conclude the quality-preserving sensitivity-ranking claim.
+
 ## Phase 0 Smoke Result
 
 On 2026-05-13, a one-batch smoke calibration ran on Qwen/Qwen2.5-0.5B with sequence length 64 and the first eight candidate modules. It produced `stability_signals.json` and `policy_trace.json` under `results/smoke_signals_seed42/`.

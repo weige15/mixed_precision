@@ -1,0 +1,122 @@
+{
+  "policy_name": "h6_snip_style_k4",
+  "budget": 4,
+  "selected_modules": [
+    {
+      "module": "base_model.model.model.layers.22.mlp.gate_proj",
+      "role": "mlp_projection",
+      "leaf": "gate_proj",
+      "layer": 22,
+      "anchor": true,
+      "risk_score": 0.4676802667718707,
+      "signal_risk": 0.2347289237123309,
+      "perturbation_risk": 0.2329513430595398,
+      "excluded_reason": null,
+      "metrics": {
+        "outlier_score_max": 16.930133819580078,
+        "int8_rel_mse_mean_max_input_or_output": 0.000909816025038405,
+        "output_int4_rel_mse_mean": 0.18032385843495527,
+        "output_int8_saturation_mean": 1.6563810163461312e-06,
+        "finite_fraction_min": 1.0,
+        "perturbation_abs_delta_mean": 0.0015530089537302654,
+        "perturbation_abs_delta_max": 0.0034442245960235596,
+        "perturbation_signed_deltas": [
+          -0.0010155439376831055,
+          0.0034442245960235596,
+          0.00019925832748413086
+        ],
+        "calibration_observation_seeds": 3,
+        "perturbation_observation_seeds": 3
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.22.mlp.up_proj",
+      "role": "mlp_projection",
+      "leaf": "up_proj",
+      "layer": 22,
+      "anchor": true,
+      "risk_score": 0.5903060158448823,
+      "signal_risk": 0.22991547190719913,
+      "perturbation_risk": 0.3603905439376831,
+      "excluded_reason": null,
+      "metrics": {
+        "outlier_score_max": 16.930133819580078,
+        "int8_rel_mse_mean_max_input_or_output": 0.000909816025038405,
+        "output_int4_rel_mse_mean": 0.1396757122129202,
+        "output_int8_saturation_mean": 1.806961108741234e-06,
+        "finite_fraction_min": 1.0,
+        "perturbation_abs_delta_mean": 0.0024026036262512207,
+        "perturbation_abs_delta_max": 0.004230856895446777,
+        "perturbation_signed_deltas": [
+          -0.004230856895446777,
+          0.0014858841896057129,
+          -0.0014910697937011719
+        ],
+        "calibration_observation_seeds": 3,
+        "perturbation_observation_seeds": 3
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.23.mlp.gate_proj",
+      "role": "mlp_projection",
+      "leaf": "gate_proj",
+      "layer": 23,
+      "anchor": true,
+      "risk_score": 0.7288787265066385,
+      "signal_risk": 0.20454858734648224,
+      "perturbation_risk": 0.5243301391601562,
+      "excluded_reason": null,
+      "metrics": {
+        "outlier_score_max": 12.768482208251953,
+        "int8_rel_mse_mean_max_input_or_output": 0.0006991908861285386,
+        "output_int4_rel_mse_mean": 0.18454987866183123,
+        "output_int8_saturation_mean": 1.907347837004636e-06,
+        "finite_fraction_min": 1.0,
+        "perturbation_abs_delta_mean": 0.0034955342610677085,
+        "perturbation_abs_delta_max": 0.004832416772842407,
+        "perturbation_signed_deltas": [
+          -0.003541707992553711,
+          0.004832416772842407,
+          0.002112478017807007
+        ],
+        "calibration_observation_seeds": 3,
+        "perturbation_observation_seeds": 3
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.23.mlp.up_proj",
+      "role": "mlp_projection",
+      "leaf": "up_proj",
+      "layer": 23,
+      "anchor": true,
+      "risk_score": 0.7044880892466521,
+      "signal_risk": 0.23312561766614676,
+      "perturbation_risk": 0.47136247158050537,
+      "excluded_reason": null,
+      "metrics": {
+        "outlier_score_max": 14.790192604064941,
+        "int8_rel_mse_mean_max_input_or_output": 0.0008479471337826302,
+        "output_int4_rel_mse_mean": 0.24513109649221101,
+        "output_int8_saturation_mean": 1.7567677446095331e-06,
+        "finite_fraction_min": 1.0,
+        "perturbation_abs_delta_mean": 0.003142416477203369,
+        "perturbation_abs_delta_max": 0.006991147994995117,
+        "perturbation_signed_deltas": [
+          0.006991147994995117,
+          0.001664489507675171,
+          0.0007716119289398193
+        ],
+        "calibration_observation_seeds": 3,
+        "perturbation_observation_seeds": 3
+      }
+    }
+  ],
+  "module_list_path": "experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k4_modules.txt",
+  "runner_args": [
+    "--fake-int8-modules",
+    "base_model.model.model.layers.22.mlp.gate_proj",
+    "base_model.model.model.layers.22.mlp.up_proj",
+    "base_model.model.model.layers.23.mlp.gate_proj",
+    "base_model.model.model.layers.23.mlp.up_proj"
+  ]
+}

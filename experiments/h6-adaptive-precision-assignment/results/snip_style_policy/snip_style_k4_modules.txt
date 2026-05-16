@@ -1,0 +1,4 @@
+base_model.model.model.layers.22.mlp.gate_proj
+base_model.model.model.layers.22.mlp.up_proj
+base_model.model.model.layers.23.mlp.gate_proj
+base_model.model.model.layers.23.mlp.up_proj
