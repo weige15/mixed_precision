@@ -30,55 +30,6 @@
   "selectable_count": 48,
   "excluded_count": 0,
   "policies": {
-    "k4": {
-      "module_count": 4,
-      "module_list_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k4_modules.txt",
-      "policy_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k4_policy.json",
-      "modules": [
-        "base_model.model.model.layers.22.mlp.gate_proj",
-        "base_model.model.model.layers.22.mlp.up_proj",
-        "base_model.model.model.layers.23.mlp.gate_proj",
-        "base_model.model.model.layers.23.mlp.up_proj"
-      ]
-    },
-    "k8": {
-      "module_count": 8,
-      "module_list_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k8_modules.txt",
-      "policy_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k8_policy.json",
-      "modules": [
-        "base_model.model.model.layers.22.mlp.gate_proj",
-        "base_model.model.model.layers.22.mlp.up_proj",
-        "base_model.model.model.layers.23.mlp.gate_proj",
-        "base_model.model.model.layers.23.mlp.up_proj",
-        "base_model.model.model.layers.1.mlp.gate_proj",
-        "base_model.model.model.layers.1.mlp.up_proj",
-        "base_model.model.model.layers.14.mlp.up_proj",
-        "base_model.model.model.layers.14.mlp.gate_proj"
-      ]
-    },
-    "k16": {
-      "module_count": 16,
-      "module_list_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k16_modules.txt",
-      "policy_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k16_policy.json",
-      "modules": [
-        "base_model.model.model.layers.22.mlp.gate_proj",
-        "base_model.model.model.layers.22.mlp.up_proj",
-        "base_model.model.model.layers.23.mlp.gate_proj",
-        "base_model.model.model.layers.23.mlp.up_proj",
-        "base_model.model.model.layers.1.mlp.gate_proj",
-        "base_model.model.model.layers.1.mlp.up_proj",
-        "base_model.model.model.layers.14.mlp.up_proj",
-        "base_model.model.model.layers.14.mlp.gate_proj",
-        "base_model.model.model.layers.15.mlp.gate_proj",
-        "base_model.model.model.layers.0.mlp.gate_proj",
-        "base_model.model.model.layers.15.mlp.up_proj",
-        "base_model.model.model.layers.0.mlp.up_proj",
-        "base_model.model.model.layers.18.mlp.gate_proj",
-        "base_model.model.model.layers.16.mlp.gate_proj",
-        "base_model.model.model.layers.16.mlp.up_proj",
-        "base_model.model.model.layers.13.mlp.gate_proj"
-      ]
-    },
     "k24": {
       "module_count": 24,
       "module_list_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k24_modules.txt",
