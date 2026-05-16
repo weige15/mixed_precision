@@ -263,7 +263,7 @@ experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
   baseline_value: 2.0906627424955366
   best_value: 2.086417777657509
-  total_runs: 27
+  total_runs: 31
   trajectory:
     - experiment_id: "h1_baseline_bf16_seed42"
       hypothesis: "H1"
@@ -535,11 +535,51 @@ experiments:
       wall_time_sec: 892.638505935669
       change_summary: "SNIP-style k=24 replication for seed 44 using per-device batch size 2 and gradient accumulation 8. Eval loss degraded by 0.098% relative to matched bf16 with zero loss spikes and zero NaN/Inf events."
       artifact: "experiments/h6-adaptive-precision-assignment/results/train_default_h6_snip_style_k24_seed44_500/summary.json"
+    - experiment_id: "h6_2_resource_bf16_seed42_100_rtx3090"
+      hypothesis: "H6.2"
+      type: "resource_baseline"
+      metric_value: 1.6416143417358398
+      metric_name: "final_eval_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 114.55529975891113
+      change_summary: "Matched bf16 resource baseline on lab RTX 3090 for 100 steps, per-device batch size 2 and gradient accumulation 8. Peak memory 4.530 GiB, train throughput 897.1 tokens/sec, zero instability events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_2_hw_bf16_seed42_100/summary.json"
+    - experiment_id: "h6_2_resource_fake_k24_seed42_100_rtx3090"
+      hypothesis: "H6.2"
+      type: "resource_treatment"
+      metric_value: 1.646006453037262
+      metric_name: "final_eval_loss"
+      baseline: 1.6416143417358398
+      delta: 0.004392111301422119
+      wall_time_sec: 119.41949129104614
+      change_summary: "H6.1 fake-int8 k=24 resource reference on lab RTX 3090. Quality stayed within 1% (+0.268%) with zero instability, but memory was slightly higher (+0.20%) and throughput was slower (-2.16%) than matched bf16."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_2_hw_fake_k24_seed42_100/summary.json"
+    - experiment_id: "h6_2_resource_lora_8bit_int8_seed42_100_rtx3090"
+      hypothesis: "H6.2"
+      type: "resource_treatment"
+      metric_value: 1.64329195022583
+      metric_name: "final_eval_loss"
+      baseline: 1.6416143417358398
+      delta: 0.0016776084899902344
+      wall_time_sec: 193.03526091575623
+      change_summary: "bitsandbytes 8-bit LoRA on lab RTX 3090. Quality stayed within 1% (+0.102%) and had zero instability, but memory was higher (+16.8%) and throughput was much slower (-40.2%) than matched bf16."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_2_hw_lora_8bit_int8_seed42_100/summary.json"
+    - experiment_id: "h6_2_resource_qlora_4bit_nf4_seed42_100_rtx3090"
+      hypothesis: "H6.2"
+      type: "resource_treatment"
+      metric_value: 1.6881097269058227
+      metric_name: "final_eval_loss"
+      baseline: 1.6416143417358398
+      delta: 0.04649538516998291
+      wall_time_sec: 184.38977003097534
+      change_summary: "QLoRA 4-bit NF4 on lab RTX 3090. It failed the 1% quality gate (+2.83%) and also used more memory (+15.8%) and lower throughput (-37.6%) than matched bf16, though without instability events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_2_hw_qlora_4bit_nf4_seed42_100/summary.json"
 
 outer_loop:
-  cycle: 10
-  last_direction: "run H6.2 hardware-realistic low-precision feasibility screen on seed 42"
-  last_reflection: "H6.1 k=24 provides strong quality/stability-preserving budgeted policy expansion, but not resource savings because it uses Python fake-quant hooks. H6.2 is now locked and implemented to test hardware-backed baselines before any custom selective-kernel work. The next inner-loop step is a 100-step seed-42 matrix comparing matched bf16, fake-int8 k=24, QLoRA 4-bit NF4, and bitsandbytes 8-bit LoRA under per-device batch size 2, gradient accumulation 8, and the same hardware label. Decision: deepen only if a hardware-backed policy improves memory or throughput while staying within the 1% validation-loss gate."
+  cycle: 11
+  last_direction: "prepare a progress report or pivot to a different hardware-backed implementation; do not deepen generic bitsandbytes on this setup"
+  last_reflection: "H6.2 completed on the lab RTX 3090. Existing bitsandbytes low-precision paths do not provide resource savings for this Qwen2.5-0.5B LoRA setup. The 8-bit policy preserved quality (+0.102%) but used 16.8% more memory and was 40.2% slower than bf16. QLoRA 4-bit NF4 failed the 1% quality gate (+2.83%) and was also worse on memory and throughput. Fake-int8 k=24 remained quality-preserving (+0.268%) but still had no resource benefit. The supported contribution is now calibration-guided sensitivity ranking plus safe budgeted policy expansion; hardware savings require a different implementation path, likely custom/module-selective kernels or a larger model where quantization overhead amortizes."
 
 workspace:
   findings: "findings.md"

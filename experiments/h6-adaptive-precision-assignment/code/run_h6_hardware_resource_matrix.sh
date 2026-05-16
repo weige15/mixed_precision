@@ -15,6 +15,7 @@ HARDWARE_LABEL="${HARDWARE_LABEL:-rtx4050-local}"
 RUN_TAG="${RUN_TAG:-h6_2_hw}"
 SEEDS="${SEEDS:-42}"
 MAX_STEPS="${MAX_STEPS:-100}"
+MODEL_NAME="${MODEL_NAME:-Qwen/Qwen2.5-0.5B}"
 LEARNING_RATE="${LEARNING_RATE:-2e-4}"
 EVAL_EVERY="${EVAL_EVERY:-50}"
 TRAIN_SIZE="${TRAIN_SIZE:-8000}"
@@ -41,6 +42,7 @@ run_policy() {
         --precision-policy bf16_baseline \
         --seed "${seed}" \
         --max-steps "${MAX_STEPS}" \
+        --model-name "${MODEL_NAME}" \
         --learning-rate "${LEARNING_RATE}" \
         --eval-every "${EVAL_EVERY}" \
         --train-size "${TRAIN_SIZE}" \
@@ -58,6 +60,7 @@ run_policy() {
         --fake-int8-modules $(tr '\n' ' ' < "${POLICY_DIR}/snip_style_k24_modules.txt") \
         --seed "${seed}" \
         --max-steps "${MAX_STEPS}" \
+        --model-name "${MODEL_NAME}" \
         --learning-rate "${LEARNING_RATE}" \
         --eval-every "${EVAL_EVERY}" \
         --train-size "${TRAIN_SIZE}" \
@@ -74,6 +77,7 @@ run_policy() {
         --precision-policy qlora_4bit_nf4 \
         --seed "${seed}" \
         --max-steps "${MAX_STEPS}" \
+        --model-name "${MODEL_NAME}" \
         --learning-rate "${LEARNING_RATE}" \
         --eval-every "${EVAL_EVERY}" \
         --train-size "${TRAIN_SIZE}" \
@@ -90,6 +94,7 @@ run_policy() {
         --precision-policy lora_8bit_int8 \
         --seed "${seed}" \
         --max-steps "${MAX_STEPS}" \
+        --model-name "${MODEL_NAME}" \
         --learning-rate "${LEARNING_RATE}" \
         --eval-every "${EVAL_EVERY}" \
         --train-size "${TRAIN_SIZE}" \

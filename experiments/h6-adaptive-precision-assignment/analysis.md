@@ -128,6 +128,19 @@ Across seeds, the mean paired eval-loss degradation is `+0.00211` absolute, or `
 
 The resource story remains unresolved. Moving from batch size 1 to batch size 2 roughly doubled throughput for both policies, but this is a microbatching improvement rather than a low-precision policy improvement. Within the matched batch-size-2 runs, `k=24` was about `3-4%` slower than bf16 and used about `0.009 GiB` more peak memory due to the Python fake-quant hooks.
 
+## 2026-05-17 H6.2 Hardware-Realistic Resource Screen
+
+H6.2 tests whether existing hardware-backed low-precision paths produce a real resource benefit before investing in custom selective kernels. The completed screen ran on the lab RTX 3090 (`cuda_device_name=NVIDIA GeForce RTX 3090`, `CUDA_VISIBLE_DEVICES=3`) with per-device batch size 2, gradient accumulation 8, effective batch size 16, learning rate `2e-4`, and 100 optimizer steps.
+
+| policy | eval loss | eval delta vs bf16 | peak GiB | memory delta | train tok/s ex-first | tok/s delta | instability |
+|---|---:|---:|---:|---:|---:|---:|---|
+| bf16 | `1.64161` | - | `4.530` | - | `897.1` | - | none |
+| fake-int8 k=24 | `1.64601` | `+0.268%` | `4.539` | `+0.20%` | `877.7` | `-2.16%` | none |
+| bitsandbytes 8-bit LoRA | `1.64329` | `+0.102%` | `5.291` | `+16.80%` | `536.8` | `-40.16%` | none |
+| QLoRA 4-bit NF4 | `1.68811` | `+2.832%` | `5.246` | `+15.79%` | `560.0` | `-37.58%` | none |
+
+Interpretation: H6.2 is negative for resource savings on this RTX 3090/bitsandbytes setup. The 8-bit policy preserves quality but loses badly on memory and throughput. QLoRA fails the 1% quality gate and also loses on memory and throughput. Fake-int8 k=24 remains quality-preserving but is still a Python-hook sensitivity proxy, not a resource implementation. This strengthens the current framing: the supported contribution is calibration-guided precision sensitivity ranking and safe policy expansion, while hardware savings require a different implementation path.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.

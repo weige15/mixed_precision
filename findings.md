@@ -48,6 +48,8 @@ The H6.1 `k=24` result now replicates across seeds 42, 43, and 44. Seed 42 used 
 
 H6.2 is now the active resource-feasibility branch. The implementation adds a bitsandbytes 8-bit LoRA baseline and a hardware matrix that compares matched bf16, H6.1 fake-int8 `k=24`, QLoRA 4-bit NF4, and 8-bit LoRA under the same hardware label and microbatching. The purpose is not yet to build custom selective kernels; it is to test whether supported hardware-backed low precision gives any real memory or throughput win on the RTX 4050 while staying inside the 1% quality gate.
 
+The H6.2 lab RTX 3090 feasibility screen is complete and negative for resource savings. The run metadata confirms `cuda_device_name = NVIDIA GeForce RTX 3090` and `CUDA_VISIBLE_DEVICES = 3`, with `HARDWARE_LABEL=rtx3090-lab`, per-device batch size 2, gradient accumulation 8, effective batch size 16, and 100 optimizer steps. Matched bf16 reached eval loss `1.64161`, peak memory `4.530 GiB`, and `897.1` train tokens/sec excluding the first step. Fake-int8 `k=24` stayed within the quality gate at `1.64601` (`+0.268%`) but used slightly more memory (`+0.20%`) and was slower (`-2.16%`). bitsandbytes 8-bit LoRA reached `1.64329` (`+0.102%`) but used more memory (`+16.8%`) and was much slower (`-40.2%`). QLoRA 4-bit NF4 reached `1.68811` (`+2.83%`), failing the 1% quality gate, while also using more memory (`+15.8%`) and running slower (`-37.6%`). All four policies had zero loss spikes and zero NaN/Inf events.
+
 ## Patterns and Insights
 
 - The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.
@@ -81,6 +83,7 @@ H6.2 is now the active resource-feasibility branch. The implementation adds a bi
 - The H6.1 SNIP-style expansion should be treated as a budgeted policy test, not a full SNIP reproduction. Keep the current four-module policy as the anchor and evaluate whether wider `k=8/16/24` MLP gate/up policies preserve the 1% validation-loss gate.
 - H6.1 `k=24` is now the best quality-preserving policy result. It demotes half of the eligible MLP gate/up modules and holds across three seeds, but it should not be described as resource-saving until backed by hardware-supported lower-precision kernels.
 - H6.2 should compare resource deltas only within matched hardware labels and microbatch settings. Do not mix old batch-size-1 results with batch-size-2 resource screens when making throughput claims.
+- On the lab RTX 3090, existing bitsandbytes 4-bit/8-bit training paths do not provide the desired resource win for this Qwen2.5-0.5B LoRA setup. The memory accounting is worse than bf16, likely because quantization state and k-bit preparation overhead dominate at this small model scale.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
 - Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.
 - H2 should be run only if H6 needs a stronger logits/loss static anchor. H3 should be run only if the default bf16 regime is too stable to reveal meaningful policy differences. H4 should be run after a candidate H6 policy exists, not before.
@@ -101,7 +104,7 @@ H6.2 is now the active resource-feasibility branch. The implementation adds a bi
 - Does the narrow candidate policy provide any real resource saving on available hardware, or only a sensitivity-ranking result under fake quantization?
 - How wide can the SNIP-style H6.1 fake-int8 MLP gate/up policy become before validation loss or stability degrades?
 - Can the H6.1 `k=24` policy be converted from Python fake-quant hooks into a hardware-realistic low-precision implementation, or is the current contribution best framed as a calibration and sensitivity-ranking method?
-- Do bitsandbytes 4-bit NF4 or 8-bit LoRA baselines provide a real memory or throughput win on the available RTX 4050 while preserving the 1% quality gate?
+- Is there a hardware-backed implementation path beyond generic bitsandbytes k-bit loading that can exploit the H6.1 selected module set, or should the paper contribution stop at calibration-guided sensitivity ranking with resource savings left as future systems work?
 
 ## Optimization Trajectory
 
