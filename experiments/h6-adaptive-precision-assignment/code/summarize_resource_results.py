@@ -67,19 +67,21 @@ def main() -> None:
             print(f"{run_dir}\t{policy}\t{seed}\t{steps}\t{lr:g}\t{batch}\t{eval_loss:.6f}\t{mem:.3f}\t{tok_s:.1f}")
             by_run[(seed, steps, lr)][policy] = summary
 
-        print("\npaired qlora_4bit_nf4 vs bf16_baseline")
-        print("seed\tsteps\tlr\teval_delta%\tmem_delta%\ttok_s_delta%")
+        print("\npaired policies vs bf16_baseline")
+        print("policy\tseed\tsteps\tlr\teval_delta%\tmem_delta%\ttok_s_delta%")
         for (seed, steps, lr), policies in sorted(by_run.items()):
             base = policies.get("bf16_baseline")
-            qlora = policies.get("qlora_4bit_nf4")
-            if not base or not qlora:
+            if not base:
                 continue
             base_tps = base.get("tokens_per_sec_train_excluding_first_step") or base.get("tokens_per_sec_train")
-            qlora_tps = qlora.get("tokens_per_sec_train_excluding_first_step") or qlora.get("tokens_per_sec_train")
-            eval_delta = (qlora["final_eval_loss"] - base["final_eval_loss"]) / base["final_eval_loss"] * 100
-            mem_delta = (qlora["peak_cuda_memory_gib"] - base["peak_cuda_memory_gib"]) / base["peak_cuda_memory_gib"] * 100
-            tps_delta = (qlora_tps - base_tps) / base_tps * 100
-            print(f"{seed}\t{steps}\t{lr:g}\t{eval_delta:+.2f}\t{mem_delta:+.2f}\t{tps_delta:+.2f}")
+            for policy, summary in sorted(policies.items()):
+                if policy == "bf16_baseline":
+                    continue
+                policy_tps = summary.get("tokens_per_sec_train_excluding_first_step") or summary.get("tokens_per_sec_train")
+                eval_delta = (summary["final_eval_loss"] - base["final_eval_loss"]) / base["final_eval_loss"] * 100
+                mem_delta = (summary["peak_cuda_memory_gib"] - base["peak_cuda_memory_gib"]) / base["peak_cuda_memory_gib"] * 100
+                tps_delta = (policy_tps - base_tps) / base_tps * 100
+                print(f"{policy}\t{seed}\t{steps}\t{lr:g}\t{eval_delta:+.2f}\t{mem_delta:+.2f}\t{tps_delta:+.2f}")
 
 
 if __name__ == "__main__":

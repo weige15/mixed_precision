@@ -98,6 +98,36 @@ Across seeds, the mean paired eval-loss delta is `+0.00195`, or `+0.120%` relati
 
 The cost story is still not positive under the current emulation. H6 changes peak memory by only `-0.00061 GiB` and has mean train-throughput delta `-5.80%`, with high seed-to-seed variation (`-13.47%`, `-4.87%`, `+0.93%`). Because this policy uses Python-level fake quantization hooks, these speed and memory numbers should not be treated as hardware-realistic low-precision performance. The supported claim is now: calibration-guided precision selection preserved bf16 validation quality and stability across three seeds for the selected late-layer MLP modules.
 
+## 2026-05-16 H6.1 SNIP-Style Width Screen
+
+H6.1 tests whether a SNIP-style score can safely expand the fake-int8 policy beyond the original four late-layer MLP gate/up modules. The policy builder aggregates calibration signals and perturbation deltas, anchors `k=4` to the validated H6 narrow policy, and adds ranked MLP `gate_proj` / `up_proj` modules for larger budgets.
+
+The seed-42 500-step screen completed for matched bf16 and `k=4/8/16/24`.
+
+| policy | fake-int8 modules | final eval loss | delta vs bf16 | rel delta | loss spikes | NaN/Inf | train tok/s ex-first | peak GiB |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| bf16 | 0 | `1.62978` | - | - | 0 | 0 | `448.35` | `2.77945` |
+| k=4 | 4 | `1.63111` | `+0.00133` | `+0.082%` | 0 | 0 | `447.01` | `2.77884` |
+| k=8 | 8 | `1.63173` | `+0.00195` | `+0.120%` | 0 | 0 | `462.16` | `2.77981` |
+| k=16 | 16 | `1.63126` | `+0.00148` | `+0.091%` | 0 | 0 | `441.20` | `2.77664` |
+| k=24 | 24 | `1.63177` | `+0.00199` | `+0.122%` | 0 | 0 | `437.81` | `2.78030` |
+
+Interpretation: this is a positive width result. All SNIP-style budgets are far inside the locked 1% validation-loss gate, and none add instability. The `k=24` policy is the most informative next candidate because it demotes half of the eligible MLP gate/up module set and still preserves seed-42 quality and stability. The throughput and memory measurements should remain secondary because Python fake-quant hooks are not hardware-realistic; the supported claim is wider quality-preserving module selection, not resource savings.
+
+Next step: replicate `k=24` on seeds 43 and 44 with matched bf16 controls. If it holds, H6.1 supports a stronger statement: calibration-guided scoring can widen the safe low-precision candidate set substantially, not just identify four handpicked late-layer modules.
+
+The `k=24` replication is now complete for seeds 43 and 44. These runs used per-device batch size 2 and gradient accumulation 8, keeping the effective batch size at 16. Because each seed has a matched bf16 control with the same microbatching, the paired comparison remains valid.
+
+| seed | microbatch x accum | bf16 eval | k=24 eval | delta | rel delta | instability | k=24 tok/s ex-first | bf16 tok/s ex-first |
+|---:|---:|---:|---:|---:|---:|---|---:|---:|
+| 42 | 1 x 16 | `1.62978` | `1.63177` | `+0.00199` | `+0.122%` | none | `437.81` | `448.35` |
+| 43 | 2 x 8 | `1.61701` | `1.61975` | `+0.00274` | `+0.169%` | none | `861.39` | `898.12` |
+| 44 | 2 x 8 | `1.62089` | `1.62248` | `+0.00159` | `+0.098%` | none | `866.24` | `893.59` |
+
+Across seeds, the mean paired eval-loss degradation is `+0.00211` absolute, or `+0.130%` relative. Both policies had zero loss spikes and zero NaN/Inf events in every run. This supports the H6.1 claim that the SNIP-style score can widen the safe fake-int8 MLP gate/up set to 24 modules while preserving bf16 validation quality and stability.
+
+The resource story remains unresolved. Moving from batch size 1 to batch size 2 roughly doubled throughput for both policies, but this is a microbatching improvement rather than a low-precision policy improvement. Within the matched batch-size-2 runs, `k=24` was about `3-4%` slower than bf16 and used about `0.009 GiB` more peak memory due to the Python fake-quant hooks.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.

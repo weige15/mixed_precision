@@ -48,6 +48,7 @@ def parse_args() -> argparse.Namespace:
             "h6_late_mlp_int8_candidate",
             "h6_custom_int8",
             "qlora_4bit_nf4",
+            "lora_8bit_int8",
         ],
     )
     parser.add_argument(
@@ -75,6 +76,12 @@ def parse_args() -> argparse.Namespace:
         "--hardware-label",
         default=os.environ.get("HARDWARE_LABEL", ""),
         help="Optional run context label such as rtx4050-local or rtx3090-lab.",
+    )
+    parser.add_argument(
+        "--llm-int8-threshold",
+        type=float,
+        default=6.0,
+        help="bitsandbytes LLM.int8 outlier threshold for --precision-policy=lora_8bit_int8.",
     )
     parser.add_argument("--output-dir", required=True)
     return parser.parse_args()
@@ -326,8 +333,8 @@ def main() -> None:
     load_dtype = torch.bfloat16 if use_bf16 else torch.float32
     if device == "cuda":
         torch.cuda.reset_peak_memory_stats()
-    if args.precision_policy == "qlora_4bit_nf4" and device != "cuda":
-        raise SystemExit("precision-policy qlora_4bit_nf4 requires CUDA for bitsandbytes 4-bit training.")
+    if args.precision_policy in {"qlora_4bit_nf4", "lora_8bit_int8"} and device != "cuda":
+        raise SystemExit(f"precision-policy {args.precision_policy} requires CUDA for bitsandbytes k-bit training.")
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_name, trust_remote_code=True)
     if tokenizer.pad_token is None:
@@ -347,6 +354,17 @@ def main() -> None:
             "bnb_4bit_compute_dtype": "bfloat16" if use_bf16 else "float16",
             "bnb_4bit_quant_type": "nf4",
             "bnb_4bit_use_double_quant": True,
+        }
+    elif args.precision_policy == "lora_8bit_int8":
+        quantization_config = BitsAndBytesConfig(
+            load_in_8bit=True,
+            llm_int8_threshold=args.llm_int8_threshold,
+            llm_int8_has_fp16_weight=False,
+        )
+        qlora_config = {
+            "load_in_8bit": True,
+            "llm_int8_threshold": args.llm_int8_threshold,
+            "llm_int8_has_fp16_weight": False,
         }
 
     from_pretrained_kwargs: dict[str, Any] = {

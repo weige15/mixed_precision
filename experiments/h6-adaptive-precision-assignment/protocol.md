@@ -159,6 +159,44 @@ H6.1 is refuted for this pilot setting if `k=8` or larger consistently violates 
 4. Replicate only the best safe wider policy on seeds 43 and 44.
 5. If no wider policy is safe, pivot toward hardware-realistic kernels for the already-supported narrow policy or conclude the quality-preserving sensitivity-ranking claim.
 
+## H6.2 Protocol: Hardware-Realistic Low-Precision Feasibility
+
+### Hypothesis
+
+At least one hardware-backed low-precision baseline can improve peak CUDA memory or throughput relative to bf16 while preserving LoRA validation loss within 1% and avoiding added instability.
+
+Plain-language version: after H6.1 showed that many modules are safe under fake int8, test whether real supported low-precision machinery on the available GPU actually gives the resource win we want.
+
+### Motivation
+
+H6.1 is scientifically useful but not hardware-realistic. Python fake-quant hooks preserve quality but do not reduce memory and tend to slow training. Before building selective module-level low-precision kernels, run a feasibility screen using existing supported backends. If standard bitsandbytes 4-bit or 8-bit LoRA cannot produce a useful resource/quality tradeoff on this hardware, custom selective engineering should be treated cautiously.
+
+### Policies
+
+Run matched short screens under the same seed, data order, learning rate, sequence length, and effective batch size:
+
+- `bf16_baseline`: the current full-bf16 LoRA baseline.
+- `h6_custom_int8` with SNIP-style `k=24`: the current quality-preserving fake-int8 H6.1 policy, included as a sensitivity-method reference.
+- `qlora_4bit_nf4`: bitsandbytes 4-bit NF4 base model plus LoRA adapters.
+- `lora_8bit_int8`: bitsandbytes 8-bit base model plus LoRA adapters.
+
+Default H6.2 screen: `MAX_STEPS=100`, `PER_DEVICE_BATCH_SIZE=2`, `GRADIENT_ACCUMULATION_STEPS=8`, `EVAL_MAX_BATCHES=100`. This keeps effective batch size 16 and makes the feasibility pass cheap before committing to 500-step replications.
+
+### Decision Rule
+
+H6.2 is supported if a hardware-backed policy, preferably `qlora_4bit_nf4` or `lora_8bit_int8`, improves peak CUDA memory or train tokens/sec relative to matched bf16 while staying within the 1% validation-loss gate and producing zero added NaN/Inf or loss-spike events.
+
+H6.2 is inconclusive if hardware-backed policies preserve quality but are slower or do not save memory on the RTX 4050.
+
+H6.2 is negative for this setup if hardware-backed policies exceed the 1% validation-loss gate or introduce instability, while also failing to improve memory or throughput.
+
+### Execution Plan
+
+1. Run the H6.2 100-step resource matrix on seed 42.
+2. Summarize paired resource deltas by hardware label, not across mixed machines or batch settings.
+3. If a hardware-backed policy passes, replicate it for 500 steps and seeds 43/44.
+4. If no hardware-backed policy passes, prepare a progress report framing H6.1 as a calibration and sensitivity-ranking contribution, and leave selective hardware kernels as future systems work.
+
 ## Phase 0 Smoke Result
 
 On 2026-05-13, a one-batch smoke calibration ran on Qwen/Qwen2.5-0.5B with sequence length 64 and the first eight candidate modules. It produced `stability_signals.json` and `policy_trace.json` under `results/smoke_signals_seed42/`.

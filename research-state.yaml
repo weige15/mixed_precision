@@ -263,7 +263,7 @@ experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
   baseline_value: 2.0906627424955366
   best_value: 2.086417777657509
-  total_runs: 18
+  total_runs: 27
   trajectory:
     - experiment_id: "h1_baseline_bf16_seed42"
       hypothesis: "H1"
@@ -445,11 +445,101 @@ experiments:
       wall_time_sec: 2037.9676790237427
       change_summary: "Frozen H6 narrow policy treatment replication for seed 44. Final eval loss degraded by 0.151% relative to matched bf16 and stayed inside the 1% gate, with zero loss spikes and zero NaN/Inf events."
       artifact: "experiments/h6-adaptive-precision-assignment/results/train_h6_late_mlp_int8_seed44_500/summary.json"
+    - experiment_id: "h6_1_train_default_bf16_seed42_500"
+      hypothesis: "H6.1"
+      type: "training_baseline"
+      metric_value: 1.6297805751264096
+      metric_name: "final_eval_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 1667.3938460350037
+      change_summary: "Matched bf16 seed-42 control for the SNIP-style width screen; zero loss spikes and zero NaN/Inf events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_default_bf16_seed42_500/summary.json"
+    - experiment_id: "h6_1_train_snip_style_k4_seed42_500"
+      hypothesis: "H6.1"
+      type: "training_treatment"
+      metric_value: 1.6311119485199452
+      metric_name: "final_eval_loss"
+      baseline: 1.6297805751264096
+      delta: 0.0013313733935356176
+      wall_time_sec: 1686.145825624466
+      change_summary: "SNIP-style k=4 anchor policy reproduced the validated four late-layer MLP gate/up fake-int8 modules. Eval loss degraded by 0.082% relative to matched bf16 with zero instability events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_default_h6_snip_style_k4_seed42_500/summary.json"
+    - experiment_id: "h6_1_train_snip_style_k8_seed42_500"
+      hypothesis: "H6.1"
+      type: "training_treatment"
+      metric_value: 1.6317321493327617
+      metric_name: "final_eval_loss"
+      baseline: 1.6297805751264096
+      delta: 0.001951574206352058
+      wall_time_sec: 1624.1071865558624
+      change_summary: "SNIP-style k=8 policy widened to eight MLP gate/up fake-int8 modules. Eval loss degraded by 0.120% relative to matched bf16 with zero instability events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_default_h6_snip_style_k8_seed42_500/summary.json"
+    - experiment_id: "h6_1_train_snip_style_k16_seed42_500"
+      hypothesis: "H6.1"
+      type: "training_treatment"
+      metric_value: 1.6312590020298958
+      metric_name: "final_eval_loss"
+      baseline: 1.6297805751264096
+      delta: 0.0014784269034862074
+      wall_time_sec: 1710.519731760025
+      change_summary: "SNIP-style k=16 policy widened to sixteen MLP gate/up fake-int8 modules. Eval loss degraded by 0.091% relative to matched bf16 with zero instability events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_default_h6_snip_style_k16_seed42_500/summary.json"
+    - experiment_id: "h6_1_train_snip_style_k24_seed42_500"
+      hypothesis: "H6.1"
+      type: "training_treatment"
+      metric_value: 1.6317743750214577
+      metric_name: "final_eval_loss"
+      baseline: 1.6297805751264096
+      delta: 0.0019937998950481095
+      wall_time_sec: 1717.633935213089
+      change_summary: "SNIP-style k=24 policy widened to twenty-four MLP gate/up fake-int8 modules. Eval loss degraded by 0.122% relative to matched bf16 with zero instability events, making it the strongest seed-42 width result."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_default_h6_snip_style_k24_seed42_500/summary.json"
+    - experiment_id: "h6_1_train_default_bf16_seed43_500_bsz2"
+      hypothesis: "H6.1"
+      type: "training_baseline"
+      metric_value: 1.6170143505185843
+      metric_name: "final_eval_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 854.1966066360474
+      change_summary: "Matched bf16 seed-43 control for H6.1 k=24 replication using per-device batch size 2 and gradient accumulation 8; effective batch size remained 16 with zero instability events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_default_bf16_seed43_500/summary.json"
+    - experiment_id: "h6_1_train_snip_style_k24_seed43_500_bsz2"
+      hypothesis: "H6.1"
+      type: "training_treatment"
+      metric_value: 1.619750689521432
+      metric_name: "final_eval_loss"
+      baseline: 1.6170143505185843
+      delta: 0.002736339002847643
+      wall_time_sec: 899.8986306190491
+      change_summary: "SNIP-style k=24 replication for seed 43 using per-device batch size 2 and gradient accumulation 8. Eval loss degraded by 0.169% relative to matched bf16 with zero loss spikes and zero NaN/Inf events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_default_h6_snip_style_k24_seed43_500/summary.json"
+    - experiment_id: "h6_1_train_default_bf16_seed44_500_bsz2"
+      hypothesis: "H6.1"
+      type: "training_baseline"
+      metric_value: 1.6208905526399613
+      metric_name: "final_eval_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 853.7221920490265
+      change_summary: "Matched bf16 seed-44 control for H6.1 k=24 replication using per-device batch size 2 and gradient accumulation 8; effective batch size remained 16 with zero instability events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_default_bf16_seed44_500/summary.json"
+    - experiment_id: "h6_1_train_snip_style_k24_seed44_500_bsz2"
+      hypothesis: "H6.1"
+      type: "training_treatment"
+      metric_value: 1.622482454419136
+      metric_name: "final_eval_loss"
+      baseline: 1.6208905526399613
+      delta: 0.001591901779174787
+      wall_time_sec: 892.638505935669
+      change_summary: "SNIP-style k=24 replication for seed 44 using per-device batch size 2 and gradient accumulation 8. Eval loss degraded by 0.098% relative to matched bf16 with zero loss spikes and zero NaN/Inf events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_default_h6_snip_style_k24_seed44_500/summary.json"
 
 outer_loop:
-  cycle: 7
-  last_direction: "screen H6.1 SNIP-style budgeted policy expansion before investing in hardware-realistic low-precision kernels"
-  last_reflection: "The paired H6 narrow-policy result supports calibration-guided quality-preserving sensitivity assignment but not resource savings. H6.1 is now locked and implemented as a minimal SNIP-style expansion: aggregate existing calibration and perturbation artifacts into conservative risk scores, anchor k=4 to the validated late-layer MLP policy, and test wider k=8/16/24 fake-int8 MLP gate/up policies. A one-step CUDA smoke confirmed the generated k=4 module list resolves and trains. Next inner-loop step: run the seed-42 500-step width sweep, then replicate only the best safe wider policy on seeds 43 and 44."
+  cycle: 10
+  last_direction: "run H6.2 hardware-realistic low-precision feasibility screen on seed 42"
+  last_reflection: "H6.1 k=24 provides strong quality/stability-preserving budgeted policy expansion, but not resource savings because it uses Python fake-quant hooks. H6.2 is now locked and implemented to test hardware-backed baselines before any custom selective-kernel work. The next inner-loop step is a 100-step seed-42 matrix comparing matched bf16, fake-int8 k=24, QLoRA 4-bit NF4, and bitsandbytes 8-bit LoRA under per-device batch size 2, gradient accumulation 8, and the same hardware label. Decision: deepen only if a hardware-backed policy improves memory or throughput while staying within the 1% validation-loss gate."
 
 workspace:
   findings: "findings.md"

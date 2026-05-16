@@ -42,6 +42,12 @@ The H6 narrow-policy comparison is now paired across seeds 42, 43, and 44. BF16 
 
 H6.1 is now implemented as the next policy-expansion branch. The SNIP-style policy builder aggregates seed 42-44 calibration signals and perturbation deltas, ranks eligible MLP `gate_proj`/`up_proj` modules by conservative risk, anchors `k=4` to the already validated late-layer policy, and emits frozen `k=4/8/16/24` module lists for `h6_custom_int8` training. A one-step CUDA smoke confirmed the generated `k=4` list resolves to the validated four modules and trains without NaN/Inf. The next real experiment is a seed-42 500-step width sweep over `k=8`, `k=16`, and `k=24` against matched bf16, followed by seed 43/44 replication only for the best safe wider policy.
 
+The H6.1 seed-42 width sweep is now complete and positive. The matched bf16 control reached final eval loss `1.62978`. SNIP-style `k=4`, `k=8`, `k=16`, and `k=24` reached `1.63111`, `1.63173`, `1.63126`, and `1.63177`, respectively. These are relative degradations of `+0.082%`, `+0.120%`, `+0.091%`, and `+0.122%`, all far inside the locked 1% quality gate. Every run had zero loss spikes and zero NaN/Inf events. This means the conservative score can safely widen from the original four late-layer MLP modules to at least 24 MLP gate/up modules on seed 42. The cost metrics are not yet a resource claim: peak memory changed by less than `0.003 GiB`, and throughput moved between about `-2.35%` and `+3.08%` under Python fake-quant hooks.
+
+The H6.1 `k=24` result now replicates across seeds 42, 43, and 44. Seed 42 used per-device batch size 1 with gradient accumulation 16; seeds 43 and 44 used per-device batch size 2 with gradient accumulation 8, preserving effective batch size 16. Each seed has a matched bf16 control under the same microbatch setting. BF16 eval losses were `1.62978`, `1.61701`, and `1.62089`; `k=24` eval losses were `1.63177`, `1.61975`, and `1.62248`. The paired relative degradations were `+0.122%`, `+0.169%`, and `+0.098%`, with mean `+0.130%`, all far inside the locked 1% quality gate. All six runs had zero loss spikes and zero NaN/Inf events. The batch-size-2 runs roughly doubled throughput versus the earlier batch-size-1 run, but `k=24` remained about `3-4%` slower than matched bf16 and used about `0.009 GiB` more peak memory, so the result still supports policy selection quality, not real resource savings.
+
+H6.2 is now the active resource-feasibility branch. The implementation adds a bitsandbytes 8-bit LoRA baseline and a hardware matrix that compares matched bf16, H6.1 fake-int8 `k=24`, QLoRA 4-bit NF4, and 8-bit LoRA under the same hardware label and microbatching. The purpose is not yet to build custom selective kernels; it is to test whether supported hardware-backed low precision gives any real memory or throughput win on the RTX 4050 while staying inside the 1% quality gate.
+
 ## Patterns and Insights
 
 - The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.
@@ -59,6 +65,7 @@ H6.1 is now implemented as the next policy-expansion branch. The SNIP-style poli
 - The three-seed bf16 calibration is stable enough to proceed to perturbation tests. It is not rich enough to freeze a resource-saving policy because almost no modules are robust low-precision candidates under the current thresholds.
 - Stage 2 now replicates the predictive-validity story for MLP projections across seeds 42-44: high Stage 1 outlier signals map to large int8 perturbation loss deltas, while relaxed low-risk late-layer gate/up projections have near-zero deltas.
 - Stage 3 shows the perturbation-selected low-risk modules preserve bf16 validation quality and stability during actual 500-step LoRA updates across seeds 42-44. The quality-preservation claim is now paired across three seeds.
+- H6.1 shows that the safe fake-int8 MLP gate/up set is not limited to the original four late-layer modules. Across seeds 42-44, widening to 24 ranked modules preserved validation quality and stability, suggesting the calibration score is conservative enough for budgeted expansion.
 
 ## Lessons and Constraints
 
@@ -72,6 +79,8 @@ H6.1 is now implemented as the next policy-expansion branch. The SNIP-style poli
 - The perturbation panel is now replicated enough to freeze the first narrow H6 policy. Keep high-risk down projections, attention projections, norms, and logits conservative; only test demoting the consistently low-delta `layers.22/23.mlp.gate_proj` and `layers.22/23.mlp.up_proj` paths.
 - The 500-step LoRA paired comparison is complete across seeds 42-44. The next decision is whether to implement hardware-realistic low precision for resource claims or to stress the regime to test whether calibration-guided precision expands the stable fine-tuning envelope.
 - The H6.1 SNIP-style expansion should be treated as a budgeted policy test, not a full SNIP reproduction. Keep the current four-module policy as the anchor and evaluate whether wider `k=8/16/24` MLP gate/up policies preserve the 1% validation-loss gate.
+- H6.1 `k=24` is now the best quality-preserving policy result. It demotes half of the eligible MLP gate/up modules and holds across three seeds, but it should not be described as resource-saving until backed by hardware-supported lower-precision kernels.
+- H6.2 should compare resource deltas only within matched hardware labels and microbatch settings. Do not mix old batch-size-1 results with batch-size-2 resource screens when making throughput claims.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
 - Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.
 - H2 should be run only if H6 needs a stronger logits/loss static anchor. H3 should be run only if the default bf16 regime is too stable to reveal meaningful policy differences. H4 should be run after a candidate H6 policy exists, not before.
@@ -91,6 +100,8 @@ H6.1 is now implemented as the next policy-expansion branch. The SNIP-style poli
 - Are the four relaxed low-risk candidates actually harmless under one-island perturbation, or are the signal thresholds still missing important training-time sensitivity?
 - Does the narrow candidate policy provide any real resource saving on available hardware, or only a sensitivity-ranking result under fake quantization?
 - How wide can the SNIP-style H6.1 fake-int8 MLP gate/up policy become before validation loss or stability degrades?
+- Can the H6.1 `k=24` policy be converted from Python fake-quant hooks into a hardware-realistic low-precision implementation, or is the current contribution best framed as a calibration and sensitivity-ranking method?
+- Do bitsandbytes 4-bit NF4 or 8-bit LoRA baselines provide a real memory or throughput win on the available RTX 4050 while preserving the 1% quality gate?
 
 ## Optimization Trajectory
 
