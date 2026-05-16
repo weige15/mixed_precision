@@ -387,7 +387,7 @@
       }
     }
   ],
-  "module_list_path": "experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k16_modules.txt",
+  "module_list_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k16_modules.txt",
   "runner_args": [
     "--fake-int8-modules",
     "base_model.model.model.layers.22.mlp.gate_proj",

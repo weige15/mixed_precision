@@ -1,6 +1,6 @@
 {
   "method": "SNIP-style conservative risk ranking over calibration and perturbation artifacts",
-  "results_dir": "experiments/h6-adaptive-precision-assignment/results",
+  "results_dir": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results",
   "seeds": [
     42,
     43,
@@ -32,8 +32,8 @@
   "policies": {
     "k4": {
       "module_count": 4,
-      "module_list_path": "experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k4_modules.txt",
-      "policy_path": "experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k4_policy.json",
+      "module_list_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k4_modules.txt",
+      "policy_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k4_policy.json",
       "modules": [
         "base_model.model.model.layers.22.mlp.gate_proj",
         "base_model.model.model.layers.22.mlp.up_proj",
@@ -43,8 +43,8 @@
     },
     "k8": {
       "module_count": 8,
-      "module_list_path": "experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k8_modules.txt",
-      "policy_path": "experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k8_policy.json",
+      "module_list_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k8_modules.txt",
+      "policy_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k8_policy.json",
       "modules": [
         "base_model.model.model.layers.22.mlp.gate_proj",
         "base_model.model.model.layers.22.mlp.up_proj",
@@ -58,8 +58,8 @@
     },
     "k16": {
       "module_count": 16,
-      "module_list_path": "experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k16_modules.txt",
-      "policy_path": "experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k16_policy.json",
+      "module_list_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k16_modules.txt",
+      "policy_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k16_policy.json",
       "modules": [
         "base_model.model.model.layers.22.mlp.gate_proj",
         "base_model.model.model.layers.22.mlp.up_proj",
@@ -81,8 +81,8 @@
     },
     "k24": {
       "module_count": 24,
-      "module_list_path": "experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k24_modules.txt",
-      "policy_path": "experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k24_policy.json",
+      "module_list_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k24_modules.txt",
+      "policy_path": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/snip_style_policy/snip_style_k24_policy.json",
       "modules": [
         "base_model.model.model.layers.22.mlp.gate_proj",
         "base_model.model.model.layers.22.mlp.up_proj",
