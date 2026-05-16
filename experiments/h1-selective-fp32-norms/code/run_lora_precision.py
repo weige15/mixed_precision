@@ -71,6 +71,11 @@ def parse_args() -> argparse.Namespace:
         default=0,
         help="Maximum validation batches per eval; 0 means full validation set.",
     )
+    parser.add_argument(
+        "--hardware-label",
+        default=os.environ.get("HARDWARE_LABEL", ""),
+        help="Optional run context label such as rtx4050-local or rtx3090-lab.",
+    )
     parser.add_argument("--output-dir", required=True)
     return parser.parse_args()
 
@@ -511,6 +516,9 @@ def main() -> None:
         "eval_size": args.eval_size,
         "eval_max_batches": args.eval_max_batches,
         "device": device,
+        "hardware_label": args.hardware_label,
+        "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
+        "cuda_device_name": torch.cuda.get_device_name(0) if device == "cuda" else None,
         "bf16_autocast": use_bf16,
         "qlora_config": qlora_config,
         "lora_targets": lora_targets,

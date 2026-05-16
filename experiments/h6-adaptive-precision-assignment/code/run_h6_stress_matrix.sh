@@ -9,6 +9,8 @@ if [[ -n "${GPU_ID:-}" ]]; then
   export CUDA_VISIBLE_DEVICES="${GPU_ID}"
 fi
 
+HARDWARE_LABEL="${HARDWARE_LABEL:-unknown_gpu}"
+RUN_TAG="${RUN_TAG:-${HARDWARE_LABEL}}"
 SEEDS="${SEEDS:-42}"
 MAX_STEPS="${MAX_STEPS:-500}"
 LEARNING_RATE="${LEARNING_RATE:-4e-4}"
@@ -39,7 +41,8 @@ run_policy() {
     --per-device-batch-size "${PER_DEVICE_BATCH_SIZE}" \
     --gradient-accumulation-steps "${GRADIENT_ACCUMULATION_STEPS}" \
     "$@" \
-    --output-dir "${RESULTS_DIR}/stress_lr${LEARNING_RATE}_${label}_seed${seed}_${MAX_STEPS}"
+    --hardware-label "${HARDWARE_LABEL}" \
+    --output-dir "${RESULTS_DIR}/stress_${RUN_TAG}_lr${LEARNING_RATE}_${label}_seed${seed}_${MAX_STEPS}"
 }
 
 for seed in ${SEEDS}; do
