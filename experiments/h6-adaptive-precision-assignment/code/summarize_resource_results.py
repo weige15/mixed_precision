@@ -52,24 +52,26 @@ def main() -> None:
         if not rows:
             continue
         print(f"\n## {key}")
-        print("dir\tpolicy\tseed\tsteps\tlr\tbatch\teval\tmem_gib\ttok_s")
-        by_run: dict[tuple[int, int, float], dict[str, dict[str, Any]]] = defaultdict(dict)
+        print("dir\tmodel\tpolicy\tseed\tsteps\tlr\tseq_len\tbatch\teval\tmem_gib\ttok_s")
+        by_run: dict[tuple[str, int, int, int, int, float], dict[str, dict[str, Any]]] = defaultdict(dict)
         for path, summary in rows:
             run_dir = os.path.basename(os.path.dirname(path))
+            model = summary.get("model_name")
             policy = summary.get("precision_policy")
             seed = int(summary.get("seed"))
             steps = int(summary.get("max_steps"))
             lr = float(summary.get("learning_rate"))
+            seq_len = int(summary.get("seq_len"))
             batch = summary.get("effective_batch_size_sequences")
             eval_loss = summary.get("final_eval_loss")
             mem = summary.get("peak_cuda_memory_gib")
             tok_s = summary.get("tokens_per_sec_train_excluding_first_step") or summary.get("tokens_per_sec_train")
-            print(f"{run_dir}\t{policy}\t{seed}\t{steps}\t{lr:g}\t{batch}\t{eval_loss:.6f}\t{mem:.3f}\t{tok_s:.1f}")
-            by_run[(seed, steps, lr)][policy] = summary
+            print(f"{run_dir}\t{model}\t{policy}\t{seed}\t{steps}\t{lr:g}\t{seq_len}\t{batch}\t{eval_loss:.6f}\t{mem:.3f}\t{tok_s:.1f}")
+            by_run[(model, seed, steps, seq_len, int(batch), lr)][policy] = summary
 
         print("\npaired policies vs bf16_baseline")
-        print("policy\tseed\tsteps\tlr\teval_delta%\tmem_delta%\ttok_s_delta%")
-        for (seed, steps, lr), policies in sorted(by_run.items()):
+        print("model\tpolicy\tseed\tsteps\tlr\tseq_len\tbatch\teval_delta%\tmem_delta%\ttok_s_delta%")
+        for (model, seed, steps, seq_len, batch, lr), policies in sorted(by_run.items()):
             base = policies.get("bf16_baseline")
             if not base:
                 continue
@@ -81,7 +83,7 @@ def main() -> None:
                 eval_delta = (summary["final_eval_loss"] - base["final_eval_loss"]) / base["final_eval_loss"] * 100
                 mem_delta = (summary["peak_cuda_memory_gib"] - base["peak_cuda_memory_gib"]) / base["peak_cuda_memory_gib"] * 100
                 tps_delta = (policy_tps - base_tps) / base_tps * 100
-                print(f"{policy}\t{seed}\t{steps}\t{lr:g}\t{eval_delta:+.2f}\t{mem_delta:+.2f}\t{tps_delta:+.2f}")
+                print(f"{model}\t{policy}\t{seed}\t{steps}\t{lr:g}\t{seq_len}\t{batch}\t{eval_delta:+.2f}\t{mem_delta:+.2f}\t{tps_delta:+.2f}")
 
 
 if __name__ == "__main__":

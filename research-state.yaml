@@ -575,11 +575,41 @@ experiments:
       wall_time_sec: 184.38977003097534
       change_summary: "QLoRA 4-bit NF4 on lab RTX 3090. It failed the 1% quality gate (+2.83%) and also used more memory (+15.8%) and lower throughput (-37.6%) than matched bf16, though without instability events."
       artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_2_hw_qlora_4bit_nf4_seed42_100/summary.json"
+    - experiment_id: "h6_3_qwen7b_resource_bf16_seed42_100_rtx3090"
+      hypothesis: "H6.3"
+      type: "resource_baseline"
+      metric_value: 1.3987619400024414
+      metric_name: "final_eval_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 680.4651031494141
+      change_summary: "Matched bf16 Qwen2.5-7B resource baseline on lab RTX 3090 for 100 steps, per-device batch size 1 and gradient accumulation 16. Peak memory 19.448 GiB, train throughput 191.2 tokens/sec, zero instability events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_3_qwen7b_hw_bf16_seed42_100/summary.json"
+    - experiment_id: "h6_3_qwen7b_resource_lora_8bit_int8_seed42_100_rtx3090"
+      hypothesis: "H6.3"
+      type: "resource_treatment"
+      metric_value: 1.4002762871980667
+      metric_name: "final_eval_loss"
+      baseline: 1.3987619400024414
+      delta: 0.001514347195625278
+      wall_time_sec: 1129.3705508708954
+      change_summary: "bitsandbytes 8-bit LoRA on Qwen2.5-7B. Quality stayed within 1% (+0.108%) and saved peak memory (-6.70%), but throughput was much slower (-40.53%) than matched bf16. bitsandbytes warned that fp32/bf16 inputs are cast to fp16 in MatMul8bitLt."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_3_qwen7b_hw_lora_8bit_int8_seed42_100/summary.json"
+    - experiment_id: "h6_3_qwen7b_resource_qlora_4bit_nf4_seed42_100_rtx3090"
+      hypothesis: "H6.3"
+      type: "resource_treatment"
+      metric_value: 1.4086734688282012
+      metric_name: "final_eval_loss"
+      baseline: 1.3987619400024414
+      delta: 0.009911528825759855
+      wall_time_sec: 849.6100008487701
+      change_summary: "QLoRA 4-bit NF4 on Qwen2.5-7B. Quality stayed within 1% (+0.709%) and saved peak memory (-23.32%), but throughput was slower (-19.78%) than matched bf16, with zero instability events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_3_qwen7b_hw_qlora_4bit_nf4_seed42_100/summary.json"
 
 outer_loop:
-  cycle: 11
-  last_direction: "prepare a progress report or pivot to a different hardware-backed implementation; do not deepen generic bitsandbytes on this setup"
-  last_reflection: "H6.2 completed on the lab RTX 3090. Existing bitsandbytes low-precision paths do not provide resource savings for this Qwen2.5-0.5B LoRA setup. The 8-bit policy preserved quality (+0.102%) but used 16.8% more memory and was 40.2% slower than bf16. QLoRA 4-bit NF4 failed the 1% quality gate (+2.83%) and was also worse on memory and throughput. Fake-int8 k=24 remained quality-preserving (+0.268%) but still had no resource benefit. The supported contribution is now calibration-guided sensitivity ranking plus safe budgeted policy expansion; hardware savings require a different implementation path, likely custom/module-selective kernels or a larger model where quantization overhead amortizes."
+  cycle: 12
+  last_direction: "treat 7B low-bit results as a memory-capacity trade-off; next either replicate 7B for longer or read hardware-kernel literature before claiming resource savings"
+  last_reflection: "H6.3 completed on the lab RTX 3090 with Qwen2.5-7B. Existing bitsandbytes low-bit paths finally produce peak-memory savings at this scale: 8-bit LoRA saved 6.70% memory with +0.108% eval-loss degradation, and QLoRA 4-bit NF4 saved 23.32% memory with +0.709% degradation. Both stayed within the 1% quality gate and had zero instability, but both were slower than bf16, especially 8-bit LoRA (-40.53%). The 8-bit path emitted MatMul8bitLt warnings that fp32/bf16 inputs are cast to fp16 during quantization, so describe it as int8 weights with fp16 activation matmul behavior rather than pure bf16 compute."
 
 workspace:
   findings: "findings.md"

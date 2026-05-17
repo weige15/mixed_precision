@@ -141,6 +141,18 @@ H6.2 tests whether existing hardware-backed low-precision paths produce a real r
 
 Interpretation: H6.2 is negative for resource savings on this RTX 3090/bitsandbytes setup. The 8-bit policy preserves quality but loses badly on memory and throughput. QLoRA fails the 1% quality gate and also loses on memory and throughput. Fake-int8 k=24 remains quality-preserving but is still a Python-hook sensitivity proxy, not a resource implementation. This strengthens the current framing: the supported contribution is calibration-guided precision sensitivity ranking and safe policy expansion, while hardware savings require a different implementation path.
 
+## 2026-05-17 H6.3 7B Hardware Scale Screen
+
+The 7B scale screen ran on the lab RTX 3090 (`cuda_device_name=NVIDIA GeForce RTX 3090`, `CUDA_VISIBLE_DEVICES=3`) with Qwen/Qwen2.5-7B, per-device batch size 1, gradient accumulation 16, effective batch size 16, sequence length 512, learning rate `2e-4`, and 100 optimizer steps.
+
+| policy | eval loss | eval delta vs bf16 | peak GiB | memory delta | train tok/s ex-first | tok/s delta | instability |
+|---|---:|---:|---:|---:|---:|---:|---|
+| bf16 | `1.39876` | - | `19.448` | - | `191.2` | - | none |
+| bitsandbytes 8-bit LoRA | `1.40028` | `+0.108%` | `18.145` | `-6.70%` | `113.7` | `-40.53%` | none |
+| QLoRA 4-bit NF4 | `1.40867` | `+0.709%` | `14.912` | `-23.32%` | `153.4` | `-19.78%` | none |
+
+Interpretation: 7B is the first scale where existing bitsandbytes low-bit paths produce real peak-memory savings under this setup. Both 8-bit LoRA and QLoRA 4-bit NF4 stay inside the locked 1% validation-loss gate and have zero loss spikes or NaN/Inf events. The resource trade-off is still not Pareto-positive because both policies reduce throughput, with 8-bit LoRA especially slow. During 8-bit LoRA, bitsandbytes emitted `MatMul8bitLt` warnings that fp32 and bf16 inputs are cast to fp16 during quantization. This does not invalidate the run, but it means the 8-bit result should be described as a hardware-backed int8-weight path with fp16 activation matmul behavior, not as pure bf16 compute.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.
