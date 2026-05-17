@@ -52,6 +52,8 @@ The H6.2 lab RTX 3090 feasibility screen is complete and negative for resource s
 
 The H6.3 7B scale screen changes the resource story from uniformly negative to a memory-throughput trade-off. On Qwen/Qwen2.5-7B, matched bf16 reached eval loss `1.39876`, peak memory `19.448 GiB`, and `191.2` train tokens/sec excluding the first step. bitsandbytes 8-bit LoRA reached `1.40028` (`+0.108%`), saved `6.70%` peak memory, but was `40.53%` slower. QLoRA 4-bit NF4 reached `1.40867` (`+0.709%`), saved `23.32%` peak memory, but was `19.78%` slower. Both low-bit policies stayed within the 1% quality gate with zero instability events. The 8-bit run emitted `MatMul8bitLt` warnings showing fp32/bf16 inputs are cast to fp16 during quantization, so this result is best described as int8-weight training with fp16 activation matmul behavior rather than pure bf16 compute.
 
+The H6.3 7B 500-step seed-42 follow-up confirms QLoRA as the useful hardware-backed baseline. Matched bf16 reached eval loss `1.37747`, peak memory `19.448 GiB`, and `191.6` train tokens/sec excluding the first step. QLoRA 4-bit NF4 reached eval loss `1.38524`, a `+0.563%` relative degradation that remains inside the 1% quality gate, with the same `23.32%` peak-memory saving and a `19.95%` throughput penalty. Both runs had zero loss spikes and zero NaN/Inf events.
+
 ## Patterns and Insights
 
 - The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.
@@ -86,6 +88,7 @@ The H6.3 7B scale screen changes the resource story from uniformly negative to a
 - H6.1 `k=24` is now the best quality-preserving policy result. It demotes half of the eligible MLP gate/up modules and holds across three seeds, but it should not be described as resource-saving until backed by hardware-supported lower-precision kernels.
 - H6.2 should compare resource deltas only within matched hardware labels and microbatch settings. Do not mix old batch-size-1 results with batch-size-2 resource screens when making throughput claims.
 - On the lab RTX 3090, existing bitsandbytes 4-bit/8-bit training paths do not provide the desired resource win for Qwen2.5-0.5B or 1.5B LoRA. At Qwen2.5-7B they do save memory, but both are slower than bf16, so the current evidence supports a memory-capacity trade-off rather than a Pareto improvement.
+- The Qwen2.5-7B QLoRA memory-capacity trade-off holds for 500 steps on seed 42: quality stays inside the 1% gate, peak memory drops by 23.32%, and throughput remains about 20% slower.
 - bitsandbytes 8-bit LoRA casts bf16/fp32 activations to fp16 inside `MatMul8bitLt`; reports should not describe the 8-bit path as pure bf16 compute.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
 - Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.

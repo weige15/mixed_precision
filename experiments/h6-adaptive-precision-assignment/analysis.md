@@ -153,6 +153,17 @@ The 7B scale screen ran on the lab RTX 3090 (`cuda_device_name=NVIDIA GeForce RT
 
 Interpretation: 7B is the first scale where existing bitsandbytes low-bit paths produce real peak-memory savings under this setup. Both 8-bit LoRA and QLoRA 4-bit NF4 stay inside the locked 1% validation-loss gate and have zero loss spikes or NaN/Inf events. The resource trade-off is still not Pareto-positive because both policies reduce throughput, with 8-bit LoRA especially slow. During 8-bit LoRA, bitsandbytes emitted `MatMul8bitLt` warnings that fp32 and bf16 inputs are cast to fp16 during quantization. This does not invalidate the run, but it means the 8-bit result should be described as a hardware-backed int8-weight path with fp16 activation matmul behavior, not as pure bf16 compute.
 
+## 2026-05-18 H6.3 7B 500-Step QLoRA Replication
+
+The 500-step 7B follow-up replicated the most promising 100-step policy, QLoRA 4-bit NF4, against a matched bf16 control on seed 42. The run used the same lab RTX 3090, Qwen/Qwen2.5-7B, sequence length 512, per-device batch size 1, gradient accumulation 16, effective batch size 16, and learning rate `2e-4`.
+
+| policy | eval loss | eval delta vs bf16 | peak GiB | memory delta | train tok/s ex-first | tok/s delta | instability |
+|---|---:|---:|---:|---:|---:|---:|---|
+| bf16 | `1.37747` | - | `19.448` | - | `191.6` | - | none |
+| QLoRA 4-bit NF4 | `1.38524` | `+0.563%` | `14.912` | `-23.32%` | `153.4` | `-19.95%` | none |
+
+Interpretation: the longer seed-42 run strengthens the 7B memory-capacity trade-off result. QLoRA remains inside the locked 1% validation-loss gate, preserves stability, and saves the same `23.32%` peak memory as the 100-step screen. The throughput penalty is also stable at about `20%`. This is now worth seed replication on seeds 43 and 44 before making a robust 7B claim.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.

@@ -605,11 +605,31 @@ experiments:
       wall_time_sec: 849.6100008487701
       change_summary: "QLoRA 4-bit NF4 on Qwen2.5-7B. Quality stayed within 1% (+0.709%) and saved peak memory (-23.32%), but throughput was slower (-19.78%) than matched bf16, with zero instability events."
       artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_3_qwen7b_hw_qlora_4bit_nf4_seed42_100/summary.json"
+    - experiment_id: "h6_3_qwen7b_resource_bf16_seed42_500_rtx3090"
+      hypothesis: "H6.3"
+      type: "resource_baseline"
+      metric_value: 1.3774729338288307
+      metric_name: "final_eval_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 3333.570438861847
+      change_summary: "Matched bf16 Qwen2.5-7B 500-step resource baseline on lab RTX 3090. Peak memory 19.448 GiB, train throughput 191.6 tokens/sec, zero instability events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_3_qwen7b_500_bf16_seed42_500/summary.json"
+    - experiment_id: "h6_3_qwen7b_resource_qlora_4bit_nf4_seed42_500_rtx3090"
+      hypothesis: "H6.3"
+      type: "resource_treatment"
+      metric_value: 1.3852352100610732
+      metric_name: "final_eval_loss"
+      baseline: 1.3774729338288307
+      delta: 0.00776227623224246
+      wall_time_sec: 4166.570867776871
+      change_summary: "QLoRA 4-bit NF4 on Qwen2.5-7B for 500 steps. Quality stayed within 1% (+0.563%) and saved peak memory (-23.32%), but throughput was slower (-19.95%) than matched bf16, with zero instability events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_3_qwen7b_500_qlora_4bit_nf4_seed42_500/summary.json"
 
 outer_loop:
-  cycle: 12
-  last_direction: "treat 7B low-bit results as a memory-capacity trade-off; next either replicate 7B for longer or read hardware-kernel literature before claiming resource savings"
-  last_reflection: "H6.3 completed on the lab RTX 3090 with Qwen2.5-7B. Existing bitsandbytes low-bit paths finally produce peak-memory savings at this scale: 8-bit LoRA saved 6.70% memory with +0.108% eval-loss degradation, and QLoRA 4-bit NF4 saved 23.32% memory with +0.709% degradation. Both stayed within the 1% quality gate and had zero instability, but both were slower than bf16, especially 8-bit LoRA (-40.53%). The 8-bit path emitted MatMul8bitLt warnings that fp32/bf16 inputs are cast to fp16 during quantization, so describe it as int8 weights with fp16 activation matmul behavior rather than pure bf16 compute."
+  cycle: 13
+  last_direction: "replicate the 7B QLoRA 500-step memory-capacity trade-off on seeds 43 and 44"
+  last_reflection: "The H6.3 Qwen2.5-7B 500-step seed-42 follow-up confirms the 100-step QLoRA signal. QLoRA 4-bit NF4 stayed within the 1% quality gate (+0.563% eval loss), saved 23.32% peak memory, and had zero instability, but remained about 19.95% slower than bf16. This is a stable memory-capacity trade-off rather than a throughput win. The next decisive step is seed 43/44 replication before making a robust 7B claim."
 
 workspace:
   findings: "findings.md"
