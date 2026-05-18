@@ -195,6 +195,25 @@ Stage 2 output fake-int8 perturbation produced a mixed but useful pattern:
 
 Across all 14 modules, max outlier score correlates with absolute perturbation delta at about `0.52`; restricted to projections, the correlation is stronger at about `0.78`. Int8 relative MSE is not predictive in this small panel. Interpretation: the 7B transfer signal is partly positive. The broad high-versus-low structure still exists, especially for projections, but the current 0.5B thresholds are too strict for 7B and do not directly emit useful int8 candidates. Replicate seeds 43 and 44 before updating the policy builder or freezing a 7B selective policy.
 
+## 2026-05-19 H6.4 7B Three-Seed Transfer Synthesis
+
+The H6.4 transfer probe is now replicated across seeds 42, 43, and 44. Stage 1 assignments are exactly stable: every projection in the targeted panel is assigned bf16, and every norm/logit path is assigned fp32. Thus, different seeds do not change the conservative Stage 1 policy, but they do change the calibration loss scale because each seed samples different examples.
+
+Stage 2 perturbation ranking is qualitatively stable:
+
+| module | mean abs loss delta | max abs loss delta | readout |
+|---|---:|---:|---|
+| `layers.4.post_attention_layernorm` | `0.2416` | `0.2729` | consistently very sensitive |
+| `layers.3.mlp.down_proj` | `0.0464` | `0.0606` | consistently sensitive |
+| `layers.24.mlp.down_proj` | `0.0071` | `0.0117` | moderate / borderline |
+| `lm_head` | `0.0070` | `0.0117` | moderate / borderline |
+| `layers.26.mlp.gate_proj` | `0.0014` | `0.0034` | consistently low-delta |
+| `layers.26.mlp.up_proj` | `0.0023` | `0.0044` | consistently low-delta |
+| `layers.27.mlp.gate_proj` | `0.0021` | `0.0034` | consistently low-delta |
+| `layers.26.self_attn.o_proj` | `0.0035` | `0.0046` | consistently low-delta |
+
+Pooled across all three seeds, max outlier score correlates with absolute perturbation delta at about `0.56` overall and `0.78` for projection modules only. Int8 relative MSE remains non-predictive in this panel. The key decision is to stop using fixed 0.5B thresholds for 7B and instead freeze a rank/perturbation-selected 7B policy. The conservative first 7B fake-int8 policy should include only the consistently low-delta modules above and exclude borderline modules such as `layers.27.mlp.up_proj` and `layers.26.self_attn.q_proj`.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.

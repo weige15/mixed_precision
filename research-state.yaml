@@ -685,11 +685,21 @@ experiments:
       wall_time_sec: 10.317770957946777
       change_summary: "Targeted Qwen2.5-7B Stage 2 fake-int8 perturbation probe on seed 42. The largest delta was layers.4.post_attention_layernorm (+0.1809), followed by layers.3.mlp.down_proj (+0.0265). Late gate/up and attention controls were mostly low-delta. Projection outlier score correlated with abs loss delta at about 0.78."
       artifact: "experiments/h6-adaptive-precision-assignment/results/h6_4_qwen7b_transfer_perturb_seed42/perturbation_results.json"
+    - experiment_id: "h6_4_qwen7b_transfer_replicated_seeds42_44"
+      hypothesis: "H6.4"
+      type: "synthesis"
+      metric_value: 0.004626
+      metric_name: "max_abs_loss_delta_selected_low_delta_panel"
+      baseline: null
+      delta: null
+      wall_time_sec: null
+      change_summary: "H6.4 Qwen2.5-7B transfer probe replicated across seeds 42-44. Stage 1 assignments were identical across seeds. The most sensitive paths were layers.4.post_attention_layernorm and layers.3.mlp.down_proj. Four modules had consistently low max abs deltas below 0.005: layers.26.mlp.gate_proj, layers.26.mlp.up_proj, layers.27.mlp.gate_proj, and layers.26.self_attn.o_proj. Projection outlier correlation with abs loss delta stayed around 0.78; int8 relative MSE was non-predictive."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/h6_4_qwen7b_transfer_perturb_seed42/perturbation_results.json"
 
 outer_loop:
-  cycle: 15
-  last_direction: "replicate H6.4 Qwen2.5-7B calibration-transfer probes on seeds 43 and 44 before recalibrating thresholds"
-  last_reflection: "The first H6.4 Qwen2.5-7B transfer probe is partly positive. The broad sensitivity-ranking structure transfers for projections: outlier score correlates with abs perturbation delta at about 0.78, and late gate/up plus attention controls are mostly low-delta. However, 7B activation/error magnitudes are much larger than 0.5B, so the old thresholds assign all projections to bf16 and emit no direct int8 candidates. One norm output path is highly sensitive under output fake-int8 (+0.1809), unlike the earlier 0.5B norm-control pattern. Replicate seeds 43/44 before changing the policy builder."
+  cycle: 16
+  last_direction: "freeze a conservative 7B rank/perturbation-selected fake-int8 policy and test it during LoRA updates"
+  last_reflection: "H6.4 Qwen2.5-7B transfer probes now replicate across seeds 42-44. Different seeds change calibration loss scale but not the qualitative ranking. Stage 1 assignments are identical across seeds, and Stage 2 consistently marks layers.4.post_attention_layernorm and layers.3.mlp.down_proj as sensitive. Four modules are consistently low-delta with max abs delta below 0.005: layers.26.mlp.gate_proj, layers.26.mlp.up_proj, layers.27.mlp.gate_proj, and layers.26.self_attn.o_proj. Next, test whether this conservative 7B fake-int8 policy remains harmless during actual LoRA updates against the existing matched bf16 controls."
 
 workspace:
   findings: "findings.md"
