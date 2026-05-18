@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>H6 Progress Report - Calibration-Guided Precision Assignment</title>
+  <style>
+    :root {
+      --bg: #0f1217;
+      --panel: #171b22;
+      --panel-2: #1f242c;
+      --line: #303742;
+      --text: #e8edf2;
+      --muted: #9aa5b1;
+      --blue: #68a4ff;
+      --green: #54c78a;
+      --amber: #f0b35a;
+      --red: #ee6b6e;
+      --violet: #b99cff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(1180px, calc(100vw - 40px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+
+    header {
+      padding: 28px 0 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    p { margin: 0 0 14px; color: #d3dae1; }
+
+    .subtitle {
+      max-width: 920px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 13px;
+    }
+
+    section {
+      margin: 0 0 34px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 18px 0 0;
+    }
+
+    .stat, .box, .chart {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .stat {
+      padding: 16px;
+    }
+
+    .stat .value {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .green { color: var(--green); }
+    .blue { color: var(--blue); }
+    .amber { color: var(--amber); }
+    .red { color: var(--red); }
+    .violet { color: var(--violet); }
+
+    .box {
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .chart {
+      padding: 18px;
+      overflow-x: auto;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 10px 11px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    th:first-child, td:first-child { text-align: left; }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      background: var(--panel-2);
+    }
+
+    .callout {
+      border-left: 4px solid var(--green);
+      background: #14241d;
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin-top: 14px;
+    }
+
+    .warn {
+      border-left-color: var(--amber);
+      background: #2a2115;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 13px;
+      min-height: 118px;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--blue);
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin: 5px 0;
+      color: #d3dae1;
+    }
+
+    code {
+      background: #0b0d11;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 1px 5px;
+      color: #dce7f3;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      main { width: min(100vw - 24px, 1180px); padding-top: 18px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .two-col { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Calibration-Guided Precision Assignment</h1>
+    <p class="subtitle">
+      Progress report on whether short pre-training precision checks can identify precision-sensitive modules
+      and guide stable low-precision LoRA fine-tuning.
+    </p>
+    <div class="meta">
+      <span class="pill">Report date: 2026-05-19</span>
+      <span class="pill">Project status: active</span>
+      <span class="pill">Main hypothesis: H6</span>
+      <span class="pill">Hardware focus: RTX 3090</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>Executive Takeaway</h2>
+    <div class="box">
+      <p>
+        The project now has two defensible findings. First, cheap calibration signals identify safe and unsafe
+        module-level precision candidates in Qwen2.5-0.5B LoRA: high-risk MLP down projections show large
+        perturbation loss deltas, while selected late-layer gate/up projections remain quality-safe across
+        three seeds. Second, generic QLoRA 4-bit NF4 becomes useful at Qwen2.5-7B as a memory-capacity
+        trade-off: it saves 23.32% peak memory across three 500-step seeds while staying inside the locked
+        1% eval-loss gate, but it is about 20% slower than bf16.
+      </p>
+      <div class="callout">
+        The current claim is not a speed win. The clean claim is: calibration predicts precision sensitivity
+        at small scale, and hardware-backed QLoRA provides a robust 7B memory-capacity trade-off.
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="stat">
+        <div class="value green">-23.32%</div>
+        <div class="label">7B QLoRA peak-memory change vs bf16</div>
+      </div>
+      <div class="stat">
+        <div class="value amber">+0.686%</div>
+        <div class="label">Mean 7B QLoRA eval-loss degradation</div>
+      </div>
+      <div class="stat">
+        <div class="value red">-20.04%</div>
+        <div class="label">Mean 7B QLoRA throughput change</div>
+      </div>
+      <div class="stat">
+        <div class="value blue">0</div>
+        <div class="label">Loss spikes or NaN/Inf events in 7B 500-step runs</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Research Question</h2>
+    <div class="box">
+      <p>
+        Before LoRA fine-tuning, can a short precision check identify which model modules are
+        precision-sensitive, so a frozen mixed-precision policy can match bf16 validation quality while saving
+        resources or expanding the stable fine-tuning envelope?
+      </p>
+      <p>
+        The original static-island idea, keeping norms in fp32, became a weak anchor rather than the main
+        result. Qwen2 RMSNorm already upcasts its reduction arithmetic internally, so hand-picking norm
+        islands does not produce a meaningful effect. The stronger path is measured precision sensitivity.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What We Tried</h2>
+    <div class="flow">
+      <div class="step">
+        <strong>H1 Static Norms</strong>
+        <span>fp32 norms improved seed-42 eval by only 0.20%, below the locked 1% support threshold.</span>
+      </div>
+      <div class="step">
+        <strong>H5 Dtype Validity</strong>
+        <span>Qwen2RMSNorm source casts to fp32 for reductions, explaining why H1 had little room to help.</span>
+      </div>
+      <div class="step">
+        <strong>H6 Signals</strong>
+        <span>Activation outliers and int8 relative MSE produced stable module rankings across seeds.</span>
+      </div>
+      <div class="step">
+        <strong>H6 Perturbations</strong>
+        <span>High-risk down projections caused large loss deltas; late gate/up candidates stayed near zero.</span>
+      </div>
+      <div class="step">
+        <strong>H6.3 Scaling</strong>
+        <span>At 7B, QLoRA gives repeatable memory savings under the quality gate, but not speed.</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Finding 1: Calibration Predicts Precision Sensitivity</h2>
+    <div class="two-col">
+      <div class="box">
+        <h3>Signal-to-perturbation link</h3>
+        <p>
+          In the H6 Stage 2 perturbation probe, fake-int8 output perturbations of high-risk MLP down
+          projections caused large loss increases in every seed. Relaxed low-risk late-layer gate/up
+          projections stayed near zero.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Module group</th>
+              <th>Cross-seed behavior</th>
+              <th>Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>High-risk MLP down projections</td>
+              <td>+0.221 to +0.370 mean loss delta</td>
+              <td>Keep conservative</td>
+            </tr>
+            <tr>
+              <td>Late-layer gate/up candidates</td>
+              <td>Mean absolute delta 0.0016 to 0.0035</td>
+              <td>Safe demotion candidates</td>
+            </tr>
+            <tr>
+              <td>MLP outlier score correlation</td>
+              <td>About 0.91 with absolute loss delta</td>
+              <td>Useful ranking signal</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chart">
+        <h3>H6.1 quality preservation across seeds</h3>
+        <svg viewBox="0 0 560 300" role="img" aria-label="H6.1 k24 eval deltas across seeds">
+          <rect x="0" y="0" width="560" height="300" fill="#171b22"/>
+          <line x1="70" y1="238" x2="520" y2="238" stroke="#303742"/>
+          <line x1="70" y1="68" x2="70" y2="238" stroke="#303742"/>
+          <line x1="70" y1="68" x2="520" y2="68" stroke="#f0b35a" stroke-dasharray="6 6"/>
+          <text x="526" y="72" fill="#f0b35a" font-size="12">1% gate</text>
+          <text x="18" y="73" fill="#9aa5b1" font-size="12">1.0%</text>
+          <text x="18" y="242" fill="#9aa5b1" font-size="12">0.0%</text>
+          <rect x="115" y="217.3" width="62" height="20.7" fill="#68a4ff"/>
+          <rect x="249" y="209.3" width="62" height="28.7" fill="#68a4ff"/>
+          <rect x="383" y="221.3" width="62" height="16.7" fill="#68a4ff"/>
+          <text x="146" y="205" text-anchor="middle" fill="#e8edf2" font-size="13">+0.122%</text>
+          <text x="280" y="197" text-anchor="middle" fill="#e8edf2" font-size="13">+0.169%</text>
+          <text x="414" y="209" text-anchor="middle" fill="#e8edf2" font-size="13">+0.098%</text>
+          <text x="146" y="262" text-anchor="middle" fill="#9aa5b1" font-size="13">seed 42</text>
+          <text x="280" y="262" text-anchor="middle" fill="#9aa5b1" font-size="13">seed 43</text>
+          <text x="414" y="262" text-anchor="middle" fill="#9aa5b1" font-size="13">seed 44</text>
+          <text x="280" y="26" text-anchor="middle" fill="#e8edf2" font-size="15" font-weight="700">H6.1 k=24 fake-int8 eval degradation</text>
+          <text x="280" y="45" text-anchor="middle" fill="#9aa5b1" font-size="12">All seeds far inside the locked 1% quality gate</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Finding 2: 7B QLoRA Is a Memory-Capacity Trade-Off</h2>
+    <div class="box">
+      <p>
+        The 0.5B and 1.5B bitsandbytes screens were negative for resource savings. The 7B result changes the
+        story: QLoRA 4-bit NF4 reliably reduces peak memory by 23.32% while keeping eval loss within the
+        1% gate across three 500-step seeds. It is still about 20% slower than bf16.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Seed</th>
+            <th>BF16 eval</th>
+            <th>QLoRA eval</th>
+            <th>Eval delta</th>
+            <th>Peak-memory delta</th>
+            <th>Throughput delta</th>
+            <th>Instability</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>42</td>
+            <td>1.37747</td>
+            <td>1.38524</td>
+            <td>+0.564%</td>
+            <td class="green">-23.32%</td>
+            <td class="red">-19.95%</td>
+            <td>none</td>
+          </tr>
+          <tr>
+            <td>43</td>
+            <td>1.36653</td>
+            <td>1.37427</td>
+            <td>+0.566%</td>
+            <td class="green">-23.32%</td>
+            <td class="red">-20.18%</td>
+            <td>none</td>
+          </tr>
+          <tr>
+            <td>44</td>
+            <td>1.34233</td>
+            <td>1.35478</td>
+            <td>+0.927%</td>
+            <td class="green">-23.32%</td>
+            <td class="red">-19.98%</td>
+            <td>none</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart">
+      <h3>7B QLoRA trade-off by seed</h3>
+      <svg viewBox="0 0 920 360" role="img" aria-label="7B QLoRA eval, memory, and throughput deltas">
+        <rect x="0" y="0" width="920" height="360" fill="#171b22"/>
+        <text x="460" y="28" text-anchor="middle" fill="#e8edf2" font-size="16" font-weight="700">Three-seed 500-step QLoRA deltas vs matched bf16</text>
+        <text x="460" y="50" text-anchor="middle" fill="#9aa5b1" font-size="12">Positive eval delta is worse; negative memory and throughput deltas are relative reductions</text>
+
+        <line x1="96" y1="285" x2="852" y2="285" stroke="#303742"/>
+        <line x1="96" y1="80" x2="96" y2="285" stroke="#303742"/>
+        <text x="78" y="89" fill="#9aa5b1" font-size="12" text-anchor="end">+1%</text>
+        <text x="78" y="289" fill="#9aa5b1" font-size="12" text-anchor="end">0</text>
+        <line x1="96" y1="80" x2="852" y2="80" stroke="#f0b35a" stroke-dasharray="6 6"/>
+        <text x="858" y="84" fill="#f0b35a" font-size="12">quality gate</text>
+
+        <rect x="146" y="169.5" width="38" height="115.5" fill="#f0b35a"/>
+        <rect x="184" y="80" width="38" height="205" fill="#54c78a" opacity="0.85"/>
+        <rect x="222" y="109.6" width="38" height="175.4" fill="#ee6b6e" opacity="0.85"/>
+        <text x="203" y="315" fill="#9aa5b1" font-size="13" text-anchor="middle">seed 42</text>
+
+        <rect x="406" y="169.0" width="38" height="116.0" fill="#f0b35a"/>
+        <rect x="444" y="80" width="38" height="205" fill="#54c78a" opacity="0.85"/>
+        <rect x="482" y="107.5" width="38" height="177.5" fill="#ee6b6e" opacity="0.85"/>
+        <text x="463" y="315" fill="#9aa5b1" font-size="13" text-anchor="middle">seed 43</text>
+
+        <rect x="666" y="94.9" width="38" height="190.1" fill="#f0b35a"/>
+        <rect x="704" y="80" width="38" height="205" fill="#54c78a" opacity="0.85"/>
+        <rect x="742" y="109.3" width="38" height="175.7" fill="#ee6b6e" opacity="0.85"/>
+        <text x="723" y="315" fill="#9aa5b1" font-size="13" text-anchor="middle">seed 44</text>
+
+        <rect x="286" y="324" width="14" height="14" fill="#f0b35a"/>
+        <text x="306" y="336" fill="#d3dae1" font-size="12">eval degradation</text>
+        <rect x="424" y="324" width="14" height="14" fill="#54c78a"/>
+        <text x="444" y="336" fill="#d3dae1" font-size="12">memory reduction</text>
+        <rect x="570" y="324" width="14" height="14" fill="#ee6b6e"/>
+        <text x="590" y="336" fill="#d3dae1" font-size="12">throughput reduction</text>
+      </svg>
+    </div>
+  </section>
+
+  <section>
+    <h2>Scale Pattern</h2>
+    <div class="box">
+      <p>
+        The hardware-backed results are scale-dependent. At 0.5B and 1.5B, bitsandbytes overhead dominates.
+        At 7B, QLoRA finally pays back in memory, but it still does not improve throughput.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Policy</th>
+            <th>Eval delta</th>
+            <th>Peak-memory delta</th>
+            <th>Throughput delta</th>
+            <th>Readout</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Qwen2.5-0.5B</td>
+            <td>QLoRA 4-bit NF4</td>
+            <td>+2.83%</td>
+            <td class="red">+15.79%</td>
+            <td class="red">-37.58%</td>
+            <td>Fails quality and resources</td>
+          </tr>
+          <tr>
+            <td>Qwen2.5-1.5B</td>
+            <td>QLoRA 4-bit NF4</td>
+            <td>+1.80%</td>
+            <td class="red">+5.79%</td>
+            <td class="red">-20.06%</td>
+            <td>Fails quality and memory</td>
+          </tr>
+          <tr>
+            <td>Qwen2.5-7B</td>
+            <td>QLoRA 4-bit NF4</td>
+            <td>+0.686% mean</td>
+            <td class="green">-23.32%</td>
+            <td class="red">-20.04% mean</td>
+            <td>Supported memory-capacity trade-off</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout warn">
+        One artifact directory was named <code>qwen15b</code>, but the recorded model in the summaries is
+        <code>Qwen/Qwen2.5-1.5B</code>. The report treats it as 1.5B.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Current Interpretation</h2>
+    <div class="two-col">
+      <div class="box">
+        <h3>What is supported</h3>
+        <ul>
+          <li>Module sensitivity is measurable before training.</li>
+          <li>Outlier-based calibration predicts MLP projection perturbation sensitivity.</li>
+          <li>Frozen fake-int8 policies selected by calibration preserve quality across seeds.</li>
+          <li>At 7B, QLoRA provides repeatable memory savings within the 1% quality gate.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>What is not supported</h3>
+        <ul>
+          <li>fp32 norm islands are not a strong intervention for Qwen2.5 LoRA.</li>
+          <li>Generic bitsandbytes gives no resource win at 0.5B or 1.5B in this setup.</li>
+          <li>QLoRA is not a throughput improvement on the RTX 3090.</li>
+          <li>The current 7B QLoRA result is not yet calibration-guided selective precision.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Recommended Next Step</h2>
+    <div class="box">
+      <p>
+        Stop repeating generic bitsandbytes baselines for now. The result is clear enough. The next experiment
+        should test whether the calibration-guided sensitivity story transfers from 0.5B to 7B.
+      </p>
+      <ol>
+        <li>Run 7B calibration on a smaller module panel first, because all-module calibration may be expensive.</li>
+        <li>Include known 0.5B high-risk analogs, late-layer gate/up candidates, and a few attention controls.</li>
+        <li>Compare whether 7B sensitivity rankings agree with 0.5B, then decide whether selective low precision at 7B is plausible.</li>
+      </ol>
+      <div class="callout">
+        If the 7B calibration ranking transfers, the paper story becomes stronger: cheap probes identify
+        precision-tolerant modules, and the hardware-backed 7B result shows why memory capacity matters.
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Generated from local research artifacts in <code>research-state.yaml</code>, <code>findings.md</code>,
+    and <code>experiments/h6-adaptive-precision-assignment/results/</code>.
+  </footer>
+</main>
+</body>
+</html>

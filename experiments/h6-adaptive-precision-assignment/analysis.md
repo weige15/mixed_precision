@@ -164,6 +164,18 @@ The 500-step 7B follow-up replicated the most promising 100-step policy, QLoRA 4
 
 Interpretation: the longer seed-42 run strengthens the 7B memory-capacity trade-off result. QLoRA remains inside the locked 1% validation-loss gate, preserves stability, and saves the same `23.32%` peak memory as the 100-step screen. The throughput penalty is also stable at about `20%`. This is now worth seed replication on seeds 43 and 44 before making a robust 7B claim.
 
+## 2026-05-18 H6.3 7B 500-Step Three-Seed Replication
+
+The 7B QLoRA 500-step comparison is now replicated across seeds 42, 43, and 44 with matched bf16 controls.
+
+| seed | bf16 eval | QLoRA eval | eval delta | peak-memory delta | tok/s delta | instability |
+|---:|---:|---:|---:|---:|---:|---|
+| 42 | `1.37747` | `1.38524` | `+0.564%` | `-23.32%` | `-19.95%` | none |
+| 43 | `1.36653` | `1.37427` | `+0.566%` | `-23.32%` | `-20.18%` | none |
+| 44 | `1.34233` | `1.35478` | `+0.927%` | `-23.32%` | `-19.98%` | none |
+
+Mean eval degradation is `+0.686%`, and the worst seed remains inside the locked 1% quality gate. Peak-memory savings are exactly stable at `-23.32%`, because the loaded model memory footprint dominates. Throughput is also consistently about `20%` lower than bf16. This supports H6.3 as a robust memory-capacity trade-off for Qwen2.5-7B LoRA on the lab RTX 3090, but not as a speed improvement.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.

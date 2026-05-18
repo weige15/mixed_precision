@@ -50,8 +50,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset-size", type=int, default=128)
     parser.add_argument("--dtype", default="bf16", choices=["bf16", "fp16", "fp32"])
     parser.add_argument("--max-modules", type=int, default=0, help="0 means probe all candidate modules.")
+    parser.add_argument("--modules", nargs="*", default=None, help="Exact module names to probe.")
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--policy-name", default="h6_probe_policy")
+    parser.add_argument("--local-files-only", action="store_true")
     return parser.parse_args()
 
 
@@ -355,10 +357,15 @@ def main() -> None:
     requested_dtype = dtype_from_arg(torch, args.dtype)
     use_autocast = device == "cuda" and requested_dtype in (torch.bfloat16, torch.float16)
     load_dtype = requested_dtype if use_autocast else torch.float32
+    local_files_only = args.local_files_only or os.environ.get("HF_HUB_OFFLINE") == "1"
     if device == "cuda":
         torch.cuda.reset_peak_memory_stats()
 
-    tokenizer = AutoTokenizer.from_pretrained(args.model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(
+        args.model_name,
+        trust_remote_code=True,
+        local_files_only=local_files_only,
+    )
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
@@ -366,6 +373,7 @@ def main() -> None:
         args.model_name,
         torch_dtype=load_dtype,
         trust_remote_code=True,
+        local_files_only=local_files_only,
     )
     model.config.use_cache = False
     model.to(device)
@@ -393,9 +401,18 @@ def main() -> None:
         collate_fn=DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False),
     )
 
+    named_modules = dict(model.named_modules())
+    requested_modules = set(args.modules or [])
+    if requested_modules:
+        missing = sorted(name for name in requested_modules if name not in named_modules)
+        if missing:
+            raise SystemExit("Requested module(s) not found:\n" + "\n".join(missing))
+
     accumulators: dict[str, SignalAccumulator] = {}
     hooks = []
     for name, module in model.named_modules():
+        if requested_modules and name not in requested_modules:
+            continue
         role = module_role(name, module)
         if role is None:
             continue
