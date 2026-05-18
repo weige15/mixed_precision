@@ -176,6 +176,25 @@ The 7B QLoRA 500-step comparison is now replicated across seeds 42, 43, and 44 w
 
 Mean eval degradation is `+0.686%`, and the worst seed remains inside the locked 1% quality gate. Peak-memory savings are exactly stable at `-23.32%`, because the loaded model memory footprint dominates. Throughput is also consistently about `20%` lower than bf16. This supports H6.3 as a robust memory-capacity trade-off for Qwen2.5-7B LoRA on the lab RTX 3090, but not as a speed improvement.
 
+## 2026-05-19 H6.4 7B Calibration Transfer Probe
+
+H6.4 tests whether the 0.5B calibration-guided sensitivity story transfers to a targeted Qwen2.5-7B module panel. The seed-42 probe used bf16 autocast, sequence length 512, batch size 1, four calibration batches, and 14 modules covering early/high-risk MLP down projections, late-layer gate/up projections, attention controls, norms, and the language-model head.
+
+Stage 1 assigned all seven MLP projections and all three attention projections to bf16, while promoting all three norm paths and the logits path to fp32. No projection met the current int8-candidate thresholds at 7B, because outlier scores and int8 relative MSE were generally much larger than the 0.5B thresholds.
+
+Stage 2 output fake-int8 perturbation produced a mixed but useful pattern:
+
+| module group | representative modules | loss-delta behavior | interpretation |
+|---|---|---:|---|
+| Norm output path | `layers.4.post_attention_layernorm` | `+0.1809` | Very sensitive; keep conservative |
+| Early/high-risk MLP down | `layers.3.mlp.down_proj` | `+0.0265` | Sensitive, but weaker than 0.5B high-risk panel |
+| Mid/late MLP down | `layers.24.mlp.down_proj` | `+0.0081` | Moderate sensitivity |
+| Late gate/up candidates | `layers.26/27.mlp.gate_proj/up_proj` | `0.0007` to `0.0034` abs, except no large spikes | Mostly low-delta candidates |
+| Attention controls | `layers.26.self_attn.q_proj/o_proj` | `0.0006` to `0.0023` abs | Low local output perturbation delta in this panel |
+| Logits | `lm_head` | `+0.0048` | Small but nonzero |
+
+Across all 14 modules, max outlier score correlates with absolute perturbation delta at about `0.52`; restricted to projections, the correlation is stronger at about `0.78`. Int8 relative MSE is not predictive in this small panel. Interpretation: the 7B transfer signal is partly positive. The broad high-versus-low structure still exists, especially for projections, but the current 0.5B thresholds are too strict for 7B and do not directly emit useful int8 candidates. Replicate seeds 43 and 44 before updating the policy builder or freezing a 7B selective policy.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.

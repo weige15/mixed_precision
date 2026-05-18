@@ -56,6 +56,8 @@ The H6.3 7B 500-step seed-42 follow-up confirms QLoRA as the useful hardware-bac
 
 The H6.3 7B 500-step QLoRA result now replicates across seeds 42, 43, and 44. Paired eval-loss degradations are `+0.564%`, `+0.566%`, and `+0.927%`, with mean `+0.686%`; all remain inside the locked 1% quality gate. Peak-memory savings are stable at `23.32%`, and throughput is consistently about `20%` lower than matched bf16. All six runs had zero loss spikes and zero NaN/Inf events. This is now a robust memory-capacity trade-off result for Qwen2.5-7B on the lab RTX 3090, not a throughput win.
 
+The first H6.4 7B calibration-transfer probe is complete for seed 42. Stage 1 on a 14-module targeted panel found much larger outlier and fake-quantization-error signals than at 0.5B, assigning every projection in the panel to bf16 and every norm/logit path to fp32. Stage 2 fake-int8 output perturbation showed one very sensitive norm path (`layers.4.post_attention_layernorm`, loss delta `+0.1809`), a sensitive early MLP down projection (`layers.3.mlp.down_proj`, `+0.0265`), moderate sensitivity for `layers.24.mlp.down_proj` (`+0.0081`), and mostly low deltas for late-layer gate/up and attention controls (`0.0006` to `0.0034` absolute for the lowest group). Projection-only outlier score correlates with absolute perturbation delta at about `0.78`, but int8 relative MSE is not predictive in this small panel.
+
 ## Patterns and Insights
 
 - The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.
@@ -91,6 +93,7 @@ The H6.3 7B 500-step QLoRA result now replicates across seeds 42, 43, and 44. Pa
 - H6.2 should compare resource deltas only within matched hardware labels and microbatch settings. Do not mix old batch-size-1 results with batch-size-2 resource screens when making throughput claims.
 - On the lab RTX 3090, existing bitsandbytes 4-bit/8-bit training paths do not provide the desired resource win for Qwen2.5-0.5B or 1.5B LoRA. At Qwen2.5-7B they do save memory, but both are slower than bf16, so the current evidence supports a memory-capacity trade-off rather than a Pareto improvement.
 - The Qwen2.5-7B QLoRA memory-capacity trade-off holds for 500 steps across seeds 42-44: quality stays inside the 1% gate, peak memory drops by 23.32%, and throughput remains about 20% slower.
+- H6.4 seed 42 suggests the calibration-guided sensitivity structure partially transfers to 7B: projection outlier scores still rank perturbation sensitivity reasonably, but the 0.5B thresholds are too strict for 7B and emit no low-precision projection candidates directly.
 - bitsandbytes 8-bit LoRA casts bf16/fp32 activations to fp16 inside `MatMul8bitLt`; reports should not describe the 8-bit path as pure bf16 compute.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
 - Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.

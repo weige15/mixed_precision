@@ -665,11 +665,31 @@ experiments:
       wall_time_sec: 4173.165654182434
       change_summary: "QLoRA 4-bit NF4 on Qwen2.5-7B for 500 steps, seed 44. Quality stayed within 1% (+0.927%) and saved peak memory (-23.32%), but throughput was slower (-19.98%) than matched bf16, with zero instability events."
       artifact: "experiments/h6-adaptive-precision-assignment/results/resource_h6_3_qwen7b_500_qlora_4bit_nf4_seed44_500/summary.json"
+    - experiment_id: "h6_4_qwen7b_transfer_signals_seed42"
+      hypothesis: "H6.4"
+      type: "calibration_probe"
+      metric_value: 1.36299529671669
+      metric_name: "mean_calibration_loss"
+      baseline: null
+      delta: null
+      wall_time_sec: 2.4172635078430176
+      change_summary: "Targeted Qwen2.5-7B Stage 1 calibration transfer probe on seed 42. All projection paths in the 14-module panel were assigned bf16 and all norm/logit paths fp32, indicating the 0.5B thresholds are too strict for 7B. No NaN/Inf events."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/h6_4_qwen7b_transfer_signals_seed42/stability_signals.json"
+    - experiment_id: "h6_4_qwen7b_transfer_perturb_seed42"
+      hypothesis: "H6.4"
+      type: "perturbation_probe"
+      metric_value: 0.1809229552745819
+      metric_name: "max_abs_loss_delta"
+      baseline: null
+      delta: null
+      wall_time_sec: 10.317770957946777
+      change_summary: "Targeted Qwen2.5-7B Stage 2 fake-int8 perturbation probe on seed 42. The largest delta was layers.4.post_attention_layernorm (+0.1809), followed by layers.3.mlp.down_proj (+0.0265). Late gate/up and attention controls were mostly low-delta. Projection outlier score correlated with abs loss delta at about 0.78."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/h6_4_qwen7b_transfer_perturb_seed42/perturbation_results.json"
 
 outer_loop:
-  cycle: 14
-  last_direction: "prepare a progress report and decide whether to conclude H6.3 or test a throughput-oriented backend"
-  last_reflection: "The H6.3 Qwen2.5-7B 500-step QLoRA comparison now replicates across seeds 42, 43, and 44. QLoRA stays inside the 1% quality gate on every seed (+0.564%, +0.566%, +0.927%; mean +0.686%), saves 23.32% peak memory, and has zero instability. Throughput is consistently about 20% lower than bf16. H6.3 is supported as a memory-capacity trade-off for this hardware/model setup, but not as a speed or Pareto improvement."
+  cycle: 15
+  last_direction: "replicate H6.4 Qwen2.5-7B calibration-transfer probes on seeds 43 and 44 before recalibrating thresholds"
+  last_reflection: "The first H6.4 Qwen2.5-7B transfer probe is partly positive. The broad sensitivity-ranking structure transfers for projections: outlier score correlates with abs perturbation delta at about 0.78, and late gate/up plus attention controls are mostly low-delta. However, 7B activation/error magnitudes are much larger than 0.5B, so the old thresholds assign all projections to bf16 and emit no direct int8 candidates. One norm output path is highly sensitive under output fake-int8 (+0.1809), unlike the earlier 0.5B norm-control pattern. Replicate seeds 43/44 before changing the policy builder."
 
 workspace:
   findings: "findings.md"
