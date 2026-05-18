@@ -1,0 +1,568 @@
+{
+  "model_name": "Qwen/Qwen2.5-7B",
+  "dataset_name": "tatsu-lab/alpaca",
+  "seed": 42,
+  "seq_len": 512,
+  "batch_size": 1,
+  "calibration_batches": 4,
+  "dataset_size": 128,
+  "dtype": "bf16",
+  "device": "cuda",
+  "autocast_enabled": true,
+  "bits": [
+    8
+  ],
+  "candidate_policy": "/nfs/home/s314511048/mixed_precision/experiments/h6-adaptive-precision-assignment/results/h6_4_qwen7b_transfer_signals_seed42/policy_trace.json",
+  "lora_targets": [
+    "down_proj",
+    "gate_proj",
+    "k_proj",
+    "o_proj",
+    "q_proj",
+    "up_proj",
+    "v_proj"
+  ],
+  "baseline_loss_mean": 1.36299529671669,
+  "baseline_losses": [
+    1.445083498954773,
+    1.1023386716842651,
+    1.1965876817703247,
+    1.7079713344573975
+  ],
+  "elapsed_sec": 10.317770957946777,
+  "peak_cuda_memory_gib": 15.586938381195068,
+  "results": [
+    {
+      "module": "base_model.model.model.layers.4.post_attention_layernorm",
+      "role": "norm",
+      "class": "Qwen2RMSNorm",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.543918251991272,
+      "loss_delta": 0.1809229552745819,
+      "loss_delta_abs": 0.1809229552745819,
+      "max_batch_loss_delta_abs": 0.21550893783569336,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.6605924367904663,
+        1.228389024734497,
+        1.3665467500686646,
+        1.92014479637146
+      ],
+      "per_batch_loss_delta": [
+        0.21550893783569336,
+        0.12605035305023193,
+        0.16995906829833984,
+        0.2121734619140625
+      ],
+      "stage1_assignment": "fp32",
+      "stage1_reason": "high-sensitivity reduction/output path",
+      "stage1_signals": {
+        "input_outlier_score_max": 755.9990844726562,
+        "output_outlier_score_max": 46.30381774902344,
+        "input_int8_rel_mse_mean": 0.0024704955285415053,
+        "output_int8_rel_mse_mean": 0.01070819259621203,
+        "output_int4_rel_mse_mean": 0.1448884978890419
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.3.mlp.down_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.3894979059696198,
+      "loss_delta": 0.026502609252929688,
+      "loss_delta_abs": 0.026502609252929688,
+      "max_batch_loss_delta_abs": 0.06583809852600098,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.461458444595337,
+        1.1229444742202759,
+        1.1997792720794678,
+        1.7738094329833984
+      ],
+      "per_batch_loss_delta": [
+        0.016374945640563965,
+        0.020605802536010742,
+        0.0031915903091430664,
+        0.06583809852600098
+      ],
+      "stage1_assignment": "bf16",
+      "stage1_reason": "projection appears sensitive under activation probe",
+      "stage1_signals": {
+        "input_outlier_score_max": 461.9297790527344,
+        "output_outlier_score_max": 756.2756958007812,
+        "input_int8_rel_mse_mean": 0.012421918101608753,
+        "output_int8_rel_mse_mean": 0.0016107116534840316,
+        "output_int4_rel_mse_mean": 0.022888464853167534
+      }
+    },
+    {
+      "module": "base_model.model.model.norm",
+      "role": "norm",
+      "class": "Qwen2RMSNorm",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.37740096449852,
+      "loss_delta": 0.014405667781829834,
+      "loss_delta_abs": 0.014405667781829834,
+      "max_batch_loss_delta_abs": 0.04685986042022705,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.4449987411499023,
+        1.1157125234603882,
+        1.1940613985061646,
+        1.7548311948776245
+      ],
+      "per_batch_loss_delta": [
+        -8.475780487060547e-05,
+        0.013373851776123047,
+        -0.0025262832641601562,
+        0.04685986042022705
+      ],
+      "stage1_assignment": "fp32",
+      "stage1_reason": "high-sensitivity reduction/output path",
+      "stage1_signals": {
+        "input_outlier_score_max": 83.39385986328125,
+        "output_outlier_score_max": 43.203121185302734,
+        "input_int8_rel_mse_mean": 0.02010078332386911,
+        "output_int8_rel_mse_mean": 0.007087122183293104,
+        "output_int4_rel_mse_mean": 0.24978932738304138
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.24.mlp.down_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.3710892498493195,
+      "loss_delta": 0.008093953132629395,
+      "loss_delta_abs": 0.008093953132629395,
+      "max_batch_loss_delta_abs": 0.014248847961425781,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.4505565166473389,
+        1.114781141281128,
+        1.2108365297317505,
+        1.7081828117370605
+      ],
+      "per_batch_loss_delta": [
+        0.005473017692565918,
+        0.012442469596862793,
+        0.014248847961425781,
+        0.00021147727966308594
+      ],
+      "stage1_assignment": "bf16",
+      "stage1_reason": "projection appears sensitive under activation probe",
+      "stage1_signals": {
+        "input_outlier_score_max": 97.65504455566406,
+        "output_outlier_score_max": 118.69303894042969,
+        "input_int8_rel_mse_mean": 0.030113645596429706,
+        "output_int8_rel_mse_mean": 0.06286352500319481,
+        "output_int4_rel_mse_mean": 0.7432934790849686
+      }
+    },
+    {
+      "module": "base_model.model.lm_head",
+      "role": "logits",
+      "class": "Linear",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.3678094744682312,
+      "loss_delta": 0.004814177751541138,
+      "loss_delta_abs": 0.004814177751541138,
+      "max_batch_loss_delta_abs": 0.00688624382019043,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.4491066932678223,
+        1.1092249155044556,
+        1.198298454284668,
+        1.714607834815979
+      ],
+      "per_batch_loss_delta": [
+        0.004023194313049316,
+        0.00688624382019043,
+        0.0017107725143432617,
+        0.006636500358581543
+      ],
+      "stage1_assignment": "fp32",
+      "stage1_reason": "non-finite activation observed",
+      "stage1_signals": {
+        "input_outlier_score_max": 43.203121185302734,
+        "output_outlier_score_max": 9.841814041137695,
+        "input_int8_rel_mse_mean": 0.007087122183293104,
+        "output_int8_rel_mse_mean": 0.0003372796672920231,
+        "output_int4_rel_mse_mean": 0.11106818541884422
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.2.self_attn.o_proj",
+      "role": "attention_projection",
+      "class": "Linear",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.3587620854377747,
+      "loss_delta": -0.004233211278915405,
+      "loss_delta_abs": 0.004233211278915405,
+      "max_batch_loss_delta_abs": 0.010843396186828613,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.4342401027679443,
+        1.103342890739441,
+        1.1885465383529663,
+        1.708918809890747
+      ],
+      "per_batch_loss_delta": [
+        -0.010843396186828613,
+        0.0010042190551757812,
+        -0.008041143417358398,
+        0.0009474754333496094
+      ],
+      "stage1_assignment": "bf16",
+      "stage1_reason": "projection appears sensitive under activation probe",
+      "stage1_signals": {
+        "input_outlier_score_max": 30.93918228149414,
+        "output_outlier_score_max": 164.66253662109375,
+        "input_int8_rel_mse_mean": 0.0043653008178807795,
+        "output_int8_rel_mse_mean": 0.12301378883421421,
+        "output_int4_rel_mse_mean": 0.8457400947809219
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.2.mlp.down_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.3592309653759003,
+      "loss_delta": -0.003764331340789795,
+      "loss_delta_abs": 0.003764331340789795,
+      "max_batch_loss_delta_abs": 0.008717179298400879,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.4376617670059204,
+        1.1036560535430908,
+        1.1878705024719238,
+        1.707735538482666
+      ],
+      "per_batch_loss_delta": [
+        -0.007421731948852539,
+        0.0013173818588256836,
+        -0.008717179298400879,
+        -0.0002357959747314453
+      ],
+      "stage1_assignment": "bf16",
+      "stage1_reason": "projection appears sensitive under activation probe",
+      "stage1_signals": {
+        "input_outlier_score_max": 586.9375,
+        "output_outlier_score_max": 68.22691345214844,
+        "input_int8_rel_mse_mean": 0.07169902138411999,
+        "output_int8_rel_mse_mean": 0.022190731950104237,
+        "output_int4_rel_mse_mean": 0.4827500283718109
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.27.mlp.gate_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.3663869500160217,
+      "loss_delta": 0.003391653299331665,
+      "loss_delta_abs": 0.003391653299331665,
+      "max_batch_loss_delta_abs": 0.007884502410888672,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.4435129165649414,
+        1.1071395874023438,
+        1.1990394592285156,
+        1.7158558368682861
+      ],
+      "per_batch_loss_delta": [
+        -0.001570582389831543,
+        0.004800915718078613,
+        0.002451777458190918,
+        0.007884502410888672
+      ],
+      "stage1_assignment": "bf16",
+      "stage1_reason": "projection appears sensitive under activation probe",
+      "stage1_signals": {
+        "input_outlier_score_max": 35.39636993408203,
+        "output_outlier_score_max": 14.099589347839355,
+        "input_int8_rel_mse_mean": 0.0057128435000777245,
+        "output_int8_rel_mse_mean": 0.00087666031322442,
+        "output_int4_rel_mse_mean": 0.3315984606742859
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.26.self_attn.o_proj",
+      "role": "attention_projection",
+      "class": "Linear",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.3653128445148468,
+      "loss_delta": 0.0023175477981567383,
+      "loss_delta_abs": 0.0023175477981567383,
+      "max_batch_loss_delta_abs": 0.003991961479187012,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.4458537101745605,
+        1.103585124015808,
+        1.2005796432495117,
+        1.7112329006195068
+      ],
+      "per_batch_loss_delta": [
+        0.0007702112197875977,
+        0.0012464523315429688,
+        0.003991961479187012,
+        0.003261566162109375
+      ],
+      "stage1_assignment": "bf16",
+      "stage1_reason": "projection appears sensitive under activation probe",
+      "stage1_signals": {
+        "input_outlier_score_max": 17.40237808227539,
+        "output_outlier_score_max": 63.397987365722656,
+        "input_int8_rel_mse_mean": 0.0011375342292012647,
+        "output_int8_rel_mse_mean": 0.014931853162124753,
+        "output_int4_rel_mse_mean": 0.5815434008836746
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.27.mlp.up_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.3608262836933136,
+      "loss_delta": -0.002169013023376465,
+      "loss_delta_abs": 0.002169013023376465,
+      "max_batch_loss_delta_abs": 0.008220672607421875,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.436862826347351,
+        1.1024014949798584,
+        1.1969234943389893,
+        1.7071173191070557
+      ],
+      "per_batch_loss_delta": [
+        -0.008220672607421875,
+        6.282329559326172e-05,
+        0.0003358125686645508,
+        -0.0008540153503417969
+      ],
+      "stage1_assignment": "bf16",
+      "stage1_reason": "projection appears sensitive under activation probe",
+      "stage1_signals": {
+        "input_outlier_score_max": 35.39636993408203,
+        "output_outlier_score_max": 16.477861404418945,
+        "input_int8_rel_mse_mean": 0.0057128435000777245,
+        "output_int8_rel_mse_mean": 0.0012534289271570742,
+        "output_int4_rel_mse_mean": 0.2760583870112896
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.26.mlp.up_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.3648960888385773,
+      "loss_delta": 0.001900792121887207,
+      "loss_delta_abs": 0.001900792121887207,
+      "max_batch_loss_delta_abs": 0.015431642532348633,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.4462593793869019,
+        1.0941309928894043,
+        1.1957910060882568,
+        1.723402976989746
+      ],
+      "per_batch_loss_delta": [
+        0.0011758804321289062,
+        -0.00820767879486084,
+        -0.0007966756820678711,
+        0.015431642532348633
+      ],
+      "stage1_assignment": "bf16",
+      "stage1_reason": "projection appears sensitive under activation probe",
+      "stage1_signals": {
+        "input_outlier_score_max": 95.39448547363281,
+        "output_outlier_score_max": 17.17129135131836,
+        "input_int8_rel_mse_mean": 0.042508846148848534,
+        "output_int8_rel_mse_mean": 0.0012281027593417093,
+        "output_int4_rel_mse_mean": 0.3505881354212761
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.26.mlp.gate_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.3622724413871765,
+      "loss_delta": -0.0007228553295135498,
+      "loss_delta_abs": 0.0007228553295135498,
+      "max_batch_loss_delta_abs": 0.0077048540115356445,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.4373786449432373,
+        1.1023263931274414,
+        1.1946204900741577,
+        1.7147642374038696
+      ],
+      "per_batch_loss_delta": [
+        -0.0077048540115356445,
+        -1.2278556823730469e-05,
+        -0.001967191696166992,
+        0.006792902946472168
+      ],
+      "stage1_assignment": "bf16",
+      "stage1_reason": "projection appears sensitive under activation probe",
+      "stage1_signals": {
+        "input_outlier_score_max": 95.39448547363281,
+        "output_outlier_score_max": 21.715940475463867,
+        "input_int8_rel_mse_mean": 0.042508846148848534,
+        "output_int8_rel_mse_mean": 0.0019698601972777396,
+        "output_int4_rel_mse_mean": 0.6070305854082108
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.4.input_layernorm",
+      "role": "norm",
+      "class": "Qwen2RMSNorm",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.363669514656067,
+      "loss_delta": 0.0006742179393768311,
+      "loss_delta_abs": 0.0006742179393768311,
+      "max_batch_loss_delta_abs": 0.008576750755310059,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.436506748199463,
+        1.1068650484085083,
+        1.1985353231430054,
+        1.712770938873291
+      ],
+      "per_batch_loss_delta": [
+        -0.008576750755310059,
+        0.004526376724243164,
+        0.001947641372680664,
+        0.004799604415893555
+      ],
+      "stage1_assignment": "fp32",
+      "stage1_reason": "high-sensitivity reduction/output path",
+      "stage1_signals": {
+        "input_outlier_score_max": 756.0198364257812,
+        "output_outlier_score_max": 37.64187240600586,
+        "input_int8_rel_mse_mean": 0.0023913405602797866,
+        "output_int8_rel_mse_mean": 0.005047254147939384,
+        "output_int4_rel_mse_mean": 0.2829354703426361
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.26.self_attn.q_proj",
+      "role": "attention_projection",
+      "class": "Linear",
+      "bits": 8,
+      "baseline_loss_mean": 1.36299529671669,
+      "perturbed_loss_mean": 1.3623510599136353,
+      "loss_delta": -0.0006442368030548096,
+      "loss_delta_abs": 0.0006442368030548096,
+      "max_batch_loss_delta_abs": 0.00308382511138916,
+      "baseline_losses": [
+        1.445083498954773,
+        1.1023386716842651,
+        1.1965876817703247,
+        1.7079713344573975
+      ],
+      "perturbed_losses": [
+        1.4463940858840942,
+        1.1007041931152344,
+        1.197418451309204,
+        1.7048875093460083
+      ],
+      "per_batch_loss_delta": [
+        0.001310586929321289,
+        -0.0016344785690307617,
+        0.0008307695388793945,
+        -0.00308382511138916
+      ],
+      "stage1_assignment": "bf16",
+      "stage1_reason": "projection appears sensitive under activation probe",
+      "stage1_signals": {
+        "input_outlier_score_max": 20.186553955078125,
+        "output_outlier_score_max": 11.510747909545898,
+        "input_int8_rel_mse_mean": 0.0019200768729206175,
+        "output_int8_rel_mse_mean": 0.0006277459324337542,
+        "output_int4_rel_mse_mean": 0.1760895997285843
+      }
+    }
+  ]
+}
