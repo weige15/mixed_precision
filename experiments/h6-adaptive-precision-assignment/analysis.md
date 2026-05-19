@@ -214,6 +214,25 @@ Stage 2 perturbation ranking is qualitatively stable:
 
 Pooled across all three seeds, max outlier score correlates with absolute perturbation delta at about `0.56` overall and `0.78` for projection modules only. Int8 relative MSE remains non-predictive in this panel. The key decision is to stop using fixed 0.5B thresholds for 7B and instead freeze a rank/perturbation-selected 7B policy. The conservative first 7B fake-int8 policy should include only the consistently low-delta modules above and exclude borderline modules such as `layers.27.mlp.up_proj` and `layers.26.self_attn.q_proj`.
 
+## 2026-05-19 H6.4 7B Rank-Selected Fake-Int8 Training
+
+The conservative H6.4 7B policy fake-int8 quantizes only the four consistently low-delta modules from the three-seed transfer probe:
+
+- `layers.26.mlp.gate_proj`
+- `layers.26.mlp.up_proj`
+- `layers.27.mlp.gate_proj`
+- `layers.26.self_attn.o_proj`
+
+The 500-step LoRA training comparison is now paired across seeds 42, 43, and 44 against matched bf16 controls.
+
+| seed | bf16 eval | H6.4 eval | eval delta | peak-memory delta | tok/s delta | instability |
+|---:|---:|---:|---:|---:|---:|---|
+| 42 | `1.37747` | `1.37969` | `+0.161%` | `+0.00%` | `+3.41%` | none |
+| 43 | `1.36653` | `1.36958` | `+0.223%` | `-0.02%` | `+3.07%` | none |
+| 44 | `1.34233` | `1.34370` | `+0.102%` | `-0.02%` | `+2.47%` | none |
+
+Mean eval degradation is `+0.162%`, with all seeds far inside the locked 1% quality gate. All runs have zero loss spikes and zero NaN/Inf events. Because this is Python-level fake-int8 output quantization, the near-zero memory change is expected and the small throughput increase should be treated as noise rather than a hardware claim. The scientific inference is stronger: the rank/perturbation-selected 7B modules remain harmless during actual LoRA updates, not just in frozen forward perturbation probes.
+
 ## 2026-05-13 Smoke Calibration
 
 The first H6 smoke probe ran on Qwen/Qwen2.5-0.5B with one Alpaca calibration batch, sequence length 64, fp32 dtype, and the first eight candidate modules. It completed on CUDA and wrote both `stability_signals.json` and `policy_trace.json`.

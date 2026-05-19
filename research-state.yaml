@@ -1,7 +1,7 @@
 project:
   title: "Calibration-Guided Precision Assignment for Stable LoRA Fine-Tuning"
   question: "Before LoRA fine-tuning, can a short precision check identify which model modules are precision-sensitive, so a frozen mixed-precision policy can match bf16 validation quality while saving resources or expanding the stable fine-tuning envelope?"
-  status: active
+  status: ready_for_writeup
   started: "2026-05-13"
   domain: "mixed precision LLM fine-tuning"
 
@@ -695,11 +695,21 @@ experiments:
       wall_time_sec: null
       change_summary: "H6.4 Qwen2.5-7B transfer probe replicated across seeds 42-44. Stage 1 assignments were identical across seeds. The most sensitive paths were layers.4.post_attention_layernorm and layers.3.mlp.down_proj. Four modules had consistently low max abs deltas below 0.005: layers.26.mlp.gate_proj, layers.26.mlp.up_proj, layers.27.mlp.gate_proj, and layers.26.self_attn.o_proj. Projection outlier correlation with abs loss delta stayed around 0.78; int8 relative MSE was non-predictive."
       artifact: "experiments/h6-adaptive-precision-assignment/results/h6_4_qwen7b_transfer_perturb_seed42/perturbation_results.json"
+    - experiment_id: "h6_4_qwen7b_rank_int8_train_seeds42_44"
+      hypothesis: "H6.4"
+      type: "training_synthesis"
+      metric_value: 0.16194896771857822
+      metric_name: "mean_eval_delta_percent"
+      baseline: 0.0
+      delta: 0.16194896771857822
+      wall_time_sec: null
+      change_summary: "H6.4 conservative 7B fake-int8 training replicated across seeds 42-44. The selected modules were layers.26.mlp.gate_proj, layers.26.mlp.up_proj, layers.27.mlp.gate_proj, and layers.26.self_attn.o_proj. Eval-loss degradations versus matched bf16 were +0.161%, +0.223%, and +0.102% with mean +0.162%; all had zero loss spikes and zero NaN/Inf events. Memory was unchanged as expected for fake-int8 output hooks."
+      artifact: "experiments/h6-adaptive-precision-assignment/results/train_h6_4_qwen7b_rank_int8_seed42_500/summary.json"
 
 outer_loop:
-  cycle: 16
-  last_direction: "freeze a conservative 7B rank/perturbation-selected fake-int8 policy and test it during LoRA updates"
-  last_reflection: "H6.4 Qwen2.5-7B transfer probes now replicate across seeds 42-44. Different seeds change calibration loss scale but not the qualitative ranking. Stage 1 assignments are identical across seeds, and Stage 2 consistently marks layers.4.post_attention_layernorm and layers.3.mlp.down_proj as sensitive. Four modules are consistently low-delta with max abs delta below 0.005: layers.26.mlp.gate_proj, layers.26.mlp.up_proj, layers.27.mlp.gate_proj, and layers.26.self_attn.o_proj. Next, test whether this conservative 7B fake-int8 policy remains harmless during actual LoRA updates against the existing matched bf16 controls."
+  cycle: 18
+  last_direction: "write the paper-style report from final synthesis; avoid more experiments unless widening the 7B policy is explicitly needed"
+  last_reflection: "Final synthesis is complete. H6 is supported as a calibration-guided sensitivity-ranking method, H6.3 is supported as a Qwen2.5-7B QLoRA memory-capacity trade-off, and H6.4 is supported as calibration-to-training transfer at 7B for a conservative selected fake-int8 module set. The project should now move to final write-up rather than routine experimentation."
 
 workspace:
   findings: "findings.md"
