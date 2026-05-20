@@ -88,3 +88,39 @@ The next useful step is to either:
 2. improve the predictor by training on aggregated module-level rows rather than per-seed rows and adding a conservative max-delta objective.
 
 For paper framing, H7 is currently a promising extension, not yet part of the main confirmed contribution.
+
+## 2026-05-21 Llama-3.1-8B Conservative Policy Training
+
+The first matched 500-step Llama-3.1-8B training validation is complete on `a100-colab`. This tested the conservative two-module policy selected from the three-seed Llama perturbation probes:
+
+- `base_model.model.model.layers.30.mlp.gate_proj`
+- `base_model.model.model.layers.30.mlp.up_proj`
+
+Run setup:
+
+| field | value |
+|---|---|
+| model | `meta-llama/Llama-3.1-8B` |
+| hardware | `NVIDIA A100-SXM4-40GB`, `HARDWARE_LABEL=a100-colab` |
+| seed | `42` |
+| max steps | `500` |
+| sequence length | `512` |
+| effective batch size | `16` |
+| learning rate | `2e-4` |
+| eval max batches | `100` |
+
+Matched result:
+
+| metric | bf16 | conservative fake-int8 MLP2 | delta |
+|---|---:|---:|---:|
+| final eval loss | `1.389425` | `1.390033` | `+0.000608` (`+0.044%`) |
+| final train loss | `1.234381` | `1.230977` | `-0.003405` |
+| max grad norm | `5.6296` | `5.6494` | `+0.0198` |
+| loss spikes | `0` | `0` | no change |
+| NaN/Inf events | `0` | `0` | no change |
+| peak CUDA memory GiB | `20.1955` | `20.1955` | no change |
+| train tok/s excl. first | `278.56` | `277.00` | `-0.56%` |
+
+Interpretation: this is a positive first training validation for cross-family transfer. The Llama-3.1-8B conservative fake-int8 policy preserved bf16 validation quality and stability on seed 42, with degradation far inside the locked 1% gate. As with the Qwen fake-int8 policies, this is not a memory-saving result because the implementation is a Python-level fake-quant output hook.
+
+Next decision: replicate seeds 43 and 44 for the same two-module policy before testing a wider or predictor-selected Llama policy.

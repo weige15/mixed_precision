@@ -62,6 +62,8 @@ H6.4 now replicates across seeds 42, 43, and 44. Different seeds do not change S
 
 The H6.4 rank-selected 7B fake-int8 training policy now validates those four low-delta modules during actual 500-step LoRA updates. Against matched bf16 controls, H6.4 eval-loss degradations are `+0.161%`, `+0.223%`, and `+0.102%` for seeds 42, 43, and 44, with mean `+0.162%`; all are far inside the 1% quality gate. All runs have zero loss spikes and zero NaN/Inf events. Memory is unchanged, as expected for fake-int8 output quantization, and the small apparent throughput gain should not be treated as a hardware claim.
 
+The H7 Llama-3.1-8B cross-family branch now has its first training validation. A conservative two-module fake-int8 MLP policy selected from the three-seed Llama perturbation probe (`layers.30.mlp.gate_proj` and `layers.30.mlp.up_proj`) was compared against matched bf16 for 500 steps on seed 42 using A100 Colab. BF16 reached eval loss `1.389425`; the conservative policy reached `1.390033`, a `+0.044%` relative degradation, with zero loss spikes, zero NaN/Inf events, unchanged peak memory, and only about `0.56%` lower train throughput. This is positive evidence that the calibration-to-training transfer idea is not Qwen-only, but it is still a single training seed and should be replicated before making a cross-family claim.
+
 ## Patterns and Insights
 
 - The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.
@@ -100,6 +102,7 @@ The H6.4 rank-selected 7B fake-int8 training policy now validates those four low
 - H6.4 seed 42 suggests the calibration-guided sensitivity structure partially transfers to 7B: projection outlier scores still rank perturbation sensitivity reasonably, but the 0.5B thresholds are too strict for 7B and emit no low-precision projection candidates directly.
 - H6.4 seeds 42-44 confirm that 7B needs rank/perturbation-based policy selection rather than fixed 0.5B thresholds. A conservative 7B fake-int8 policy should start with only the four consistently low-delta modules.
 - The conservative H6.4 7B fake-int8 policy preserves LoRA quality across seeds 42-44, so the calibration-to-training transfer now holds at 7B for a small selected module set.
+- The first Llama-3.1-8B conservative-policy training run preserves LoRA quality on seed 42, suggesting cross-family transfer is plausible. It is not yet a replicated result.
 - bitsandbytes 8-bit LoRA casts bf16/fp32 activations to fp16 inside `MatMul8bitLt`; reports should not describe the 8-bit path as pure bf16 compute.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
 - Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.

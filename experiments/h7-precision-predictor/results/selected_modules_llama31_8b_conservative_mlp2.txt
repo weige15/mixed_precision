@@ -1,0 +1,2 @@
+base_model.model.model.layers.30.mlp.gate_proj
+base_model.model.model.layers.30.mlp.up_proj
