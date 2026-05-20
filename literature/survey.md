@@ -24,6 +24,7 @@ This survey focuses on mixed precision and low-precision execution for LLMs and 
 | QLORA2023 | [QLoRA](qlora_2023.md) | 4-bit storage + higher-precision training path | Shows low-resource LoRA-style fine-tuning with aggressive base-model quantization. |
 | FP4TRAIN | [FP4 All the Way](fp4_all_the_way_2025.md) | FP4 LLM training | Connects FP4 training success to scaling, rounding, and gradient-norm-versus-quantization-noise thresholds. |
 | ATTNQAT | [Attn-QAT](attn_qat_2026.md) | 4-bit attention | Identifies attention as a high-risk low-precision region because of heavy-tailed activations and backward precision assumptions. |
+| LPFMT2026 | [Low-Precision Data Formats in Large Language Models](llm_low_precision_formats_2026.md) | FP32/TF32/BF16/FP8/FP6/FP4/INT8/INT4 reference | Maps bit layouts, scaling requirements, Transformer operation placement, and accelerator support for current LLM low-precision formats. |
 | HAWQ | [HAWQ](hawq_2019.md) | Mixed precision by Hessian sensitivity | Provides a principled sensitivity-based answer to which layers deserve more bits. |
 | HAWQV3 | [HAWQ-V3](hawq_v3_2021.md) | Mixed INT4/INT8 + hardware constraints | Frames precision assignment as constrained optimization over perturbation, memory, and latency. |
 | ADAPT | [AdaPT](adapt_adaptive_precision_training_2021.md) | Dynamic fixed-point training | Explicitly studies adaptive precision during training rather than only post-training inference. |

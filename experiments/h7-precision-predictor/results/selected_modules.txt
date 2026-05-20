@@ -1,0 +1,4 @@
+base_model.model.model.layers.26.self_attn.o_proj
+base_model.model.model.layers.27.mlp.gate_proj
+base_model.model.model.layers.26.self_attn.q_proj
+base_model.model.model.layers.27.mlp.up_proj

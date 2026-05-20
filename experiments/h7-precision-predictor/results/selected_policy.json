@@ -1,0 +1,70 @@
+{
+  "source_predictions": "experiments/h7-precision-predictor/results/predictions.csv",
+  "split": "cross_scale_0p5b_to_7b",
+  "top_k": 4,
+  "filters": {
+    "model_size_min": 7.0,
+    "roles": [
+      "mlp_projection",
+      "attention_projection"
+    ],
+    "leaves": null,
+    "max_predicted_risk": null
+  },
+  "modules": [
+    {
+      "module_name": "base_model.model.model.layers.26.self_attn.o_proj",
+      "module_short": "layers.26.self_attn.o_proj",
+      "module_role": "attention_projection",
+      "module_leaf": "o_proj",
+      "predicted_risk_mean": -0.06589379721005724,
+      "predicted_risk_max": -0.059969881119246,
+      "predicted_safe_probability_mean": 0.9429037495168603,
+      "observed_abs_delta_mean": 0.00353714823723,
+      "observed_safe_rate": 1.0,
+      "seed_count": 3
+    },
+    {
+      "module_name": "base_model.model.model.layers.27.mlp.gate_proj",
+      "module_short": "layers.27.mlp.gate_proj",
+      "module_role": "mlp_projection",
+      "module_leaf": "gate_proj",
+      "predicted_risk_mean": -0.03401203896752733,
+      "predicted_risk_max": -0.0208632994981676,
+      "predicted_safe_probability_mean": 0.9528565163416806,
+      "observed_abs_delta_mean": 0.0021445850531246666,
+      "observed_safe_rate": 1.0,
+      "seed_count": 3
+    },
+    {
+      "module_name": "base_model.model.model.layers.26.self_attn.q_proj",
+      "module_short": "layers.26.self_attn.q_proj",
+      "module_role": "attention_projection",
+      "module_leaf": "q_proj",
+      "predicted_risk_mean": -0.029745268891207235,
+      "predicted_risk_max": -0.0257336917698036,
+      "predicted_safe_probability_mean": 0.9138484637725314,
+      "observed_abs_delta_mean": 0.003360639015835,
+      "observed_safe_rate": 0.6666666666666666,
+      "seed_count": 3
+    },
+    {
+      "module_name": "base_model.model.model.layers.27.mlp.up_proj",
+      "module_short": "layers.27.mlp.up_proj",
+      "module_role": "mlp_projection",
+      "module_leaf": "up_proj",
+      "predicted_risk_mean": -0.013405367537526134,
+      "predicted_risk_max": -0.0102891184730397,
+      "predicted_safe_probability_mean": 0.882622873036973,
+      "observed_abs_delta_mean": 0.0025502244631463336,
+      "observed_safe_rate": 0.6666666666666666,
+      "seed_count": 3
+    }
+  ],
+  "module_names": [
+    "base_model.model.model.layers.26.self_attn.o_proj",
+    "base_model.model.model.layers.27.mlp.gate_proj",
+    "base_model.model.model.layers.26.self_attn.q_proj",
+    "base_model.model.model.layers.27.mlp.up_proj"
+  ]
+}
