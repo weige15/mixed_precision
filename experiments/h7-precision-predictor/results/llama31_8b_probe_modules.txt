@@ -1,0 +1,14 @@
+base_model.model.model.layers.2.mlp.down_proj
+base_model.model.model.layers.3.mlp.down_proj
+base_model.model.model.layers.28.mlp.down_proj
+base_model.model.model.layers.30.mlp.gate_proj
+base_model.model.model.layers.30.mlp.up_proj
+base_model.model.model.layers.31.mlp.gate_proj
+base_model.model.model.layers.31.mlp.up_proj
+base_model.model.model.layers.4.input_layernorm
+base_model.model.model.layers.4.post_attention_layernorm
+base_model.model.model.layers.2.self_attn.o_proj
+base_model.model.model.layers.30.self_attn.q_proj
+base_model.model.model.layers.30.self_attn.o_proj
+base_model.model.model.norm
+base_model.model.lm_head
