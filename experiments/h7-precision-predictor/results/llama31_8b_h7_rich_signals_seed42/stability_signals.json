@@ -1,0 +1,664 @@
+{
+  "policy_name": "llama31_8b_h7_rich_seed42",
+  "model_name": "meta-llama/Llama-3.1-8B",
+  "dataset_name": "tatsu-lab/alpaca",
+  "seed": 42,
+  "seq_len": 512,
+  "batch_size": 1,
+  "calibration_batches": 4,
+  "dtype": "bf16",
+  "device": "cuda",
+  "autocast_enabled": true,
+  "lora_targets": [
+    "down_proj",
+    "gate_proj",
+    "k_proj",
+    "o_proj",
+    "q_proj",
+    "up_proj",
+    "v_proj"
+  ],
+  "mean_calibration_loss": 2.0378001630306244,
+  "nan_or_inf_count": 0,
+  "elapsed_sec": 2.8706562519073486,
+  "peak_cuda_memory_gib": 19.96114158630371,
+  "decision_thresholds": {
+    "outlier_score_fp32_threshold": 12.0,
+    "int8_rel_mse_candidate_threshold": 0.001,
+    "int4_rel_mse_candidate_threshold": 0.005
+  },
+  "role_precision_counts": {
+    "attention_projection": {
+      "bf16": 3
+    },
+    "mlp_projection": {
+      "bf16": 7
+    },
+    "norm": {
+      "fp32": 3
+    },
+    "logits": {
+      "fp32": 1
+    }
+  },
+  "modules": [
+    {
+      "module": "base_model.model.model.layers.2.self_attn.o_proj",
+      "role": "attention_projection",
+      "class": "Linear",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 68.7502498626709,
+      "input_outlier_score_max": 77.31253814697266,
+      "output_outlier_score_mean": 58.8629789352417,
+      "output_outlier_score_max": 67.0770034790039,
+      "input_int8_rel_mse_mean": 0.018515817588195205,
+      "output_int8_rel_mse_mean": 0.018032629042863846,
+      "output_int4_rel_mse_mean": 0.5759849846363068,
+      "output_int8_saturation_mean": 1.4305107924883487e-06,
+      "output_int4_saturation_mean": 3.933904679342959e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.layers.2.mlp.down_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 83.86704730987549,
+      "input_outlier_score_max": 122.37604522705078,
+      "output_outlier_score_mean": 10.347052574157715,
+      "output_outlier_score_max": 12.081785202026367,
+      "input_int8_rel_mse_mean": 0.03161224699579179,
+      "output_int8_rel_mse_mean": 0.0005661278337356634,
+      "output_int4_rel_mse_mean": 0.1830419208854437,
+      "output_int8_saturation_mean": 1.4305107924883487e-06,
+      "output_int4_saturation_mean": 3.933904736186378e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.layers.3.mlp.down_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 52.02386474609375,
+      "input_outlier_score_max": 66.00308990478516,
+      "output_outlier_score_mean": 15.773342370986938,
+      "output_outlier_score_max": 18.281278610229492,
+      "input_int8_rel_mse_mean": 0.012783837737515569,
+      "output_int8_rel_mse_mean": 0.0013548712959163822,
+      "output_int4_rel_mse_mean": 0.41181325912475586,
+      "output_int8_saturation_mean": 1.4305107924883487e-06,
+      "output_int4_saturation_mean": 2.145766188732523e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.layers.4.input_layernorm",
+      "role": "norm",
+      "class": "LlamaRMSNorm",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 807.7283477783203,
+      "input_outlier_score_max": 809.323974609375,
+      "output_outlier_score_mean": 16.12821936607361,
+      "output_outlier_score_max": 18.564531326293945,
+      "input_int8_rel_mse_mean": 0.04820528905838728,
+      "output_int8_rel_mse_mean": 0.0013624755083583295,
+      "output_int4_rel_mse_mean": 0.35133130103349686,
+      "output_int8_saturation_mean": 1.4305107924883487e-06,
+      "output_int4_saturation_mean": 3.2186493967856222e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.layers.4.post_attention_layernorm",
+      "role": "norm",
+      "class": "LlamaRMSNorm",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 806.7163238525391,
+      "input_outlier_score_max": 808.228759765625,
+      "output_outlier_score_mean": 31.261924266815186,
+      "output_outlier_score_max": 31.493595123291016,
+      "input_int8_rel_mse_mean": 0.0497360834851861,
+      "output_int8_rel_mse_mean": 0.005045824218541384,
+      "output_int4_rel_mse_mean": 0.8538691401481628,
+      "output_int8_saturation_mean": 1.4305107924883487e-06,
+      "output_int4_saturation_mean": 1.4305107924883487e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.layers.28.mlp.down_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 64.63055801391602,
+      "input_outlier_score_max": 98.6465835571289,
+      "output_outlier_score_mean": 17.70607614517212,
+      "output_outlier_score_max": 20.78965187072754,
+      "input_int8_rel_mse_mean": 0.02160203841049224,
+      "output_int8_rel_mse_mean": 0.0016745347384130582,
+      "output_int4_rel_mse_mean": 0.49365101754665375,
+      "output_int8_saturation_mean": 1.4305107924883487e-06,
+      "output_int4_saturation_mean": 1.7881384906104358e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.layers.30.self_attn.q_proj",
+      "role": "attention_projection",
+      "class": "Linear",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 16.446101188659668,
+      "input_outlier_score_max": 17.392406463623047,
+      "output_outlier_score_mean": 13.421044826507568,
+      "output_outlier_score_max": 13.583744049072266,
+      "input_int8_rel_mse_mean": 0.00139888672856614,
+      "output_int8_rel_mse_mean": 0.00093137587828096,
+      "output_int4_rel_mse_mean": 0.2658614441752434,
+      "output_int8_saturation_mean": 1.4305107924883487e-06,
+      "output_int4_saturation_mean": 1.3947479828857468e-05,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.layers.30.self_attn.o_proj",
+      "role": "attention_projection",
+      "class": "Linear",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 29.550864219665527,
+      "input_outlier_score_max": 32.780399322509766,
+      "output_outlier_score_mean": 123.38889503479004,
+      "output_outlier_score_max": 133.29824829101562,
+      "input_int8_rel_mse_mean": 0.004530174832325429,
+      "output_int8_rel_mse_mean": 0.07795758545398712,
+      "output_int4_rel_mse_mean": 0.6874502450227737,
+      "output_int8_saturation_mean": 1.4305107924883487e-06,
+      "output_int4_saturation_mean": 1.7881384906104358e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.layers.30.mlp.gate_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 26.80661916732788,
+      "input_outlier_score_max": 27.12821388244629,
+      "output_outlier_score_mean": 32.56785869598389,
+      "output_outlier_score_max": 33.10115051269531,
+      "input_int8_rel_mse_mean": 0.0037115903687663376,
+      "output_int8_rel_mse_mean": 0.005481288651935756,
+      "output_int4_rel_mse_mean": 0.7152603566646576,
+      "output_int8_saturation_mean": 1.0899135531872162e-06,
+      "output_int4_saturation_mean": 1.0899135531872162e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.layers.30.mlp.up_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 26.80661916732788,
+      "input_outlier_score_max": 27.12821388244629,
+      "output_outlier_score_mean": 19.6942400932312,
+      "output_outlier_score_max": 20.769737243652344,
+      "input_int8_rel_mse_mean": 0.0037115903687663376,
+      "output_int8_rel_mse_mean": 0.0020099721441511065,
+      "output_int4_rel_mse_mean": 0.552352637052536,
+      "output_int8_saturation_mean": 1.0899135531872162e-06,
+      "output_int4_saturation_mean": 3.5422190478584525e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.layers.31.mlp.gate_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 33.81092071533203,
+      "input_outlier_score_max": 34.48106002807617,
+      "output_outlier_score_mean": 18.75121784210205,
+      "output_outlier_score_max": 21.901594161987305,
+      "input_int8_rel_mse_mean": 0.005909598781727254,
+      "output_int8_rel_mse_mean": 0.0018467316986061633,
+      "output_int4_rel_mse_mean": 0.3885452300310135,
+      "output_int8_saturation_mean": 1.0899135531872162e-06,
+      "output_int4_saturation_mean": 4.63213254420225e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.layers.31.mlp.up_proj",
+      "role": "mlp_projection",
+      "class": "Linear",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 33.81092071533203,
+      "input_outlier_score_max": 34.48106002807617,
+      "output_outlier_score_mean": 23.086390018463135,
+      "output_outlier_score_max": 23.923664093017578,
+      "input_int8_rel_mse_mean": 0.005909598781727254,
+      "output_int8_rel_mse_mean": 0.002754480461589992,
+      "output_int4_rel_mse_mean": 0.506748616695404,
+      "output_int8_saturation_mean": 1.0899135531872162e-06,
+      "output_int4_saturation_mean": 1.0899135531872162e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.model.norm",
+      "role": "norm",
+      "class": "LlamaRMSNorm",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 41.67579174041748,
+      "input_outlier_score_max": 62.445579528808594,
+      "output_outlier_score_mean": 18.292150497436523,
+      "output_outlier_score_max": 19.59586524963379,
+      "input_int8_rel_mse_mean": 0.009772182442247868,
+      "output_int8_rel_mse_mean": 0.001737606100505218,
+      "output_int4_rel_mse_mean": 0.49923016130924225,
+      "output_int8_saturation_mean": 1.4305107924883487e-06,
+      "output_int4_saturation_mean": 4.2915326048387215e-06,
+      "finite_fraction_min": 1.0
+    },
+    {
+      "module": "base_model.model.lm_head",
+      "role": "logits",
+      "class": "Linear",
+      "observations": 4,
+      "dtypes": [
+        "torch.bfloat16"
+      ],
+      "input_outlier_score_mean": 18.292150497436523,
+      "input_outlier_score_max": 19.59586524963379,
+      "output_outlier_score_mean": 8.157663941383362,
+      "output_outlier_score_max": 8.530741691589355,
+      "input_int8_rel_mse_mean": 0.001737606100505218,
+      "output_int8_rel_mse_mean": 0.00034383654565317556,
+      "output_int4_rel_mse_mean": 0.11305468715727329,
+      "output_int8_saturation_mean": 1.005069520942925e-06,
+      "output_int4_saturation_mean": 2.5126738023573125e-06,
+      "finite_fraction_min": 0.9999999403953552
+    }
+  ],
+  "policy_trace": [
+    {
+      "module": "base_model.model.model.layers.2.self_attn.o_proj",
+      "role": "attention_projection",
+      "assigned_precision": "bf16",
+      "reason": "projection appears sensitive under activation probe",
+      "signals": {
+        "module": "base_model.model.model.layers.2.self_attn.o_proj",
+        "role": "attention_projection",
+        "class": "Linear",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 68.7502498626709,
+        "input_outlier_score_max": 77.31253814697266,
+        "output_outlier_score_mean": 58.8629789352417,
+        "output_outlier_score_max": 67.0770034790039,
+        "input_int8_rel_mse_mean": 0.018515817588195205,
+        "output_int8_rel_mse_mean": 0.018032629042863846,
+        "output_int4_rel_mse_mean": 0.5759849846363068,
+        "output_int8_saturation_mean": 1.4305107924883487e-06,
+        "output_int4_saturation_mean": 3.933904679342959e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.2.mlp.down_proj",
+      "role": "mlp_projection",
+      "assigned_precision": "bf16",
+      "reason": "projection appears sensitive under activation probe",
+      "signals": {
+        "module": "base_model.model.model.layers.2.mlp.down_proj",
+        "role": "mlp_projection",
+        "class": "Linear",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 83.86704730987549,
+        "input_outlier_score_max": 122.37604522705078,
+        "output_outlier_score_mean": 10.347052574157715,
+        "output_outlier_score_max": 12.081785202026367,
+        "input_int8_rel_mse_mean": 0.03161224699579179,
+        "output_int8_rel_mse_mean": 0.0005661278337356634,
+        "output_int4_rel_mse_mean": 0.1830419208854437,
+        "output_int8_saturation_mean": 1.4305107924883487e-06,
+        "output_int4_saturation_mean": 3.933904736186378e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.3.mlp.down_proj",
+      "role": "mlp_projection",
+      "assigned_precision": "bf16",
+      "reason": "projection appears sensitive under activation probe",
+      "signals": {
+        "module": "base_model.model.model.layers.3.mlp.down_proj",
+        "role": "mlp_projection",
+        "class": "Linear",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 52.02386474609375,
+        "input_outlier_score_max": 66.00308990478516,
+        "output_outlier_score_mean": 15.773342370986938,
+        "output_outlier_score_max": 18.281278610229492,
+        "input_int8_rel_mse_mean": 0.012783837737515569,
+        "output_int8_rel_mse_mean": 0.0013548712959163822,
+        "output_int4_rel_mse_mean": 0.41181325912475586,
+        "output_int8_saturation_mean": 1.4305107924883487e-06,
+        "output_int4_saturation_mean": 2.145766188732523e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.4.input_layernorm",
+      "role": "norm",
+      "assigned_precision": "fp32",
+      "reason": "high-sensitivity reduction/output path",
+      "signals": {
+        "module": "base_model.model.model.layers.4.input_layernorm",
+        "role": "norm",
+        "class": "LlamaRMSNorm",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 807.7283477783203,
+        "input_outlier_score_max": 809.323974609375,
+        "output_outlier_score_mean": 16.12821936607361,
+        "output_outlier_score_max": 18.564531326293945,
+        "input_int8_rel_mse_mean": 0.04820528905838728,
+        "output_int8_rel_mse_mean": 0.0013624755083583295,
+        "output_int4_rel_mse_mean": 0.35133130103349686,
+        "output_int8_saturation_mean": 1.4305107924883487e-06,
+        "output_int4_saturation_mean": 3.2186493967856222e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.4.post_attention_layernorm",
+      "role": "norm",
+      "assigned_precision": "fp32",
+      "reason": "high-sensitivity reduction/output path",
+      "signals": {
+        "module": "base_model.model.model.layers.4.post_attention_layernorm",
+        "role": "norm",
+        "class": "LlamaRMSNorm",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 806.7163238525391,
+        "input_outlier_score_max": 808.228759765625,
+        "output_outlier_score_mean": 31.261924266815186,
+        "output_outlier_score_max": 31.493595123291016,
+        "input_int8_rel_mse_mean": 0.0497360834851861,
+        "output_int8_rel_mse_mean": 0.005045824218541384,
+        "output_int4_rel_mse_mean": 0.8538691401481628,
+        "output_int8_saturation_mean": 1.4305107924883487e-06,
+        "output_int4_saturation_mean": 1.4305107924883487e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.28.mlp.down_proj",
+      "role": "mlp_projection",
+      "assigned_precision": "bf16",
+      "reason": "projection appears sensitive under activation probe",
+      "signals": {
+        "module": "base_model.model.model.layers.28.mlp.down_proj",
+        "role": "mlp_projection",
+        "class": "Linear",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 64.63055801391602,
+        "input_outlier_score_max": 98.6465835571289,
+        "output_outlier_score_mean": 17.70607614517212,
+        "output_outlier_score_max": 20.78965187072754,
+        "input_int8_rel_mse_mean": 0.02160203841049224,
+        "output_int8_rel_mse_mean": 0.0016745347384130582,
+        "output_int4_rel_mse_mean": 0.49365101754665375,
+        "output_int8_saturation_mean": 1.4305107924883487e-06,
+        "output_int4_saturation_mean": 1.7881384906104358e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.30.self_attn.q_proj",
+      "role": "attention_projection",
+      "assigned_precision": "bf16",
+      "reason": "projection appears sensitive under activation probe",
+      "signals": {
+        "module": "base_model.model.model.layers.30.self_attn.q_proj",
+        "role": "attention_projection",
+        "class": "Linear",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 16.446101188659668,
+        "input_outlier_score_max": 17.392406463623047,
+        "output_outlier_score_mean": 13.421044826507568,
+        "output_outlier_score_max": 13.583744049072266,
+        "input_int8_rel_mse_mean": 0.00139888672856614,
+        "output_int8_rel_mse_mean": 0.00093137587828096,
+        "output_int4_rel_mse_mean": 0.2658614441752434,
+        "output_int8_saturation_mean": 1.4305107924883487e-06,
+        "output_int4_saturation_mean": 1.3947479828857468e-05,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.30.self_attn.o_proj",
+      "role": "attention_projection",
+      "assigned_precision": "bf16",
+      "reason": "projection appears sensitive under activation probe",
+      "signals": {
+        "module": "base_model.model.model.layers.30.self_attn.o_proj",
+        "role": "attention_projection",
+        "class": "Linear",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 29.550864219665527,
+        "input_outlier_score_max": 32.780399322509766,
+        "output_outlier_score_mean": 123.38889503479004,
+        "output_outlier_score_max": 133.29824829101562,
+        "input_int8_rel_mse_mean": 0.004530174832325429,
+        "output_int8_rel_mse_mean": 0.07795758545398712,
+        "output_int4_rel_mse_mean": 0.6874502450227737,
+        "output_int8_saturation_mean": 1.4305107924883487e-06,
+        "output_int4_saturation_mean": 1.7881384906104358e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.30.mlp.gate_proj",
+      "role": "mlp_projection",
+      "assigned_precision": "bf16",
+      "reason": "projection appears sensitive under activation probe",
+      "signals": {
+        "module": "base_model.model.model.layers.30.mlp.gate_proj",
+        "role": "mlp_projection",
+        "class": "Linear",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 26.80661916732788,
+        "input_outlier_score_max": 27.12821388244629,
+        "output_outlier_score_mean": 32.56785869598389,
+        "output_outlier_score_max": 33.10115051269531,
+        "input_int8_rel_mse_mean": 0.0037115903687663376,
+        "output_int8_rel_mse_mean": 0.005481288651935756,
+        "output_int4_rel_mse_mean": 0.7152603566646576,
+        "output_int8_saturation_mean": 1.0899135531872162e-06,
+        "output_int4_saturation_mean": 1.0899135531872162e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.30.mlp.up_proj",
+      "role": "mlp_projection",
+      "assigned_precision": "bf16",
+      "reason": "projection appears sensitive under activation probe",
+      "signals": {
+        "module": "base_model.model.model.layers.30.mlp.up_proj",
+        "role": "mlp_projection",
+        "class": "Linear",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 26.80661916732788,
+        "input_outlier_score_max": 27.12821388244629,
+        "output_outlier_score_mean": 19.6942400932312,
+        "output_outlier_score_max": 20.769737243652344,
+        "input_int8_rel_mse_mean": 0.0037115903687663376,
+        "output_int8_rel_mse_mean": 0.0020099721441511065,
+        "output_int4_rel_mse_mean": 0.552352637052536,
+        "output_int8_saturation_mean": 1.0899135531872162e-06,
+        "output_int4_saturation_mean": 3.5422190478584525e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.31.mlp.gate_proj",
+      "role": "mlp_projection",
+      "assigned_precision": "bf16",
+      "reason": "projection appears sensitive under activation probe",
+      "signals": {
+        "module": "base_model.model.model.layers.31.mlp.gate_proj",
+        "role": "mlp_projection",
+        "class": "Linear",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 33.81092071533203,
+        "input_outlier_score_max": 34.48106002807617,
+        "output_outlier_score_mean": 18.75121784210205,
+        "output_outlier_score_max": 21.901594161987305,
+        "input_int8_rel_mse_mean": 0.005909598781727254,
+        "output_int8_rel_mse_mean": 0.0018467316986061633,
+        "output_int4_rel_mse_mean": 0.3885452300310135,
+        "output_int8_saturation_mean": 1.0899135531872162e-06,
+        "output_int4_saturation_mean": 4.63213254420225e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.layers.31.mlp.up_proj",
+      "role": "mlp_projection",
+      "assigned_precision": "bf16",
+      "reason": "projection appears sensitive under activation probe",
+      "signals": {
+        "module": "base_model.model.model.layers.31.mlp.up_proj",
+        "role": "mlp_projection",
+        "class": "Linear",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 33.81092071533203,
+        "input_outlier_score_max": 34.48106002807617,
+        "output_outlier_score_mean": 23.086390018463135,
+        "output_outlier_score_max": 23.923664093017578,
+        "input_int8_rel_mse_mean": 0.005909598781727254,
+        "output_int8_rel_mse_mean": 0.002754480461589992,
+        "output_int4_rel_mse_mean": 0.506748616695404,
+        "output_int8_saturation_mean": 1.0899135531872162e-06,
+        "output_int4_saturation_mean": 1.0899135531872162e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.model.norm",
+      "role": "norm",
+      "assigned_precision": "fp32",
+      "reason": "high-sensitivity reduction/output path",
+      "signals": {
+        "module": "base_model.model.model.norm",
+        "role": "norm",
+        "class": "LlamaRMSNorm",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 41.67579174041748,
+        "input_outlier_score_max": 62.445579528808594,
+        "output_outlier_score_mean": 18.292150497436523,
+        "output_outlier_score_max": 19.59586524963379,
+        "input_int8_rel_mse_mean": 0.009772182442247868,
+        "output_int8_rel_mse_mean": 0.001737606100505218,
+        "output_int4_rel_mse_mean": 0.49923016130924225,
+        "output_int8_saturation_mean": 1.4305107924883487e-06,
+        "output_int4_saturation_mean": 4.2915326048387215e-06,
+        "finite_fraction_min": 1.0
+      }
+    },
+    {
+      "module": "base_model.model.lm_head",
+      "role": "logits",
+      "assigned_precision": "fp32",
+      "reason": "non-finite activation observed",
+      "signals": {
+        "module": "base_model.model.lm_head",
+        "role": "logits",
+        "class": "Linear",
+        "observations": 4,
+        "dtypes": [
+          "torch.bfloat16"
+        ],
+        "input_outlier_score_mean": 18.292150497436523,
+        "input_outlier_score_max": 19.59586524963379,
+        "output_outlier_score_mean": 8.157663941383362,
+        "output_outlier_score_max": 8.530741691589355,
+        "input_int8_rel_mse_mean": 0.001737606100505218,
+        "output_int8_rel_mse_mean": 0.00034383654565317556,
+        "output_int4_rel_mse_mean": 0.11305468715727329,
+        "output_int8_saturation_mean": 1.005069520942925e-06,
+        "output_int4_saturation_mean": 2.5126738023573125e-06,
+        "finite_fraction_min": 0.9999999403953552
+      }
+    }
+  ]
+}

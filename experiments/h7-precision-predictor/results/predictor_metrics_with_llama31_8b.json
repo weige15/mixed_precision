@@ -1,0 +1,291 @@
+{
+  "input": "/content/drive/MyDrive/mixed_precision/mixed_precision/experiments/h7-precision-predictor/results/precision_dataset_with_llama31_8b.csv",
+  "row_count": 114,
+  "safe_threshold": 0.005,
+  "features": {
+    "numeric": [
+      "model_size_b",
+      "layer_idx",
+      "normalized_depth",
+      "log_activation_outlier_score",
+      "log_int8_rel_mse",
+      "log_output_int4_rel_mse",
+      "log_output_int8_saturation_mean"
+    ],
+    "categorical": [
+      "module_role",
+      "module_leaf",
+      "candidate_format"
+    ]
+  },
+  "leave_one_seed_out": {
+    "leave_seed_42": {
+      "train_n": 76,
+      "test_n": 38,
+      "ridge": {
+        "n": 38,
+        "safe_count": 26,
+        "unsafe_count": 12,
+        "precision_at_4_lowest_risk": 0.75,
+        "precision_at_8_lowest_risk": 0.5,
+        "unsafe_recall_at_4_highest_risk": 0.3333333333333333,
+        "unsafe_recall_at_8_highest_risk": 0.4166666666666667,
+        "spearman_abs_delta": 0.19247182405077143,
+        "spearman_pvalue": 0.24698419537535096,
+        "auroc_unsafe": 0.5705128205128205,
+        "mae_abs_delta": 0.025191331267531532,
+        "rmse_abs_delta": 0.042152472526785965,
+        "r2_abs_delta": 0.5851213519644467
+      },
+      "baseline_outlier_rank": {
+        "n": 38,
+        "safe_count": 26,
+        "unsafe_count": 12,
+        "precision_at_4_lowest_risk": 0.75,
+        "precision_at_8_lowest_risk": 0.75,
+        "unsafe_recall_at_4_highest_risk": 0.25,
+        "unsafe_recall_at_8_highest_risk": 0.5,
+        "spearman_abs_delta": 0.3202364091164081,
+        "spearman_pvalue": 0.04998546240691665,
+        "auroc_unsafe": 0.6746794871794872
+      },
+      "baseline_int8_mse_rank": {
+        "n": 38,
+        "safe_count": 26,
+        "unsafe_count": 12,
+        "precision_at_4_lowest_risk": 0.75,
+        "precision_at_8_lowest_risk": 0.75,
+        "unsafe_recall_at_4_highest_risk": 0.08333333333333333,
+        "unsafe_recall_at_8_highest_risk": 0.25,
+        "spearman_abs_delta": 0.13155302930892776,
+        "spearman_pvalue": 0.43111322812186825,
+        "auroc_unsafe": 0.5560897435897436
+      },
+      "baseline_fixed_threshold": {
+        "n": 38,
+        "safe_count": 26,
+        "unsafe_count": 12,
+        "precision_at_4_lowest_risk": 0.75,
+        "precision_at_8_lowest_risk": 0.5,
+        "unsafe_recall_at_4_highest_risk": 0.25,
+        "unsafe_recall_at_8_highest_risk": 0.25,
+        "spearman_abs_delta": -0.0071939733334397595,
+        "spearman_pvalue": 0.9658085721741938,
+        "auroc_unsafe": 0.5176282051282051
+      },
+      "logistic_safe_probability": {
+        "n": 38,
+        "safe_count": 26,
+        "unsafe_count": 12,
+        "precision_at_4_lowest_risk": 1.0,
+        "precision_at_8_lowest_risk": 0.75,
+        "unsafe_recall_at_4_highest_risk": 0.3333333333333333,
+        "unsafe_recall_at_8_highest_risk": 0.5,
+        "spearman_abs_delta": 0.32793522267206476,
+        "spearman_pvalue": 0.04443482815638984,
+        "auroc_unsafe": 0.7083333333333333
+      }
+    },
+    "leave_seed_43": {
+      "train_n": 76,
+      "test_n": 38,
+      "ridge": {
+        "n": 38,
+        "safe_count": 25,
+        "unsafe_count": 13,
+        "precision_at_4_lowest_risk": 0.75,
+        "precision_at_8_lowest_risk": 0.5,
+        "unsafe_recall_at_4_highest_risk": 0.3076923076923077,
+        "unsafe_recall_at_8_highest_risk": 0.38461538461538464,
+        "spearman_abs_delta": 0.3132727869569975,
+        "spearman_pvalue": 0.055473065307006325,
+        "auroc_unsafe": 0.6215384615384616,
+        "mae_abs_delta": 0.0326735715681535,
+        "rmse_abs_delta": 0.053435517172199014,
+        "r2_abs_delta": 0.6732456252551585
+      },
+      "baseline_outlier_rank": {
+        "n": 38,
+        "safe_count": 25,
+        "unsafe_count": 13,
+        "precision_at_4_lowest_risk": 1.0,
+        "precision_at_8_lowest_risk": 0.875,
+        "unsafe_recall_at_4_highest_risk": 0.15384615384615385,
+        "unsafe_recall_at_8_highest_risk": 0.38461538461538464,
+        "spearman_abs_delta": 0.4296815250140186,
+        "spearman_pvalue": 0.007096781097681473,
+        "auroc_unsafe": 0.7292307692307692
+      },
+      "baseline_int8_mse_rank": {
+        "n": 38,
+        "safe_count": 25,
+        "unsafe_count": 13,
+        "precision_at_4_lowest_risk": 1.0,
+        "precision_at_8_lowest_risk": 0.875,
+        "unsafe_recall_at_4_highest_risk": 0.23076923076923078,
+        "unsafe_recall_at_8_highest_risk": 0.23076923076923078,
+        "spearman_abs_delta": 0.1385575167263748,
+        "spearman_pvalue": 0.40676143871044224,
+        "auroc_unsafe": 0.6153846153846154
+      },
+      "baseline_fixed_threshold": {
+        "n": 38,
+        "safe_count": 25,
+        "unsafe_count": 13,
+        "precision_at_4_lowest_risk": 1.0,
+        "precision_at_8_lowest_risk": 0.625,
+        "unsafe_recall_at_4_highest_risk": 0.23076923076923078,
+        "unsafe_recall_at_8_highest_risk": 0.46153846153846156,
+        "spearman_abs_delta": 0.10947527352899045,
+        "spearman_pvalue": 0.5129324461379247,
+        "auroc_unsafe": 0.5800000000000001
+      },
+      "logistic_safe_probability": {
+        "n": 38,
+        "safe_count": 25,
+        "unsafe_count": 13,
+        "precision_at_4_lowest_risk": 0.75,
+        "precision_at_8_lowest_risk": 0.875,
+        "unsafe_recall_at_4_highest_risk": 0.3076923076923077,
+        "unsafe_recall_at_8_highest_risk": 0.46153846153846156,
+        "spearman_abs_delta": 0.31721194879089615,
+        "spearman_pvalue": 0.052312739644215976,
+        "auroc_unsafe": 0.7230769230769232
+      }
+    },
+    "leave_seed_44": {
+      "train_n": 76,
+      "test_n": 38,
+      "ridge": {
+        "n": 38,
+        "safe_count": 26,
+        "unsafe_count": 12,
+        "precision_at_4_lowest_risk": 1.0,
+        "precision_at_8_lowest_risk": 0.75,
+        "unsafe_recall_at_4_highest_risk": 0.3333333333333333,
+        "unsafe_recall_at_8_highest_risk": 0.4166666666666667,
+        "spearman_abs_delta": 0.4511434511434511,
+        "spearman_pvalue": 0.004471790746366262,
+        "auroc_unsafe": 0.6634615384615384,
+        "mae_abs_delta": 0.02982433908249524,
+        "rmse_abs_delta": 0.059262199904716775,
+        "r2_abs_delta": 0.6588493969656541
+      },
+      "baseline_outlier_rank": {
+        "n": 38,
+        "safe_count": 26,
+        "unsafe_count": 12,
+        "precision_at_4_lowest_risk": 1.0,
+        "precision_at_8_lowest_risk": 0.875,
+        "unsafe_recall_at_4_highest_risk": 0.16666666666666666,
+        "unsafe_recall_at_8_highest_risk": 0.5,
+        "spearman_abs_delta": 0.5092481242715813,
+        "spearman_pvalue": 0.0010935409883218907,
+        "auroc_unsafe": 0.8028846153846153
+      },
+      "baseline_int8_mse_rank": {
+        "n": 38,
+        "safe_count": 26,
+        "unsafe_count": 12,
+        "precision_at_4_lowest_risk": 1.0,
+        "precision_at_8_lowest_risk": 0.875,
+        "unsafe_recall_at_4_highest_risk": 0.25,
+        "unsafe_recall_at_8_highest_risk": 0.25,
+        "spearman_abs_delta": 0.24351538287218324,
+        "spearman_pvalue": 0.1406794316721675,
+        "auroc_unsafe": 0.6266025641025641
+      },
+      "baseline_fixed_threshold": {
+        "n": 38,
+        "safe_count": 26,
+        "unsafe_count": 12,
+        "precision_at_4_lowest_risk": 1.0,
+        "precision_at_8_lowest_risk": 0.625,
+        "unsafe_recall_at_4_highest_risk": 0.25,
+        "unsafe_recall_at_8_highest_risk": 0.3333333333333333,
+        "spearman_abs_delta": 0.26586852142754824,
+        "spearman_pvalue": 0.10666569138651216,
+        "auroc_unsafe": 0.5769230769230769
+      },
+      "logistic_safe_probability": {
+        "n": 38,
+        "safe_count": 26,
+        "unsafe_count": 12,
+        "precision_at_4_lowest_risk": 0.75,
+        "precision_at_8_lowest_risk": 0.875,
+        "unsafe_recall_at_4_highest_risk": 0.3333333333333333,
+        "unsafe_recall_at_8_highest_risk": 0.4166666666666667,
+        "spearman_abs_delta": 0.46930736404420614,
+        "spearman_pvalue": 0.0029547813480594754,
+        "auroc_unsafe": 0.7371794871794872
+      }
+    }
+  },
+  "cross_scale_0p5b_to_7b": {
+    "train_n": 30,
+    "test_n": 84,
+    "ridge": {
+      "n": 84,
+      "safe_count": 59,
+      "unsafe_count": 25,
+      "precision_at_4_lowest_risk": 1.0,
+      "precision_at_8_lowest_risk": 0.875,
+      "unsafe_recall_at_4_highest_risk": 0.12,
+      "unsafe_recall_at_8_highest_risk": 0.2,
+      "spearman_abs_delta": 0.26514123721777866,
+      "spearman_pvalue": 0.014791546834204581,
+      "auroc_unsafe": 0.632542372881356,
+      "mae_abs_delta": 0.06322350477765133,
+      "rmse_abs_delta": 0.10524983780437767,
+      "r2_abs_delta": -4.345349521315565
+    },
+    "baseline_outlier_rank": {
+      "n": 84,
+      "safe_count": 59,
+      "unsafe_count": 25,
+      "precision_at_4_lowest_risk": 0.75,
+      "precision_at_8_lowest_risk": 0.75,
+      "unsafe_recall_at_4_highest_risk": 0.04,
+      "unsafe_recall_at_8_highest_risk": 0.12,
+      "spearman_abs_delta": 0.2661570397781162,
+      "spearman_pvalue": 0.014399789055864318,
+      "auroc_unsafe": 0.6125423728813559
+    },
+    "baseline_int8_mse_rank": {
+      "n": 84,
+      "safe_count": 59,
+      "unsafe_count": 25,
+      "precision_at_4_lowest_risk": 0.75,
+      "precision_at_8_lowest_risk": 0.75,
+      "unsafe_recall_at_4_highest_risk": 0.08,
+      "unsafe_recall_at_8_highest_risk": 0.12,
+      "spearman_abs_delta": 0.07732457191961739,
+      "spearman_pvalue": 0.4844768910387153,
+      "auroc_unsafe": 0.49627118644067797
+    },
+    "baseline_fixed_threshold": {
+      "n": 84,
+      "safe_count": 59,
+      "unsafe_count": 25,
+      "precision_at_4_lowest_risk": 0.75,
+      "precision_at_8_lowest_risk": 0.875,
+      "unsafe_recall_at_4_highest_risk": 0.04,
+      "unsafe_recall_at_8_highest_risk": 0.04,
+      "spearman_abs_delta": null,
+      "spearman_pvalue": null,
+      "auroc_unsafe": null
+    },
+    "logistic_safe_probability": {
+      "n": 84,
+      "safe_count": 59,
+      "unsafe_count": 25,
+      "precision_at_4_lowest_risk": 0.75,
+      "precision_at_8_lowest_risk": 0.875,
+      "unsafe_recall_at_4_highest_risk": 0.12,
+      "unsafe_recall_at_8_highest_risk": 0.2,
+      "spearman_abs_delta": 0.26402753872633394,
+      "spearman_pvalue": 0.015231621565405216,
+      "auroc_unsafe": 0.6379661016949152
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "source_predictions": "/content/drive/MyDrive/mixed_precision/mixed_precision/experiments/h7-precision-predictor/results/predictions_with_llama31_8b.csv",
+  "split": "cross_scale_0p5b_to_7b",
+  "top_k": 4,
+  "filters": {
+    "model_size_min": 8.0,
+    "roles": [
+      "mlp_projection"
+    ],
+    "leaves": [
+      "gate_proj",
+      "up_proj"
+    ],
+    "max_predicted_risk": null
+  },
+  "modules": [
+    {
+      "module_name": "base_model.model.model.layers.30.mlp.gate_proj",
+      "module_short": "layers.30.mlp.gate_proj",
+      "module_role": "mlp_projection",
+      "module_leaf": "gate_proj",
+      "predicted_risk_mean": -0.09365546734108943,
+      "predicted_risk_max": -0.0921217609800028,
+      "predicted_safe_probability_mean": 0.9812334059298736,
+      "observed_abs_delta_mean": 0.0021509130795806667,
+      "observed_safe_rate": 1.0,
+      "seed_count": 3
+    },
+    {
+      "module_name": "base_model.model.model.layers.30.mlp.up_proj",
+      "module_short": "layers.30.mlp.up_proj",
+      "module_role": "mlp_projection",
+      "module_leaf": "up_proj",
+      "predicted_risk_mean": -0.07123482347537625,
+      "predicted_risk_max": -0.0701138950761056,
+      "predicted_safe_probability_mean": 0.9483862057516476,
+      "observed_abs_delta_mean": 0.0024297535419466666,
+      "observed_safe_rate": 1.0,
+      "seed_count": 3
+    },
+    {
+      "module_name": "base_model.model.model.layers.31.mlp.up_proj",
+      "module_short": "layers.31.mlp.up_proj",
+      "module_role": "mlp_projection",
+      "module_leaf": "up_proj",
+      "predicted_risk_mean": -0.06382073861276043,
+      "predicted_risk_max": -0.0624646543306443,
+      "predicted_safe_probability_mean": 0.9398184922571365,
+      "observed_abs_delta_mean": 0.006014277537660001,
+      "observed_safe_rate": 0.3333333333333333,
+      "seed_count": 3
+    },
+    {
+      "module_name": "base_model.model.model.layers.31.mlp.gate_proj",
+      "module_short": "layers.31.mlp.gate_proj",
+      "module_role": "mlp_projection",
+      "module_leaf": "gate_proj",
+      "predicted_risk_mean": -0.0455148388546113,
+      "predicted_risk_max": -0.0431259393890478,
+      "predicted_safe_probability_mean": 0.9611285822119916,
+      "observed_abs_delta_mean": 0.004202951987582333,
+      "observed_safe_rate": 0.6666666666666666,
+      "seed_count": 3
+    }
+  ],
+  "module_names": [
+    "base_model.model.model.layers.30.mlp.gate_proj",
+    "base_model.model.model.layers.30.mlp.up_proj",
+    "base_model.model.model.layers.31.mlp.up_proj",
+    "base_model.model.model.layers.31.mlp.gate_proj"
+  ]
+}
