@@ -80,3 +80,51 @@ The predictor must not use raw `module_name` in the first version, because that 
 
 H7 is useful enough to report if it beats either fixed thresholds or pure outlier ranking on a held-out setting. If it does not, the result is still useful: the paper should keep the simpler claim that activation-outlier ranking is currently sufficient.
 
+## Llama-3.1-8B Extension
+
+For a richer cross-family outcome, run a staged H6-style ladder on `meta-llama/Llama-3.1-8B` rather than jumping directly to full training:
+
+1. Three-seed targeted calibration and perturbation probes.
+2. Rebuild the H7 predictor dataset using both Qwen H6 artifacts and Llama H7 artifacts.
+3. Select a Llama module policy from predictor outputs.
+4. Run 500-step LoRA training for the selected policy against matched bf16.
+5. Run QLoRA 4-bit NF4 as the hardware-backed resource baseline.
+
+The launch script is:
+
+```bash
+GPU_ID=7 \
+HARDWARE_LABEL=rtx3090-lab \
+bash experiments/h7-precision-predictor/code/run_llama31_8b_rich_h6.sh
+```
+
+Before running the probe panel, verify the actual PEFT-wrapped module names:
+
+```bash
+CUDA_VISIBLE_DEVICES=7 \
+python experiments/h7-precision-predictor/code/inspect_model_modules.py \
+  --model-name meta-llama/Llama-3.1-8B \
+  --output experiments/h7-precision-predictor/results/llama31_8b_module_inventory.json \
+  --panel-output experiments/h7-precision-predictor/results/llama31_8b_probe_modules.txt
+```
+
+Then pass the discovered panel explicitly:
+
+```bash
+GPU_ID=7 \
+MODULE_FILE=experiments/h7-precision-predictor/results/llama31_8b_probe_modules.txt \
+HARDWARE_LABEL=rtx3090-lab \
+bash experiments/h7-precision-predictor/code/run_llama31_8b_rich_h6.sh
+```
+
+By default this runs probes and predictor refresh only. Training is opt-in:
+
+```bash
+GPU_ID=7 \
+RUN_PROBES=0 \
+RUN_PREDICTOR=0 \
+RUN_TRAINING=1 \
+RUN_RESOURCE_BASELINES=1 \
+TRAIN_SEEDS="42" \
+bash experiments/h7-precision-predictor/code/run_llama31_8b_rich_h6.sh
+```

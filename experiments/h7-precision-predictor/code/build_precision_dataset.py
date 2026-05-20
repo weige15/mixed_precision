@@ -61,6 +61,12 @@ FIELDNAMES = [
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--h6-results", default="experiments/h6-adaptive-precision-assignment/results")
+    parser.add_argument(
+        "--results-roots",
+        nargs="+",
+        default=None,
+        help="One or more result roots to scan. Defaults to --h6-results for backward compatibility.",
+    )
     parser.add_argument("--output", default="experiments/h7-precision-predictor/results/precision_dataset.csv")
     parser.add_argument("--safe-threshold", type=float, default=0.005)
     parser.add_argument(
@@ -310,9 +316,12 @@ def merge_perturbations(
 
 def main() -> None:
     args = parse_args()
-    results_dir = Path(args.h6_results)
-    rows = load_calibration_rows(results_dir, args.candidate_format, args.safe_threshold)
-    merge_perturbations(rows, results_dir, args.candidate_format, args.safe_threshold)
+    results_roots = [Path(path) for path in (args.results_roots or [args.h6_results])]
+    rows: dict[tuple[str, int, str], dict[str, Any]] = {}
+    for results_dir in results_roots:
+        rows.update(load_calibration_rows(results_dir, args.candidate_format, args.safe_threshold))
+    for results_dir in results_roots:
+        merge_perturbations(rows, results_dir, args.candidate_format, args.safe_threshold)
 
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
