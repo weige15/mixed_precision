@@ -36,15 +36,15 @@
   ],
   "h6_fake_int8_bits": 8,
   "h6_fake_int8_gradient": "straight_through_estimator",
-  "final_train_loss": 1.2337346524000168,
-  "final_eval_loss": 1.3899526411294938,
+  "final_train_loss": 1.2352368533611298,
+  "final_eval_loss": 1.3902318334579469,
   "max_grad_norm": 5.75204610824585,
   "loss_spike_count": 0,
   "nan_or_inf_count": 0,
   "peak_cuda_memory_gib": 20.19551658630371,
-  "elapsed_sec": 2299.301233291626,
-  "train_time_sec": 2246.395777463913,
-  "tokens_per_sec_overall": 271.3759254183202,
-  "tokens_per_sec_train": 277.7671709766307,
-  "tokens_per_sec_train_excluding_first_step": 277.8588727852334
+  "elapsed_sec": 2343.335588693619,
+  "train_time_sec": 2289.7942209243774,
+  "tokens_per_sec_overall": 266.27641512834214,
+  "tokens_per_sec_train": 272.5026529886623,
+  "tokens_per_sec_train_excluding_first_step": 272.5916286641725
 }
