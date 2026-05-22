@@ -123,4 +123,32 @@ Matched result:
 
 Interpretation: this is a positive first training validation for cross-family transfer. The Llama-3.1-8B conservative fake-int8 policy preserved bf16 validation quality and stability on seed 42, with degradation far inside the locked 1% gate. As with the Qwen fake-int8 policies, this is not a memory-saving result because the implementation is a Python-level fake-quant output hook.
 
-Next decision: replicate seeds 43 and 44 for the same two-module policy before testing a wider or predictor-selected Llama policy.
+This seed-42 result justified replication on seeds 43 and 44.
+
+## 2026-05-22 Llama-3.1-8B Conservative Policy Replication
+
+The conservative two-module fake-int8 MLP policy is now replicated across seeds 42, 43, and 44 with matched bf16 controls.
+
+| seed | bf16 eval | H7 eval | abs delta | rel delta | spikes total | NaN/Inf total | memory delta | tok/s delta |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 42 | `1.389425` | `1.390033` | `+0.000608` | `+0.044%` | 0 | 0 | `+0.000000 GiB` | `-0.56%` |
+| 43 | `1.364863` | `1.366315` | `+0.001452` | `+0.106%` | 0 | 0 | `+0.000000 GiB` | `+1.86%` |
+| 44 | `1.361036` | `1.361887` | `+0.000852` | `+0.063%` | 0 | 0 | `+0.000000 GiB` | `+0.07%` |
+
+Mean paired eval degradation is `+0.000970` absolute, or `+0.071%` relative. The worst seed is `+0.106%`, far inside the locked 1% quality gate. Both policies had zero loss spikes and zero NaN/Inf events in all paired runs.
+
+Interpretation: H7 now has replicated cross-family calibration-to-training transfer for a conservative Llama-3.1-8B selected module set. This strengthens the story beyond Qwen: a short perturbation-calibrated precision check can identify low-risk projection modules that remain harmless during actual LoRA updates across model families.
+
+The resource interpretation is unchanged. Peak memory is identical because fake-int8 output hooks do not change model storage, optimizer states, or activation allocation in a hardware-backed way. Throughput deltas are small and noisy. The claim is quality-preserving sensitivity assignment, not resource savings.
+
+Next step: run a cautious wider Llama policy. The best next policy should add only the two stable attention modules from the perturbation probe:
+
+- `base_model.model.model.layers.30.self_attn.q_proj`
+- `base_model.model.model.layers.30.self_attn.o_proj`
+
+to the validated conservative MLP pair:
+
+- `base_model.model.model.layers.30.mlp.gate_proj`
+- `base_model.model.model.layers.30.mlp.up_proj`
+
+Avoid adding `layers.31.mlp.up_proj` or `layers.31.mlp.gate_proj` yet, because they were not stable under the strict perturbation safety rule across seeds.
