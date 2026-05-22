@@ -176,3 +176,31 @@ Matched seed-42 comparison:
 Interpretation: the cautious four-module policy is safe on seed 42. It remains far inside the 1% quality gate and has no instability. The eval degradation is slightly larger than the conservative two-module policy (`+0.058%` vs `+0.044%` relative to bf16), but the difference is tiny. Throughput is about `2.14%` lower than bf16 under Python fake-int8 hooks, which should not be treated as hardware-realistic performance.
 
 Next step: replicate this cautious four-module policy on seeds 43 and 44. If it holds, then H7 has a stronger cross-family result: Llama can tolerate both a small selected MLP pair and selected attention projections during LoRA updates.
+
+## 2026-05-22 Invalid Cautious Policy Replication Attempt
+
+The first seed 43/44 artifacts under:
+
+- `results/train_llama31_8b_h7_cautious_attn_mlp4_seed43_500/`
+- `results/train_llama31_8b_h7_cautious_attn_mlp4_seed44_500/`
+
+are not valid replications of the seed-42 cautious four-module policy.
+
+Problems:
+
+1. Both runs used `max_steps=100`, not the locked 500-step training protocol.
+2. Both runs fake-int8 quantized only three modules:
+   - `base_model.model.model.layers.30.mlp.gate_proj`
+   - `base_model.model.model.layers.30.mlp.up_proj`
+   - `base_model.model.model.layers.30.self_attn.o_proj`
+3. They omitted the intended fourth module:
+   - `base_model.model.model.layers.30.self_attn.q_proj`
+
+Observed metrics:
+
+| seed | max steps | modules | eval loss | note |
+|---:|---:|---:|---:|---|
+| 43 | `100` | 3 | `1.375298` | not comparable to 500-step bf16 |
+| 44 | `100` | 3 | `1.396982` | not comparable to 500-step bf16 |
+
+Conclusion: do not use these as evidence for or against the cautious four-module policy. They should be treated as misconfigured exploratory artifacts. The correct next action is to rerun seeds 43 and 44 for 500 steps with all four intended modules.
