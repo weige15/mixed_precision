@@ -152,3 +152,27 @@ to the validated conservative MLP pair:
 - `base_model.model.model.layers.30.mlp.up_proj`
 
 Avoid adding `layers.31.mlp.up_proj` or `layers.31.mlp.gate_proj` yet, because they were not stable under the strict perturbation safety rule across seeds.
+
+## 2026-05-22 Llama-3.1-8B Cautious Attention+MLP Policy
+
+The cautious four-module Llama policy completed for seed 42. The run output landed at `experiments/h7-precision-predictor/results/summary.json` and `metrics.jsonl` rather than the intended named subdirectory, but the summary metadata confirms the policy:
+
+- `base_model.model.model.layers.30.self_attn.q_proj`
+- `base_model.model.model.layers.30.self_attn.o_proj`
+- `base_model.model.model.layers.30.mlp.gate_proj`
+- `base_model.model.model.layers.30.mlp.up_proj`
+
+Matched seed-42 comparison:
+
+| metric | bf16 | conservative MLP2 | cautious attention+MLP4 |
+|---|---:|---:|---:|
+| final eval loss | `1.389425` | `1.390033` | `1.390232` |
+| delta vs bf16 | - | `+0.044%` | `+0.058%` |
+| loss spikes | `0` | `0` | `0` |
+| NaN/Inf events | `0` | `0` | `0` |
+| peak CUDA memory GiB | `20.1955` | `20.1955` | `20.1955` |
+| train tok/s excl. first | `278.56` | `277.00` | `272.59` |
+
+Interpretation: the cautious four-module policy is safe on seed 42. It remains far inside the 1% quality gate and has no instability. The eval degradation is slightly larger than the conservative two-module policy (`+0.058%` vs `+0.044%` relative to bf16), but the difference is tiny. Throughput is about `2.14%` lower than bf16 under Python fake-int8 hooks, which should not be treated as hardware-realistic performance.
+
+Next step: replicate this cautious four-module policy on seeds 43 and 44. If it holds, then H7 has a stronger cross-family result: Llama can tolerate both a small selected MLP pair and selected attention projections during LoRA updates.

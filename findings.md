@@ -64,6 +64,8 @@ The H6.4 rank-selected 7B fake-int8 training policy now validates those four low
 
 The H7 Llama-3.1-8B cross-family branch now has replicated training validation. A conservative two-module fake-int8 MLP policy selected from the three-seed Llama perturbation probe (`layers.30.mlp.gate_proj` and `layers.30.mlp.up_proj`) was compared against matched bf16 for 500 steps across seeds 42, 43, and 44 using A100 Colab. Paired eval-loss degradations were `+0.044%`, `+0.106%`, and `+0.063%`, with mean `+0.071%` and worst seed `+0.106%`, all far inside the locked 1% quality gate. All six runs had zero loss spikes and zero NaN/Inf events. Peak memory was unchanged, as expected for fake-int8 output hooks, and throughput deltas were small/noisy. This is now positive replicated evidence that the calibration-to-training transfer idea is not Qwen-only.
 
+The first wider Llama cautious attention+MLP policy also succeeded on seed 42. It fake-int8 quantized `layers.30.self_attn.q_proj`, `layers.30.self_attn.o_proj`, `layers.30.mlp.gate_proj`, and `layers.30.mlp.up_proj`. Against matched bf16 seed 42, eval loss changed from `1.389425` to `1.390232`, a `+0.058%` relative degradation, with zero loss spikes and zero NaN/Inf events. This suggests the Llama safe set may extend beyond MLP projections into selected attention projections, but it is not yet replicated.
+
 ## Patterns and Insights
 
 - The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.
@@ -103,6 +105,7 @@ The H7 Llama-3.1-8B cross-family branch now has replicated training validation. 
 - H6.4 seeds 42-44 confirm that 7B needs rank/perturbation-based policy selection rather than fixed 0.5B thresholds. A conservative 7B fake-int8 policy should start with only the four consistently low-delta modules.
 - The conservative H6.4 7B fake-int8 policy preserves LoRA quality across seeds 42-44, so the calibration-to-training transfer now holds at 7B for a small selected module set.
 - The Llama-3.1-8B conservative-policy training result now replicates across seeds 42-44, supporting cross-family transfer for a small selected module set. It still does not provide a resource-saving claim because the implementation is a fake-int8 output hook.
+- A wider Llama policy including selected attention projections is safe on seed 42, but it needs seed 43/44 replication before becoming a supported result.
 - bitsandbytes 8-bit LoRA casts bf16/fp32 activations to fp16 inside `MatMul8bitLt`; reports should not describe the 8-bit path as pure bf16 compute.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
 - Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.
