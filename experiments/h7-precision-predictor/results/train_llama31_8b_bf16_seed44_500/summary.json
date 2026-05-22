@@ -1,8 +1,8 @@
 {
   "model_name": "meta-llama/Llama-3.1-8B",
   "dataset_name": "tatsu-lab/alpaca",
-  "precision_policy": "h6_custom_int8",
-  "seed": 43,
+  "precision_policy": "bf16_baseline",
+  "seed": 44,
   "max_steps": 500,
   "seq_len": 512,
   "per_device_batch_size": 1,
@@ -28,21 +28,18 @@
     "v_proj"
   ],
   "fp32_norm_wrapped_modules": [],
-  "h6_fake_int8_output_modules": [
-    "base_model.model.model.layers.30.mlp.gate_proj",
-    "base_model.model.model.layers.30.mlp.up_proj"
-  ],
-  "h6_fake_int8_bits": 8,
-  "h6_fake_int8_gradient": "straight_through_estimator",
-  "final_train_loss": 1.4871759563684464,
-  "final_eval_loss": 1.3647494116425514,
-  "max_grad_norm": 3.9415171146392822,
+  "h6_fake_int8_output_modules": [],
+  "h6_fake_int8_bits": null,
+  "h6_fake_int8_gradient": null,
+  "final_train_loss": 1.3573671095073223,
+  "final_eval_loss": 1.3610356956720353,
+  "max_grad_norm": 5.083251476287842,
   "loss_spike_count": 0,
   "nan_or_inf_count": 0,
   "peak_cuda_memory_gib": 20.19551658630371,
-  "elapsed_sec": 2281.4785430431366,
-  "train_time_sec": 2229.763623714447,
-  "tokens_per_sec_overall": 276.91384691144776,
-  "tokens_per_sec_train": 283.3363112039483,
-  "tokens_per_sec_train_excluding_first_step": 283.461330779069
+  "elapsed_sec": 2205.0246679782867,
+  "train_time_sec": 2154.0137581825256,
+  "tokens_per_sec_overall": 285.64487696978557,
+  "tokens_per_sec_train": 292.4094600637308,
+  "tokens_per_sec_train_excluding_first_step": 292.4813880402981
 }
