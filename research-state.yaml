@@ -708,8 +708,8 @@ experiments:
 
 outer_loop:
   cycle: 18
-  last_direction: "write the paper-style report from final synthesis; avoid more experiments unless widening the 7B policy is explicitly needed"
-  last_reflection: "Final synthesis is complete. H6 is supported as a calibration-guided sensitivity-ranking method, H6.3 is supported as a Qwen2.5-7B QLoRA memory-capacity trade-off, and H6.4 is supported as calibration-to-training transfer at 7B for a conservative selected fake-int8 module set. The project should now move to final write-up rather than routine experimentation."
+  last_direction: "write the paper-style report from final synthesis; treat hardware-backed selective precision as a future systems branch unless explicitly prioritized"
+  last_reflection: "Final synthesis is complete, and the 2026-05-23 literature refresh clarifies the next systems direction. H6/H7 support calibration-guided sensitivity ranking and cross-family quality preservation, while H6.3 supports a Qwen2.5-7B QLoRA memory-capacity trade-off. Related work suggests the next hardware-backed branch should be selective rescue from a low-bit baseline using a risk(module, format, backend) predictor plus measured cost model, not routine fake-int8 demotion repeats."
 
 workspace:
   findings: "findings.md"
