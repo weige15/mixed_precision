@@ -1,0 +1,168 @@
+{
+  "source": "experiments/h7-precision-predictor/results/precision_dataset.csv",
+  "model_filter": "Qwen/Qwen2.5-7B",
+  "safe_threshold": 0.005,
+  "n_modules_with_perturbation_labels": 14,
+  "high_risk_modules": [
+    {
+      "model_name": "Qwen/Qwen2.5-7B",
+      "module_name": "base_model.model.model.layers.4.post_attention_layernorm",
+      "module_role": "norm",
+      "module_leaf": "post_attention_layernorm",
+      "layer_idx": 4.0,
+      "mean_abs_delta": 0.241635620594,
+      "max_abs_delta": 0.272918015718,
+      "mean_outlier_score": 755.997212728,
+      "n_labeled_seeds": 3
+    },
+    {
+      "model_name": "Qwen/Qwen2.5-7B",
+      "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+      "module_role": "mlp_projection",
+      "module_leaf": "down_proj",
+      "layer_idx": 3.0,
+      "mean_abs_delta": 0.046365102132166665,
+      "max_abs_delta": 0.0605845451355,
+      "mean_outlier_score": 756.2717081706667,
+      "n_labeled_seeds": 3
+    },
+    {
+      "model_name": "Qwen/Qwen2.5-7B",
+      "module_name": "base_model.model.model.norm",
+      "module_role": "norm",
+      "module_leaf": "norm",
+      "layer_idx": null,
+      "mean_abs_delta": 0.005764573812475334,
+      "max_abs_delta": 0.0144056677818,
+      "mean_outlier_score": 75.2649383545,
+      "n_labeled_seeds": 3
+    },
+    {
+      "model_name": "Qwen/Qwen2.5-7B",
+      "module_name": "base_model.model.model.layers.24.mlp.down_proj",
+      "module_role": "mlp_projection",
+      "module_leaf": "down_proj",
+      "layer_idx": 24.0,
+      "mean_abs_delta": 0.0071089565753833335,
+      "max_abs_delta": 0.0117001533508,
+      "mean_outlier_score": 123.782742818,
+      "n_labeled_seeds": 3
+    },
+    {
+      "model_name": "Qwen/Qwen2.5-7B",
+      "module_name": "base_model.model.lm_head",
+      "module_role": "logits",
+      "module_leaf": "lm_head",
+      "layer_idx": null,
+      "mean_abs_delta": 0.006980369488396666,
+      "max_abs_delta": 0.0116916000843,
+      "mean_outlier_score": 44.5871136983,
+      "n_labeled_seeds": 3
+    },
+    {
+      "model_name": "Qwen/Qwen2.5-7B",
+      "module_name": "base_model.model.model.layers.2.self_attn.o_proj",
+      "module_role": "attention_projection",
+      "module_leaf": "o_proj",
+      "layer_idx": 2.0,
+      "mean_abs_delta": 0.00694535175961,
+      "max_abs_delta": 0.0110846459866,
+      "mean_outlier_score": 165.029953003,
+      "n_labeled_seeds": 3
+    },
+    {
+      "model_name": "Qwen/Qwen2.5-7B",
+      "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+      "module_role": "mlp_projection",
+      "module_leaf": "down_proj",
+      "layer_idx": 2.0,
+      "mean_abs_delta": 0.0053805311520899995,
+      "max_abs_delta": 0.00757718086243,
+      "mean_outlier_score": 502.23510742166667,
+      "n_labeled_seeds": 3
+    },
+    {
+      "model_name": "Qwen/Qwen2.5-7B",
+      "module_name": "base_model.model.model.layers.4.input_layernorm",
+      "module_role": "norm",
+      "module_leaf": "input_layernorm",
+      "layer_idx": 4.0,
+      "mean_abs_delta": 0.0039005676905323333,
+      "max_abs_delta": 0.00694087147713,
+      "mean_outlier_score": 756.0162963866667,
+      "n_labeled_seeds": 3
+    },
+    {
+      "model_name": "Qwen/Qwen2.5-7B",
+      "module_name": "base_model.model.model.layers.26.self_attn.q_proj",
+      "module_role": "attention_projection",
+      "module_leaf": "q_proj",
+      "layer_idx": 26.0,
+      "mean_abs_delta": 0.003360639015835,
+      "max_abs_delta": 0.00622218847275,
+      "mean_outlier_score": 20.119837443066665,
+      "n_labeled_seeds": 3
+    },
+    {
+      "model_name": "Qwen/Qwen2.5-7B",
+      "module_name": "base_model.model.model.layers.27.mlp.up_proj",
+      "module_role": "mlp_projection",
+      "module_leaf": "up_proj",
+      "layer_idx": 27.0,
+      "mean_abs_delta": 0.0025502244631463336,
+      "max_abs_delta": 0.00513631105423,
+      "mean_outlier_score": 36.48943583173333,
+      "n_labeled_seeds": 3
+    }
+  ],
+  "candidate_policies": [
+    {
+      "policy_name": "h8_rescue_norm_logits",
+      "base_backend": "qlora_4bit_nf4",
+      "policy_type": "selective_rescue_from_low_bit",
+      "rescue_precision": "bf16_or_fp32_backend_dependent",
+      "rescue_modules": [
+        "base_model.model.model.layers.4.post_attention_layernorm",
+        "base_model.model.model.norm",
+        "base_model.model.lm_head",
+        "base_model.model.model.layers.4.input_layernorm"
+      ],
+      "rationale": "Rescue high-risk norm/logit paths first because reductions and logits are conservative precision targets.",
+      "backend_feasibility": "unverified",
+      "expected_effect": "quality rescue with possible memory/dispatch overhead"
+    },
+    {
+      "policy_name": "h8_rescue_norm_logits_highrisk_down",
+      "base_backend": "qlora_4bit_nf4",
+      "policy_type": "selective_rescue_from_low_bit",
+      "rescue_precision": "bf16_or_fp32_backend_dependent",
+      "rescue_modules": [
+        "base_model.model.model.layers.4.post_attention_layernorm",
+        "base_model.model.model.norm",
+        "base_model.model.lm_head",
+        "base_model.model.model.layers.4.input_layernorm",
+        "base_model.model.model.layers.3.mlp.down_proj",
+        "base_model.model.model.layers.24.mlp.down_proj",
+        "base_model.model.model.layers.2.mlp.down_proj"
+      ],
+      "rationale": "Add high-risk MLP down projections identified by perturbation deltas.",
+      "backend_feasibility": "unverified",
+      "expected_effect": "quality rescue with possible memory/dispatch overhead"
+    },
+    {
+      "policy_name": "h8_rescue_projection_top4",
+      "base_backend": "qlora_4bit_nf4",
+      "policy_type": "selective_rescue_from_low_bit",
+      "rescue_precision": "bf16_or_fp32_backend_dependent",
+      "rescue_modules": [
+        "base_model.model.model.layers.3.mlp.down_proj",
+        "base_model.model.model.layers.24.mlp.down_proj",
+        "base_model.model.model.layers.2.self_attn.o_proj",
+        "base_model.model.model.layers.2.mlp.down_proj"
+      ],
+      "rationale": "Rescue top-k high-risk projection modules by max perturbation delta.",
+      "backend_feasibility": "unverified",
+      "expected_effect": "quality rescue with possible memory/dispatch overhead"
+    }
+  ]
+}
