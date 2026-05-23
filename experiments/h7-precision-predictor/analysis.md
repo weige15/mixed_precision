@@ -204,3 +204,72 @@ Observed metrics:
 | 44 | `100` | 3 | `1.396982` | not comparable to 500-step bf16 |
 
 Conclusion: do not use these as evidence for or against the cautious four-module policy. They should be treated as misconfigured exploratory artifacts. The correct next action is to rerun seeds 43 and 44 for 500 steps with all four intended modules.
+
+## 2026-05-23 Lab 3090 Cautious Policy Audit
+
+After the lab 3090 rerun, only one valid new four-module cautious-policy artifact is visible:
+
+- `experiments/h7-precision-predictor/results/summary.json`
+
+This root-level artifact is a valid seed-44 run, but it is still misplaced at the H7 result root rather than under a named run directory.
+
+Valid seed-44 metadata:
+
+| field | value |
+|---|---|
+| model | `meta-llama/Llama-3.1-8B` |
+| seed | `44` |
+| max steps | `500` |
+| hardware | `rtx3090-lab`, `NVIDIA GeForce RTX 3090` |
+| fake-int8 modules | 4 intended cautious modules |
+| final eval loss | `1.362870` |
+| loss spikes / NaN-Inf | `0 / 0` |
+
+The four modules are correct:
+
+- `base_model.model.model.layers.30.mlp.gate_proj`
+- `base_model.model.model.layers.30.mlp.up_proj`
+- `base_model.model.model.layers.30.self_attn.o_proj`
+- `base_model.model.model.layers.30.self_attn.q_proj`
+
+Compared against the existing seed-44 bf16 baseline, final eval loss changes from `1.361036` to `1.362870`, an absolute delta of `+0.001834` or `+0.135%`. This is inside the locked 1% quality gate and has no instability. However, the bf16 baseline was run on A100 Colab while this cautious-policy run was run on RTX 3090, so only the quality comparison is usable with caveat; memory and throughput are not comparable.
+
+The named seed-43 artifact under `train_llama31_8b_h7_cautious_attn_mlp4_seed43_500/` is not the intended 3090 four-module run. It is an A100 run with 500 steps but only three modules, omitting `layers.30.self_attn.q_proj`. It should remain classified as misconfigured/exploratory, not as the seed-43 cautious-policy replication.
+
+Current cautious-policy status:
+
+| seed | status | readout |
+|---:|---|---|
+| 42 | valid A100, 4 modules, 500 steps | safe, `+0.058%` vs bf16 |
+| 43 | missing valid 4-module run | rerun needed |
+| 44 | valid RTX 3090, 4 modules, 500 steps | safe, `+0.135%` vs A100 bf16 quality baseline |
+
+Conclusion: the cautious four-module policy has two safe seeds, but only one of the new lab runs is valid. It is not yet a clean three-seed replication. Rerun seed 43 with all four modules and `--max-steps 500`, preferably with a unique output directory suffix such as `_rtx3090`.
+
+## 2026-05-23 Lab 3090 Cautious Policy Replication
+
+The intended lab 3090 cautious-policy artifacts are now present for seeds 43 and 44:
+
+- `results/train_llama31_8b_h7_cautious_attn_mlp4_seed43_500_rtx3090/`
+- `results/train_llama31_8b_h7_cautious_attn_mlp4_seed44_500_rtx3090/`
+
+Both are valid 500-step runs with all four intended modules:
+
+- `base_model.model.model.layers.30.self_attn.q_proj`
+- `base_model.model.model.layers.30.self_attn.o_proj`
+- `base_model.model.model.layers.30.mlp.gate_proj`
+- `base_model.model.model.layers.30.mlp.up_proj`
+
+Both have zero loss spikes and zero NaN/Inf events. The existing seed-42 cautious four-module value is retained from the earlier A100 run recorded above; its root-level artifact was later overwritten by a seed-44 root-level run, so use the recorded seed-42 value rather than the current root `summary.json`.
+
+Matched quality comparison against the available bf16 baselines:
+
+| seed | bf16 eval | cautious eval | abs delta | rel delta | cautious hardware | bf16 hardware |
+|---:|---:|---:|---:|---:|---|---|
+| 42 | `1.389425` | `1.390232` | `+0.000807` | `+0.058%` | A100 Colab | A100 Colab |
+| 43 | `1.364863` | `1.365466` | `+0.000603` | `+0.044%` | RTX 3090 lab | A100 Colab |
+| 44 | `1.361036` | `1.362673` | `+0.001637` | `+0.120%` | RTX 3090 lab | A100 Colab |
+
+Mean paired eval degradation is `+0.001016` absolute, or `+0.074%` relative. The worst seed is `+0.120%`, still far inside the locked 1% quality gate.
+
+Interpretation: the cautious attention+MLP four-module policy is now supported on quality and stability across three seeds. The result extends the Llama safe set beyond the conservative MLP-only pair to include selected attention projections. Resource metrics remain non-comparable across seeds because bf16 baselines for seeds 43 and 44 were A100 while the cautious-policy treatments were RTX 3090. Do not use these runs for a memory or throughput claim.
