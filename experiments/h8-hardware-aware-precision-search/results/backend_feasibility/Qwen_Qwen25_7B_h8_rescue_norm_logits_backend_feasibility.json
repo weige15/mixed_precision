@@ -1,0 +1,94 @@
+{
+  "model_name": "Qwen/Qwen2.5-7B",
+  "policy_name": "h8_rescue_norm_logits",
+  "candidate_source": "experiments/h8-hardware-aware-precision-search/results/h8_policy_candidates.json",
+  "base_backend": "qlora_4bit_nf4",
+  "device": "cuda",
+  "cuda_device_name": "NVIDIA GeForce RTX 3090",
+  "bf16_compute": true,
+  "lora_wrapped": true,
+  "lora_targets": [
+    "down_proj",
+    "gate_proj",
+    "k_proj",
+    "o_proj",
+    "q_proj",
+    "up_proj",
+    "v_proj"
+  ],
+  "status_counts": {
+    "already_non_quantized": 3,
+    "non_quantized_linear": 1
+  },
+  "targets": [
+    {
+      "requested_name": "base_model.model.model.layers.4.post_attention_layernorm",
+      "resolved_name": "base_model.model.model.layers.4.post_attention_layernorm",
+      "status": "already_non_quantized",
+      "interpretation": "Target is not a quantized linear module in this backend path; it may already run in regular precision.",
+      "class_name": "Qwen2RMSNorm",
+      "class_module": "transformers.models.qwen2.modeling_qwen2",
+      "is_quantized_linear": false,
+      "local_tensors": [
+        {
+          "kind": "parameter",
+          "name": "weight",
+          "dtype": "torch.float32"
+        }
+      ],
+      "base_layer": null
+    },
+    {
+      "requested_name": "base_model.model.model.norm",
+      "resolved_name": "base_model.model.model.norm",
+      "status": "already_non_quantized",
+      "interpretation": "Target is not a quantized linear module in this backend path; it may already run in regular precision.",
+      "class_name": "Qwen2RMSNorm",
+      "class_module": "transformers.models.qwen2.modeling_qwen2",
+      "is_quantized_linear": false,
+      "local_tensors": [
+        {
+          "kind": "parameter",
+          "name": "weight",
+          "dtype": "torch.float32"
+        }
+      ],
+      "base_layer": null
+    },
+    {
+      "requested_name": "base_model.model.lm_head",
+      "resolved_name": "base_model.model.lm_head",
+      "status": "non_quantized_linear",
+      "interpretation": "Target is a normal linear-like module in the loaded graph; check dtype and memory impact before counting it as rescued.",
+      "class_name": "Linear",
+      "class_module": "torch.nn.modules.linear",
+      "is_quantized_linear": false,
+      "local_tensors": [
+        {
+          "kind": "parameter",
+          "name": "weight",
+          "dtype": "torch.float32"
+        }
+      ],
+      "base_layer": null
+    },
+    {
+      "requested_name": "base_model.model.model.layers.4.input_layernorm",
+      "resolved_name": "base_model.model.model.layers.4.input_layernorm",
+      "status": "already_non_quantized",
+      "interpretation": "Target is not a quantized linear module in this backend path; it may already run in regular precision.",
+      "class_name": "Qwen2RMSNorm",
+      "class_module": "transformers.models.qwen2.modeling_qwen2",
+      "is_quantized_linear": false,
+      "local_tensors": [
+        {
+          "kind": "parameter",
+          "name": "weight",
+          "dtype": "torch.float32"
+        }
+      ],
+      "base_layer": null
+    }
+  ],
+  "summary": "Selective rescue is implementation-feasible only for targets that can be reloaded or replaced in higher precision while preserving most QLoRA memory savings. This probe identifies which targets are quantized versus already regular precision."
+}
