@@ -40,3 +40,5 @@ The candidate file now tracks both:
 - `meta-llama/Llama-3.1-8B`
 
 Both models have three-seed perturbation labels for 14 modules and are marked `candidate_ready`. The policy sets are still planning artifacts with `backend_feasibility: unverified`; the next H8 step is a backend feasibility check for whether QLoRA/NF4 can selectively rescue the proposed modules to bf16/fp32 without losing the memory advantage.
+
+Added `code/inspect_h8_backend_feasibility.py` for this check. It mirrors the QLoRA load path, applies PEFT LoRA wrapping by default, resolves the candidate rescue targets, and reports whether each target is missing, already non-quantized, or backed by a bitsandbytes quantized linear module. The local environment has the packages installed but no available CUDA device, so the real backend probe must run on the target RTX 3090 host.

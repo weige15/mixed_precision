@@ -21,3 +21,15 @@ python experiments/h8-hardware-aware-precision-search/code/build_h8_policy_candi
 
 Next implementation step: verify backend feasibility for selective rescue from
 QLoRA/NF4 before launching long H8 training runs.
+
+Backend feasibility commands:
+
+```bash
+python experiments/h8-hardware-aware-precision-search/code/inspect_h8_backend_feasibility.py \
+  --model-name meta-llama/Llama-3.1-8B \
+  --policy-name h8_rescue_norm_logits
+
+python experiments/h8-hardware-aware-precision-search/code/inspect_h8_backend_feasibility.py \
+  --model-name Qwen/Qwen2.5-7B \
+  --policy-name h8_rescue_norm_logits
+```
