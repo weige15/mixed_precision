@@ -1,0 +1,67 @@
+{
+  "model_name": "meta-llama/Llama-3.1-8B",
+  "precision_policy": "h8_qlora_nf4_rescue_projection_top4",
+  "device": "cuda",
+  "hardware_label": "a100-lab",
+  "cuda_visible_devices": "0",
+  "cuda_device_name": "NVIDIA A100-SXM4-40GB",
+  "bf16_autocast": true,
+  "qlora_config": {
+    "load_in_4bit": true,
+    "bnb_4bit_compute_dtype": "bfloat16",
+    "bnb_4bit_quant_type": "nf4",
+    "bnb_4bit_use_double_quant": true
+  },
+  "lora_targets": [
+    "down_proj",
+    "gate_proj",
+    "k_proj",
+    "o_proj",
+    "q_proj",
+    "up_proj",
+    "v_proj"
+  ],
+  "trainable_params": 20971520,
+  "total_params": 4649652224,
+  "fp32_norm_wrapped_modules": [],
+  "h6_fake_int8_output_modules": [],
+  "h8_policy_name": "h8_rescue_projection_top4",
+  "h8_candidates": "experiments/h8-hardware-aware-precision-search/results/h8_policy_candidates.json",
+  "h8_rescue_precision": "bf16",
+  "h8_rescued_modules": [
+    {
+      "candidate_name": "base_model.model.model.layers.31.mlp.up_proj",
+      "runtime_name": "model.layers.31.mlp.up_proj",
+      "checkpoint_weight": "model.layers.31.mlp.up_proj.weight",
+      "original_class": "Linear4bit",
+      "replacement_class": "Linear",
+      "replacement_dtype": "torch.bfloat16",
+      "in_features": 4096,
+      "out_features": 14336,
+      "bias": false
+    },
+    {
+      "candidate_name": "base_model.model.model.layers.31.mlp.gate_proj",
+      "runtime_name": "model.layers.31.mlp.gate_proj",
+      "checkpoint_weight": "model.layers.31.mlp.gate_proj.weight",
+      "original_class": "Linear4bit",
+      "replacement_class": "Linear",
+      "replacement_dtype": "torch.bfloat16",
+      "in_features": 4096,
+      "out_features": 14336,
+      "bias": false
+    },
+    {
+      "candidate_name": "base_model.model.model.layers.2.mlp.down_proj",
+      "runtime_name": "model.layers.2.mlp.down_proj",
+      "checkpoint_weight": "model.layers.2.mlp.down_proj.weight",
+      "original_class": "Linear4bit",
+      "replacement_class": "Linear",
+      "replacement_dtype": "torch.bfloat16",
+      "in_features": 14336,
+      "out_features": 4096,
+      "bias": false
+    }
+  ],
+  "peak_cuda_memory_gib": 14.693079948425293
+}
