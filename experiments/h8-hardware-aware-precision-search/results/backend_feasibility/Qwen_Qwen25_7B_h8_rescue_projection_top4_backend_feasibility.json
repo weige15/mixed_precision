@@ -1,0 +1,113 @@
+{
+  "model_name": "Qwen/Qwen2.5-7B",
+  "policy_name": "h8_rescue_projection_top4",
+  "candidate_source": "experiments/h8-hardware-aware-precision-search/results/h8_policy_candidates.json",
+  "base_backend": "qlora_4bit_nf4",
+  "device": "cuda",
+  "cuda_device_name": "NVIDIA GeForce RTX 3090",
+  "bf16_compute": true,
+  "lora_wrapped": true,
+  "lora_targets": [
+    "down_proj",
+    "gate_proj",
+    "k_proj",
+    "o_proj",
+    "q_proj",
+    "up_proj",
+    "v_proj"
+  ],
+  "status_counts": {
+    "quantized_target": 4
+  },
+  "targets": [
+    {
+      "requested_name": "base_model.model.model.layers.3.mlp.down_proj",
+      "resolved_name": "base_model.model.model.layers.3.mlp.down_proj",
+      "status": "quantized_target",
+      "interpretation": "Target is backed by bitsandbytes quantization; rescue likely requires loading or replacing this module in higher precision, not just casting it.",
+      "class_name": "Linear4bit",
+      "class_module": "peft.tuners.lora.bnb",
+      "is_quantized_linear": true,
+      "local_tensors": [],
+      "base_layer": {
+        "class_name": "Linear4bit",
+        "class_module": "bitsandbytes.nn.modules",
+        "is_quantized_linear": true,
+        "local_tensors": [
+          {
+            "kind": "parameter",
+            "name": "weight",
+            "dtype": "torch.uint8"
+          }
+        ]
+      }
+    },
+    {
+      "requested_name": "base_model.model.model.layers.24.mlp.down_proj",
+      "resolved_name": "base_model.model.model.layers.24.mlp.down_proj",
+      "status": "quantized_target",
+      "interpretation": "Target is backed by bitsandbytes quantization; rescue likely requires loading or replacing this module in higher precision, not just casting it.",
+      "class_name": "Linear4bit",
+      "class_module": "peft.tuners.lora.bnb",
+      "is_quantized_linear": true,
+      "local_tensors": [],
+      "base_layer": {
+        "class_name": "Linear4bit",
+        "class_module": "bitsandbytes.nn.modules",
+        "is_quantized_linear": true,
+        "local_tensors": [
+          {
+            "kind": "parameter",
+            "name": "weight",
+            "dtype": "torch.uint8"
+          }
+        ]
+      }
+    },
+    {
+      "requested_name": "base_model.model.model.layers.2.self_attn.o_proj",
+      "resolved_name": "base_model.model.model.layers.2.self_attn.o_proj",
+      "status": "quantized_target",
+      "interpretation": "Target is backed by bitsandbytes quantization; rescue likely requires loading or replacing this module in higher precision, not just casting it.",
+      "class_name": "Linear4bit",
+      "class_module": "peft.tuners.lora.bnb",
+      "is_quantized_linear": true,
+      "local_tensors": [],
+      "base_layer": {
+        "class_name": "Linear4bit",
+        "class_module": "bitsandbytes.nn.modules",
+        "is_quantized_linear": true,
+        "local_tensors": [
+          {
+            "kind": "parameter",
+            "name": "weight",
+            "dtype": "torch.uint8"
+          }
+        ]
+      }
+    },
+    {
+      "requested_name": "base_model.model.model.layers.2.mlp.down_proj",
+      "resolved_name": "base_model.model.model.layers.2.mlp.down_proj",
+      "status": "quantized_target",
+      "interpretation": "Target is backed by bitsandbytes quantization; rescue likely requires loading or replacing this module in higher precision, not just casting it.",
+      "class_name": "Linear4bit",
+      "class_module": "peft.tuners.lora.bnb",
+      "is_quantized_linear": true,
+      "local_tensors": [],
+      "base_layer": {
+        "class_name": "Linear4bit",
+        "class_module": "bitsandbytes.nn.modules",
+        "is_quantized_linear": true,
+        "local_tensors": [
+          {
+            "kind": "parameter",
+            "name": "weight",
+            "dtype": "torch.uint8"
+          }
+        ]
+      }
+    }
+  ],
+  "summary": "Selective rescue is implementation-feasible only for targets that can be reloaded or replaced in higher precision while preserving most QLoRA memory savings. This probe identifies which targets are quantized versus already regular precision."
+}
