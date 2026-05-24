@@ -19,6 +19,9 @@ RUN_BF16="${RUN_BF16:-1}"
 RUN_QLORA="${RUN_QLORA:-1}"
 RUN_SELECTIVE_RESCUE="${RUN_SELECTIVE_RESCUE:-0}"
 RUNNER="${RUNNER:-experiments/h1-selective-fp32-norms/code/run_lora_precision.py}"
+H8_POLICY_NAME="${H8_POLICY_NAME:-h8_rescue_projection_top4}"
+H8_CANDIDATES="${H8_CANDIDATES:-experiments/h8-hardware-aware-precision-search/results/h8_policy_candidates.json}"
+H8_RESCUE_PRECISION="${H8_RESCUE_PRECISION:-bf16}"
 
 mkdir -p "${OUTPUT_ROOT}"
 
@@ -53,8 +56,14 @@ for seed in ${SEEDS}; do
   fi
 
   if [[ "${RUN_SELECTIVE_RESCUE}" == "1" ]]; then
-    echo "Selective rescue is not wired yet. First verify backend support for mixed QLoRA + rescued modules." >&2
-    exit 2
+    out_dir="${OUTPUT_ROOT}/llama31_8b_h8_${H8_POLICY_NAME}_${H8_RESCUE_PRECISION}_seed${seed}_${MAX_STEPS}_${HARDWARE_LABEL}"
+    CUDA_VISIBLE_DEVICES="${GPU_ID}" python "${RUNNER}" \
+      "${common_args[@]}" \
+      --seed "${seed}" \
+      --precision-policy h8_qlora_nf4_rescue_projection_top4 \
+      --h8-candidates "${H8_CANDIDATES}" \
+      --h8-policy-name "${H8_POLICY_NAME}" \
+      --h8-rescue-precision "${H8_RESCUE_PRECISION}" \
+      --output-dir "${out_dir}"
   fi
 done
-

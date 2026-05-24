@@ -56,3 +56,15 @@ Interpretation: norm/logit rescue is not a meaningful H8 selective rescue under 
 - meta-llama/Llama-3.1-8B: all 3 projection targets are `quantized_target` modules with the same PEFT/bitsandbytes structure.
 
 Interpretation: projection rescue is the right H8 implementation target. It cannot be implemented by simply casting the existing modules, because the weights are already packed 4-bit/uint8 bitsandbytes parameters. H8 needs either a module replacement path that reloads selected projection weights in bf16/fp32, or a controlled approximation/prototype that measures the resource cost of adding high-precision shadow modules for those targets.
+
+Implemented first real selective-rescue path in `experiments/h1-selective-fp32-norms/code/run_lora_precision.py`:
+
+- new policy: `h8_qlora_nf4_rescue_projection_top4`
+- reads `results/h8_policy_candidates.json`
+- maps PEFT candidate names such as `base_model.model.model.layers.31.mlp.up_proj` back to pre-PEFT model names such as `model.layers.31.mlp.up_proj`
+- loads selected checkpoint tensors from safetensors or PyTorch shards
+- replaces the corresponding bitsandbytes 4-bit modules with frozen bf16/fp32 `torch.nn.Linear` modules
+- applies LoRA after replacement so rescued modules can still receive adapters
+- records `h8_rescued_modules` in setup/training summaries
+
+Added `--setup-only` to verify model loading, replacement, LoRA wrapping, and peak setup memory without starting dataset processing or training. The next empirical step is a setup-only smoke test on the RTX 3090, followed by a 100-step selective-rescue run before spending a full 500-step run.

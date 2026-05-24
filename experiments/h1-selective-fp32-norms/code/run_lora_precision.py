@@ -10,6 +10,7 @@ import os
 import random
 import time
 from contextlib import nullcontext
+from pathlib import Path
 from typing import Any
 
 H6_LATE_MLP_INT8_MODULES = {
@@ -18,6 +19,9 @@ H6_LATE_MLP_INT8_MODULES = {
     "base_model.model.model.layers.23.mlp.gate_proj",
     "base_model.model.model.layers.23.mlp.up_proj",
 }
+
+H8_DEFAULT_CANDIDATES = Path("experiments/h8-hardware-aware-precision-search/results/h8_policy_candidates.json")
+H8_SELECTIVE_RESCUE_POLICY = "h8_qlora_nf4_rescue_projection_top4"
 
 
 def require_packages() -> None:
@@ -48,6 +52,7 @@ def parse_args() -> argparse.Namespace:
             "h6_late_mlp_int8_candidate",
             "h6_custom_int8",
             "qlora_4bit_nf4",
+            H8_SELECTIVE_RESCUE_POLICY,
             "lora_8bit_int8",
         ],
     )
@@ -82,6 +87,28 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=6.0,
         help="bitsandbytes LLM.int8 outlier threshold for --precision-policy=lora_8bit_int8.",
+    )
+    parser.add_argument(
+        "--h8-candidates",
+        type=Path,
+        default=H8_DEFAULT_CANDIDATES,
+        help="H8 policy candidate JSON used by h8 selective-rescue policies.",
+    )
+    parser.add_argument(
+        "--h8-policy-name",
+        default="h8_rescue_projection_top4",
+        help="Candidate policy name inside --h8-candidates for h8 selective rescue.",
+    )
+    parser.add_argument(
+        "--h8-rescue-precision",
+        choices=["bf16", "fp32"],
+        default="bf16",
+        help="Precision used for rescued H8 projection modules.",
+    )
+    parser.add_argument(
+        "--setup-only",
+        action="store_true",
+        help="Load the model, apply precision policy/LoRA wrapping, write setup_summary.json, and exit before data/training.",
     )
     parser.add_argument("--output-dir", required=True)
     return parser.parse_args()
@@ -286,6 +313,191 @@ def infer_lora_targets(model: Any) -> list[str]:
     return sorted(fallback)
 
 
+def load_h8_candidate_policy(candidates_path: Path, model_name: str, policy_name: str) -> dict[str, Any]:
+    data = json.loads(candidates_path.read_text())
+    models = data.get("models")
+    if models is None:
+        models = [
+            {
+                "model_name": data.get("model_filter"),
+                "candidate_policies": data.get("candidate_policies", []),
+            }
+        ]
+
+    for model_entry in models:
+        if model_entry.get("model_name") != model_name:
+            continue
+        for policy in model_entry.get("candidate_policies", []):
+            if policy.get("policy_name") == policy_name:
+                return policy
+        available = sorted(str(policy.get("policy_name")) for policy in model_entry.get("candidate_policies", []))
+        raise SystemExit(f"H8 policy not found for {model_name}: {policy_name}. Available: {available}")
+
+    available_models = sorted(str(model_entry.get("model_name")) for model_entry in models)
+    raise SystemExit(f"H8 model not found in {candidates_path}: {model_name}. Available: {available_models}")
+
+
+def h8_runtime_module_name(candidate_name: str) -> str:
+    """Map PEFT-wrapped candidate names back to the pre-PEFT base model graph."""
+
+    for prefix in ("base_model.model.", "base_model."):
+        if candidate_name.startswith(prefix):
+            return candidate_name[len(prefix) :]
+    return candidate_name
+
+
+def resolve_h8_model_snapshot(model_name: str) -> Path:
+    model_path = Path(model_name)
+    if model_path.exists():
+        return model_path
+
+    try:
+        from huggingface_hub import snapshot_download
+    except ImportError as exc:
+        raise SystemExit("H8 selective rescue requires huggingface_hub to locate checkpoint shards.") from exc
+
+    local_files_only = os.environ.get("HF_HUB_OFFLINE") == "1" or os.environ.get("TRANSFORMERS_OFFLINE") == "1"
+    try:
+        snapshot = snapshot_download(
+            repo_id=model_name,
+            allow_patterns=[
+                "*.safetensors",
+                "*.safetensors.index.json",
+                "pytorch_model*.bin",
+                "pytorch_model*.bin.index.json",
+            ],
+            local_files_only=local_files_only,
+        )
+    except Exception as exc:
+        raise SystemExit(f"Could not locate checkpoint files for H8 selective rescue: {model_name}") from exc
+    return Path(snapshot)
+
+
+def find_checkpoint_shard(snapshot_dir: Path, tensor_name: str) -> tuple[Path, str]:
+    for index_name in ("model.safetensors.index.json", "pytorch_model.bin.index.json"):
+        index_path = snapshot_dir / index_name
+        if not index_path.exists():
+            continue
+        index = json.loads(index_path.read_text())
+        weight_map = index.get("weight_map", {})
+        shard_name = weight_map.get(tensor_name)
+        if shard_name is not None:
+            return snapshot_dir / shard_name, "safetensors" if shard_name.endswith(".safetensors") else "torch"
+
+    safetensors_path = snapshot_dir / "model.safetensors"
+    if safetensors_path.exists():
+        return safetensors_path, "safetensors"
+
+    torch_path = snapshot_dir / "pytorch_model.bin"
+    if torch_path.exists():
+        return torch_path, "torch"
+
+    raise SystemExit(f"Could not find a checkpoint shard containing tensor: {tensor_name}")
+
+
+def load_checkpoint_tensor(snapshot_dir: Path, tensor_name: str) -> Any:
+    shard_path, shard_type = find_checkpoint_shard(snapshot_dir, tensor_name)
+    if shard_type == "safetensors":
+        try:
+            from safetensors import safe_open
+        except ImportError as exc:
+            raise SystemExit("H8 selective rescue requires safetensors to read checkpoint shards.") from exc
+        with safe_open(shard_path, framework="pt", device="cpu") as handle:
+            if tensor_name not in handle.keys():
+                raise SystemExit(f"Tensor {tensor_name} was not found in {shard_path}.")
+            return handle.get_tensor(tensor_name)
+
+    import torch
+
+    shard = torch.load(shard_path, map_location="cpu")
+    if tensor_name not in shard:
+        raise SystemExit(f"Tensor {tensor_name} was not found in {shard_path}.")
+    return shard[tensor_name]
+
+
+def replace_module(model: Any, module_name: str, replacement: Any) -> None:
+    parent_name, leaf_name = module_name.rsplit(".", 1) if "." in module_name else ("", module_name)
+    parent = model.get_submodule(parent_name) if parent_name else model
+    setattr(parent, leaf_name, replacement)
+
+
+def apply_h8_selective_rescue(
+    model: Any,
+    model_name: str,
+    candidates_path: Path,
+    policy_name: str,
+    rescue_precision: str,
+    device: str,
+    bf16_ok: bool,
+) -> list[dict[str, Any]]:
+    import torch
+    import torch.nn as nn
+
+    if rescue_precision == "bf16":
+        if not bf16_ok:
+            raise SystemExit("H8 bf16 rescue requested, but torch.cuda.is_bf16_supported() is false.")
+        rescue_dtype = torch.bfloat16
+    else:
+        rescue_dtype = torch.float32
+
+    policy = load_h8_candidate_policy(candidates_path, model_name, policy_name)
+    rescue_modules = policy.get("rescue_modules", [])
+    if not rescue_modules:
+        raise SystemExit(f"H8 policy has no rescue_modules: {policy_name}")
+
+    snapshot_dir = resolve_h8_model_snapshot(model_name)
+    reports = []
+    for candidate_name in rescue_modules:
+        module_name = h8_runtime_module_name(candidate_name)
+        try:
+            original_module = model.get_submodule(module_name)
+        except AttributeError as exc:
+            raise SystemExit(f"H8 rescue target not found in loaded model: {candidate_name} -> {module_name}") from exc
+        if not is_linear_like(original_module):
+            raise SystemExit(f"H8 rescue target is not linear-like: {module_name} ({original_module.__class__.__name__})")
+
+        in_features = getattr(original_module, "in_features", None)
+        out_features = getattr(original_module, "out_features", None)
+        if in_features is None or out_features is None:
+            raise SystemExit(f"H8 rescue target lacks in/out feature metadata: {module_name}")
+
+        weight_key = f"{module_name}.weight"
+        weight = load_checkpoint_tensor(snapshot_dir, weight_key).to(dtype=rescue_dtype)
+        has_bias = getattr(original_module, "bias", None) is not None
+        replacement = nn.Linear(
+            int(in_features),
+            int(out_features),
+            bias=has_bias,
+            device=device,
+            dtype=rescue_dtype,
+        )
+        with torch.no_grad():
+            replacement.weight.copy_(weight.to(device=device))
+            if has_bias:
+                bias_key = f"{module_name}.bias"
+                bias = load_checkpoint_tensor(snapshot_dir, bias_key).to(device=device, dtype=rescue_dtype)
+                replacement.bias.copy_(bias)
+        replacement.requires_grad_(False)
+        replace_module(model, module_name, replacement)
+
+        reports.append(
+            {
+                "candidate_name": candidate_name,
+                "runtime_name": module_name,
+                "checkpoint_weight": weight_key,
+                "original_class": original_module.__class__.__name__,
+                "replacement_class": replacement.__class__.__name__,
+                "replacement_dtype": str(rescue_dtype),
+                "in_features": int(in_features),
+                "out_features": int(out_features),
+                "bias": bool(has_bias),
+            }
+        )
+        del weight
+
+    return reports
+
+
 def grad_norm(parameters: Any) -> float:
     import torch
 
@@ -333,7 +545,7 @@ def main() -> None:
     load_dtype = torch.bfloat16 if use_bf16 else torch.float32
     if device == "cuda":
         torch.cuda.reset_peak_memory_stats()
-    if args.precision_policy in {"qlora_4bit_nf4", "lora_8bit_int8"} and device != "cuda":
+    if args.precision_policy in {"qlora_4bit_nf4", H8_SELECTIVE_RESCUE_POLICY, "lora_8bit_int8"} and device != "cuda":
         raise SystemExit(f"precision-policy {args.precision_policy} requires CUDA for bitsandbytes k-bit training.")
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_name, trust_remote_code=True)
@@ -342,7 +554,7 @@ def main() -> None:
 
     quantization_config = None
     qlora_config: dict[str, Any] | None = None
-    if args.precision_policy == "qlora_4bit_nf4":
+    if args.precision_policy in {"qlora_4bit_nf4", H8_SELECTIVE_RESCUE_POLICY}:
         quantization_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_compute_dtype=torch.bfloat16 if use_bf16 else torch.float16,
@@ -382,6 +594,20 @@ def main() -> None:
     else:
         model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=False)
 
+    h8_rescued_modules: list[dict[str, Any]] = []
+    if args.precision_policy == H8_SELECTIVE_RESCUE_POLICY:
+        h8_rescued_modules = apply_h8_selective_rescue(
+            model=model,
+            model_name=args.model_name,
+            candidates_path=args.h8_candidates,
+            policy_name=args.h8_policy_name,
+            rescue_precision=args.h8_rescue_precision,
+            device=device,
+            bf16_ok=bf16_ok,
+        )
+        if not h8_rescued_modules:
+            raise SystemExit("H8 selective rescue did not replace any modules.")
+
     lora_targets = infer_lora_targets(model)
     lora_config = LoraConfig(
         r=8,
@@ -406,6 +632,34 @@ def main() -> None:
         if not args.fake_int8_modules:
             raise SystemExit("--precision-policy h6_custom_int8 requires at least one --fake-int8-modules target.")
         h6_int8_modules = apply_fake_int8_modules(model, args.fake_int8_modules)
+
+    if args.setup_only:
+        trainable_count = sum(param.numel() for param in model.parameters() if param.requires_grad)
+        total_count = sum(param.numel() for param in model.parameters())
+        setup_summary = {
+            "model_name": args.model_name,
+            "precision_policy": args.precision_policy,
+            "device": device,
+            "hardware_label": args.hardware_label,
+            "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
+            "cuda_device_name": torch.cuda.get_device_name(0) if device == "cuda" else None,
+            "bf16_autocast": use_bf16,
+            "qlora_config": qlora_config,
+            "lora_targets": lora_targets,
+            "trainable_params": trainable_count,
+            "total_params": total_count,
+            "fp32_norm_wrapped_modules": wrapped_norms,
+            "h6_fake_int8_output_modules": h6_int8_modules,
+            "h8_policy_name": args.h8_policy_name if args.precision_policy == H8_SELECTIVE_RESCUE_POLICY else None,
+            "h8_candidates": str(args.h8_candidates) if args.precision_policy == H8_SELECTIVE_RESCUE_POLICY else None,
+            "h8_rescue_precision": args.h8_rescue_precision if args.precision_policy == H8_SELECTIVE_RESCUE_POLICY else None,
+            "h8_rescued_modules": h8_rescued_modules,
+            "peak_cuda_memory_gib": torch.cuda.max_memory_allocated() / (1024**3) if device == "cuda" else None,
+        }
+        with open(os.path.join(args.output_dir, "setup_summary.json"), "w", encoding="utf-8") as f:
+            json.dump(setup_summary, f, indent=2)
+        print(json.dumps(setup_summary, indent=2))
+        return
 
     trainable_params = [param for param in model.parameters() if param.requires_grad]
     optimizer = torch.optim.AdamW(trainable_params, lr=args.learning_rate)
@@ -544,6 +798,10 @@ def main() -> None:
         "h6_fake_int8_output_modules": h6_int8_modules,
         "h6_fake_int8_bits": 8 if h6_int8_modules else None,
         "h6_fake_int8_gradient": "straight_through_estimator" if h6_int8_modules else None,
+        "h8_policy_name": args.h8_policy_name if args.precision_policy == H8_SELECTIVE_RESCUE_POLICY else None,
+        "h8_candidates": str(args.h8_candidates) if args.precision_policy == H8_SELECTIVE_RESCUE_POLICY else None,
+        "h8_rescue_precision": args.h8_rescue_precision if args.precision_policy == H8_SELECTIVE_RESCUE_POLICY else None,
+        "h8_rescued_modules": h8_rescued_modules,
         "final_train_loss": loss_history[-1] if loss_history else None,
         "final_eval_loss": final_eval_loss,
         "max_grad_norm": max_grad_norm,
