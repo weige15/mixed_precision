@@ -9,7 +9,9 @@ Main files:
 - `code/build_h8_policy_candidates.py`: first conservative policy planner.
 - `results/`: generated candidate policies and experiment outputs.
 
-Current status: scaffolded. No H8 training runs have been executed yet.
+Current status: BF16 and blanket QLoRA/NF4 baselines are validated for
+Llama-3.1-8B seed 42 on the RTX 3090 lab machine. The policy candidate file
+now aligns Qwen2.5-7B and Llama-3.1-8B from the combined H7 dataset.
 
 First planning command:
 
@@ -17,3 +19,5 @@ First planning command:
 python experiments/h8-hardware-aware-precision-search/code/build_h8_policy_candidates.py
 ```
 
+Next implementation step: verify backend feasibility for selective rescue from
+QLoRA/NF4 before launching long H8 training runs.

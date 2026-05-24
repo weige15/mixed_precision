@@ -28,3 +28,15 @@ These are planning artifacts only. They do not prove that the backend can expres
 
 Next implementation task: run the planner, inspect candidate modules, then check whether the current runner/backend can express any of the rescue policies without destroying the QLoRA memory benefit.
 
+## 2026-05-24 Qwen/Llama Alignment
+
+Regenerated `results/h8_policy_candidates.json` from the combined H7 dataset:
+
+- `experiments/h7-precision-predictor/results/precision_dataset_with_llama31_8b.csv`
+
+The candidate file now tracks both:
+
+- `Qwen/Qwen2.5-7B`
+- `meta-llama/Llama-3.1-8B`
+
+Both models have three-seed perturbation labels for 14 modules and are marked `candidate_ready`. The policy sets are still planning artifacts with `backend_feasibility: unverified`; the next H8 step is a backend feasibility check for whether QLoRA/NF4 can selectively rescue the proposed modules to bf16/fp32 without losing the memory advantage.

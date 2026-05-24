@@ -12,9 +12,9 @@
       "bf16_peak_memory_gib": 20.19441795349121,
       "policy_peak_memory_gib": 14.803130149841309,
       "memory_delta_percent": -26.69692098116577,
-      "bf16_tokens_per_sec": 0.0,
-      "policy_tokens_per_sec": 0.0,
-      "tokens_per_sec_delta_percent": null,
+      "bf16_tokens_per_sec": 190.21821474110465,
+      "policy_tokens_per_sec": 152.56006108360688,
+      "tokens_per_sec_delta_percent": -19.797343650161036,
       "loss_spike_count": 0,
       "nan_or_inf_count": 0,
       "summary_path": "experiments/h8-hardware-aware-precision-search/results/llama31_8b_qlora_nf4_seed42_500_rtx3090-lab/summary.json"

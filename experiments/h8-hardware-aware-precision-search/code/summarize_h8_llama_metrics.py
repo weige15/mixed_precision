@@ -35,6 +35,16 @@ def rel_delta(treatment: float, baseline: float) -> float:
     return 100.0 * (treatment - baseline) / baseline
 
 
+def train_tokens_per_sec(data: dict) -> float:
+    return float(
+        data.get("tokens_per_sec_train_excluding_first_step")
+        or data.get("tokens_per_sec_train")
+        or data.get("train_tokens_per_sec_excl_first")
+        or data.get("train_tokens_per_sec")
+        or 0.0
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -64,13 +74,13 @@ def main() -> None:
             continue
         bf16_eval = float(bf16["final_eval_loss"])
         bf16_mem = float(bf16["peak_cuda_memory_gib"])
-        bf16_tok = float(bf16.get("train_tokens_per_sec_excl_first") or bf16.get("train_tokens_per_sec") or 0.0)
+        bf16_tok = train_tokens_per_sec(bf16)
         for policy, data in sorted(policies.items()):
             if policy == "bf16":
                 continue
             eval_loss = float(data["final_eval_loss"])
             mem = float(data["peak_cuda_memory_gib"])
-            tok = float(data.get("train_tokens_per_sec_excl_first") or data.get("train_tokens_per_sec") or 0.0)
+            tok = train_tokens_per_sec(data)
             rows.append(
                 {
                     "seed": seed,
@@ -104,4 +114,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

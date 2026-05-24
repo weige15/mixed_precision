@@ -109,14 +109,39 @@ def build_candidates(modules: list[dict[str, object]], safe_threshold: float, to
     ]
 
 
+def build_model_payload(
+    model_name: str,
+    modules: list[dict[str, object]],
+    safe_threshold: float,
+    topk: int,
+) -> dict[str, object]:
+    high_risk = [m for m in modules if float(m["max_abs_delta"]) > safe_threshold]
+    candidates = build_candidates(modules, safe_threshold, topk) if modules else []
+    for candidate in candidates:
+        candidate["model_name"] = model_name
+    return {
+        "model_name": model_name,
+        "status": "candidate_ready" if modules else "no_perturbation_labels",
+        "n_modules_with_perturbation_labels": len(modules),
+        "n_high_risk_modules": len(high_risk),
+        "high_risk_modules": high_risk,
+        "candidate_policies": candidates,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--precision-dataset",
         type=Path,
-        default=Path("experiments/h7-precision-predictor/results/precision_dataset.csv"),
+        default=Path("experiments/h7-precision-predictor/results/precision_dataset_with_llama31_8b.csv"),
     )
-    parser.add_argument("--model-filter", default="Qwen/Qwen2.5-7B")
+    parser.add_argument(
+        "--model-filter",
+        nargs="+",
+        default=["Qwen/Qwen2.5-7B", "meta-llama/Llama-3.1-8B"],
+        help="One or more model names to include. Each model is summarized independently.",
+    )
     parser.add_argument("--safe-threshold", type=float, default=0.005)
     parser.add_argument("--topk", type=int, default=4)
     parser.add_argument(
@@ -126,18 +151,37 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    modules = load_module_risks(args.precision_dataset, args.model_filter)
-    candidates = build_candidates(modules, args.safe_threshold, args.topk)
+    model_payloads = [
+        build_model_payload(
+            model_name,
+            load_module_risks(args.precision_dataset, model_name),
+            args.safe_threshold,
+            args.topk,
+        )
+        for model_name in args.model_filter
+    ]
+    flat_candidates = [
+        candidate
+        for model_payload in model_payloads
+        for candidate in model_payload["candidate_policies"]
+    ]
     payload = {
         "source": str(args.precision_dataset),
-        "model_filter": args.model_filter,
+        "model_filters": args.model_filter,
         "safe_threshold": args.safe_threshold,
-        "n_modules_with_perturbation_labels": len(modules),
-        "high_risk_modules": [
-            m for m in modules if float(m["max_abs_delta"]) > args.safe_threshold
-        ],
-        "candidate_policies": candidates,
+        "topk": args.topk,
+        "models": model_payloads,
+        "candidate_policies_flat": flat_candidates,
     }
+    if len(model_payloads) == 1:
+        payload.update(
+            {
+                "model_filter": args.model_filter[0],
+                "n_modules_with_perturbation_labels": model_payloads[0]["n_modules_with_perturbation_labels"],
+                "high_risk_modules": model_payloads[0]["high_risk_modules"],
+                "candidate_policies": model_payloads[0]["candidate_policies"],
+            }
+        )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2) + "\n")
     print(f"wrote {args.output}")
@@ -145,4 +189,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
