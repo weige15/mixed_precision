@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-25T20:59:39.461618+00:00",
+  "status": "dry_run",
+  "policy_name": "bf16_eager",
+  "policy": {
+    "policy_name": "bf16_eager",
+    "description": "bf16 eager-mode control for separating compile/runtime effects.",
+    "expected_role": "diagnostic_control",
+    "llm_kwargs": {
+      "dtype": "bfloat16",
+      "enforce_eager": true,
+      "gpu_memory_utilization": 0.88,
+      "max_model_len": 4096,
+      "block_size": 16,
+      "trust_remote_code": true
+    },
+    "search_tags": {
+      "dtype": "bfloat16",
+      "quantization": "none",
+      "kv_cache_dtype": "auto",
+      "runtime_mode": "eager"
+    }
+  },
+  "model_name": "meta-llama/Llama-3.1-8B",
+  "runtime": "vllm",
+  "hardware_label": "rtx3090-lab",
+  "seed": 42,
+  "smoke": true,
+  "repeats": 1,
+  "warmup_runs": 1,
+  "cuda_visible_devices": null,
+  "runs": [],
+  "workloads": [
+    {
+      "name": "smoke",
+      "max_tokens": 4,
+      "prompts": [
+        "Briefly define KV cache."
+      ],
+      "description": "Tiny policy-instantiation smoke workload."
+    }
+  ]
+}

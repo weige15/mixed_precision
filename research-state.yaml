@@ -258,6 +258,21 @@ hypotheses:
       - H3
       - H4
     priority: high
+  - id: H9
+    statement: "A vLLM-backed hardware-aware policy search can identify Transformer inference precision/backend policies that improve the latency-memory-quality Pareto frontier versus default bf16/fp16 serving."
+    status: scaffolded
+    plain_language_question: "Can we search real LLM serving backends for better precision choices across model dtype, quantized weights, and KV-cache dtype?"
+    motivation: "H8 showed that backend-real low-bit plus high-precision rescue can improve a memory-quality trade-off during LoRA. Inference shifts the bottleneck to prefill latency, decode throughput, KV-cache memory, and serving kernels."
+    why_it_matters: "HAQ-style hardware-aware search is more meaningful for Transformer inference if candidate policies map to real vLLM kernels and cache formats instead of fake precision hooks."
+    expected_result: "At least one backend-real vLLM policy is non-dominated against bf16/fp16 defaults on either memory or latency while staying inside a quality gate; otherwise H9 records which backend constraints prevent a win."
+    required_experiment: "Generate a concrete vLLM policy grid for Llama-3.1-8B, inspect backend support, run smoke instantiation checks, benchmark prefill-heavy, decode-heavy, and mixed workloads on the RTX 3090, then summarize Pareto non-dominated policies."
+    metric: "Primary: end-to-end latency, output tokens/sec, total tokens/sec, peak CUDA memory, policy failure status, and Pareto non-domination by workload. Secondary: quality proxy from NLL/perplexity or deterministic logprob/output agreement versus bf16."
+    estimated_compute_cost: "Thorough single-GPU pilot: one RTX 3090, about 10 candidate policies, smoke checks first, then repeated full workload benchmarks for viable policies."
+    risk: "vLLM may not instantiate some policy knobs for the target model or GPU; AWQ/GPTQ/Marlin candidates may require missing quantized artifacts; quality measurement through vLLM logprobs may need a follow-up script."
+    parent: null
+    dependencies:
+      - H8
+    priority: high
 
 experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
@@ -718,8 +733,8 @@ experiments:
 
 outer_loop:
   cycle: 19
-  last_direction: "close out H8 rigorously before starting H9 Transformer inference policy search"
-  last_reflection: "H8 is now supported as a narrow hardware-aware selective-rescue result. On Llama-3.1-8B, selective bf16 projection rescue from QLoRA/NF4 consistently improves final eval loss versus blanket QLoRA while retaining nearly all of the memory saving, but it does not provide a throughput win. Remaining H8 work should be documentation or optional robustness only; Transformer inference precision search should start as H9 with a separate objective over attention, MLP, KV cache, and backend-supported kernels."
+  last_direction: "run H9 vLLM smoke instantiation checks on the RTX 3090, then benchmark viable policies"
+  last_reflection: "H9 is scaffolded as a separate Transformer inference policy-search branch. The local non-GPU shell can generate policies, inspect installed packages, dry-run benchmark configs, and summarize artifacts, but all candidate policies remain not_tested until vLLM instantiates them on the RTX 3090. The first empirical step is smoke-running bf16_default, fp16_default, FP8 KV-cache variants, and bitsandbytes/torchao candidates one policy per process."
 
 workspace:
   findings: "findings.md"

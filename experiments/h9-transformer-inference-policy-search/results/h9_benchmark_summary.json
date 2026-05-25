@@ -1,0 +1,11 @@
+{
+  "results_dir": "experiments/h9-transformer-inference-policy-search/results/benchmarks",
+  "baseline_policy": "bf16_default",
+  "n_artifacts": 10,
+  "n_completed_policy_workloads": 0,
+  "n_failed_policies": 0,
+  "n_quality_artifacts": 1,
+  "completed": [],
+  "failures": [],
+  "note": "Quality metrics are not yet included unless a benchmark artifact records them explicitly. Pareto marking currently uses latency, output throughput, and peak reserved CUDA memory."
+}

@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-25T20:55:21.393954+00:00",
+  "platform": {
+    "python": "3.12.8",
+    "system": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "policy_source": "experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates.json",
+  "model_name": "meta-llama/Llama-3.1-8B",
+  "packages": {
+    "torch": {
+      "import_name": "torch",
+      "distribution_name": "torch",
+      "imported": true,
+      "version": "2.9.0",
+      "import_error": null
+    },
+    "transformers": {
+      "import_name": "transformers",
+      "distribution_name": "transformers",
+      "imported": true,
+      "version": "4.57.6",
+      "import_error": null
+    },
+    "vllm": {
+      "import_name": "vllm",
+      "distribution_name": "vllm",
+      "imported": true,
+      "version": "0.11.2",
+      "import_error": null
+    },
+    "bitsandbytes": {
+      "import_name": "bitsandbytes",
+      "distribution_name": "bitsandbytes",
+      "imported": true,
+      "version": "0.48.1",
+      "import_error": null
+    },
+    "flash_attn": {
+      "import_name": "flash_attn",
+      "distribution_name": "flash-attn",
+      "imported": true,
+      "version": "2.8.3",
+      "import_error": null
+    },
+    "torchao": {
+      "import_name": "torchao",
+      "distribution_name": "torchao",
+      "imported": true,
+      "version": "0.16.0",
+      "import_error": null
+    },
+    "auto_gptq": {
+      "import_name": "auto_gptq",
+      "distribution_name": "auto_gptq",
+      "imported": false,
+      "version": null,
+      "import_error": "ModuleNotFoundError: No module named 'auto_gptq'"
+    },
+    "awq": {
+      "import_name": "awq",
+      "distribution_name": "awq",
+      "imported": false,
+      "version": null,
+      "import_error": "ModuleNotFoundError: No module named 'awq'"
+    }
+  },
+  "cuda": {
+    "cuda_available": false,
+    "cuda_device_count": 0,
+    "cuda_visible_devices": null,
+    "torch_cuda_version": "12.8",
+    "bf16_supported": false
+  },
+  "vllm": {
+    "imported": true,
+    "version": "0.11.2",
+    "llm_signature": "(model: str, *, runner: Literal['auto', 'generate', 'pooling', 'draft'] = 'auto', convert: Literal['auto', 'none', 'embed', 'classify', 'reward'] = 'auto', tokenizer: str | None = None, tokenizer_mode: Literal['auto', 'slow', 'mistral', 'custom'] = 'auto', skip_tokenizer_init: bool = False, trust_remote_code: bool = False, allowed_local_media_path: str = '', allowed_media_domains: list[str] | None = None, tensor_parallel_size: int = 1, dtype: Literal['auto', 'half', 'float16', 'bfloat16', 'float', 'float32'] = 'auto', quantization: Optional[Literal['awq', 'deepspeedfp', 'tpu_int8', 'fp8', 'ptpc_fp8', 'fbgemm_fp8', 'fp_quant', 'modelopt', 'modelopt_fp4', 'bitblas', 'gguf', 'gptq_marlin_24', 'gptq_marlin', 'gptq_bitblas', 'awq_marlin', 'gptq', 'compressed-tensors', 'bitsandbytes', 'hqq', 'experts_int8', 'ipex', 'quark', 'moe_wna16', 'torchao', 'auto-round', 'rtn', 'inc', 'mxfp4', 'petit_nvfp4']] = None, revision: str | None = None, tokenizer_revision: str | None = None, seed: int | None = None, gpu_memory_utilization: float = 0.9, swap_space: float = 4, cpu_offload_gb: float = 0, enforce_eager: bool = False, disable_custom_all_reduce: bool = False, hf_token: bool | str | None = None, hf_overrides: dict[str, typing.Any] | collections.abc.Callable[[typing.Any], typing.Any] | None = None, mm_processor_kwargs: dict[str, typing.Any] | None = None, pooler_config: vllm.config.pooler.PoolerConfig | None = None, override_pooler_config: vllm.config.pooler.PoolerConfig | None = None, structured_outputs_config: dict[str, typing.Any] | vllm.config.structured_outputs.StructuredOutputsConfig | None = None, kv_cache_memory_bytes: int | None = None, compilation_config: int | dict[str, typing.Any] | vllm.config.compilation.CompilationConfig | None = None, logits_processors: list[str | type[vllm.v1.sample.logits_processor.interface.LogitsProcessor]] | None = None, **kwargs: Any) -> None",
+    "cache_config_signature": "(block_size: Annotated[Literal[1, 8, 16, 32, 64, 128, 256], SkipValidation()] = None, gpu_memory_utilization: float = 0.9, swap_space: float = 4, cache_dtype: Literal['auto', 'bfloat16', 'fp8', 'fp8_e4m3', 'fp8_e5m2', 'fp8_inc', 'fp8_ds_mla'] = 'auto', is_attention_free: bool = False, num_gpu_blocks_override: int | None = None, sliding_window: int | None = None, enable_prefix_caching: bool | None = None, prefix_caching_hash_algo: Literal['sha256', 'sha256_cbor'] = 'sha256', cpu_offload_gb: float = 0, calculate_kv_scales: bool = False, cpu_kvcache_space_bytes: int | None = None, mamba_page_size_padded: int | None = None, mamba_block_size: int | None = None, mamba_cache_dtype: Literal['auto', 'float32'] = 'auto', mamba_ssm_cache_dtype: Literal['auto', 'float32'] = 'auto', kv_sharing_fast_prefill: bool = False, kv_cache_memory_bytes: int | None = None, kv_offloading_size: float | None = None, kv_offloading_backend: Optional[Literal['native', 'lmcache']] = None) -> None",
+    "known_quantization_values": [
+      "awq",
+      "gptq",
+      "gptq_marlin",
+      "awq_marlin",
+      "bitblas",
+      "bitsandbytes",
+      "torchao",
+      "fp8",
+      "compressed-tensors",
+      "mxfp4"
+    ],
+    "known_kv_cache_dtypes": [
+      "auto",
+      "bfloat16",
+      "fp8",
+      "fp8_e4m3",
+      "fp8_e5m2"
+    ]
+  },
+  "policy_status_counts": {
+    "not_tested": 10
+  },
+  "policies": [
+    {
+      "policy_name": "bf16_default",
+      "status": "not_tested",
+      "reasons": [
+        "CUDA is not available in this shell; instantiate on target GPU host."
+      ],
+      "llm_kwargs": {
+        "dtype": "bfloat16",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      }
+    },
+    {
+      "policy_name": "fp16_default",
+      "status": "not_tested",
+      "reasons": [
+        "CUDA is not available in this shell; instantiate on target GPU host."
+      ],
+      "llm_kwargs": {
+        "dtype": "float16",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      }
+    },
+    {
+      "policy_name": "bf16_kv_fp8_e4m3",
+      "status": "not_tested",
+      "reasons": [
+        "CUDA is not available in this shell; instantiate on target GPU host."
+      ],
+      "llm_kwargs": {
+        "dtype": "bfloat16",
+        "kv_cache_dtype": "fp8_e4m3",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      }
+    },
+    {
+      "policy_name": "fp16_kv_fp8_e4m3",
+      "status": "not_tested",
+      "reasons": [
+        "CUDA is not available in this shell; instantiate on target GPU host."
+      ],
+      "llm_kwargs": {
+        "dtype": "float16",
+        "kv_cache_dtype": "fp8_e4m3",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      }
+    },
+    {
+      "policy_name": "bf16_kv_fp8",
+      "status": "not_tested",
+      "reasons": [
+        "CUDA is not available in this shell; instantiate on target GPU host."
+      ],
+      "llm_kwargs": {
+        "dtype": "bfloat16",
+        "kv_cache_dtype": "fp8",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      }
+    },
+    {
+      "policy_name": "fp16_kv_fp8",
+      "status": "not_tested",
+      "reasons": [
+        "CUDA is not available in this shell; instantiate on target GPU host."
+      ],
+      "llm_kwargs": {
+        "dtype": "float16",
+        "kv_cache_dtype": "fp8",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      }
+    },
+    {
+      "policy_name": "fp16_bitsandbytes",
+      "status": "not_tested",
+      "reasons": [
+        "CUDA is not available in this shell; instantiate on target GPU host."
+      ],
+      "llm_kwargs": {
+        "dtype": "float16",
+        "quantization": "bitsandbytes",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      }
+    },
+    {
+      "policy_name": "fp16_torchao",
+      "status": "not_tested",
+      "reasons": [
+        "CUDA is not available in this shell; instantiate on target GPU host.",
+        "torchao imports locally, but benchmark must confirm torch/vLLM compatibility."
+      ],
+      "llm_kwargs": {
+        "dtype": "float16",
+        "quantization": "torchao",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      }
+    },
+    {
+      "policy_name": "bf16_eager",
+      "status": "not_tested",
+      "reasons": [
+        "CUDA is not available in this shell; instantiate on target GPU host."
+      ],
+      "llm_kwargs": {
+        "dtype": "bfloat16",
+        "enforce_eager": true,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      }
+    },
+    {
+      "policy_name": "fp16_eager",
+      "status": "not_tested",
+      "reasons": [
+        "CUDA is not available in this shell; instantiate on target GPU host."
+      ],
+      "llm_kwargs": {
+        "dtype": "float16",
+        "enforce_eager": true,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      }
+    }
+  ]
+}

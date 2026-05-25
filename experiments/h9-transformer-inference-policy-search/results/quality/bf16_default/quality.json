@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-25T21:00:50.327156+00:00",
+  "status": "dry_run",
+  "policy_name": "bf16_default",
+  "policy": {
+    "policy_name": "bf16_default",
+    "description": "Default bf16 vLLM baseline with automatic KV-cache dtype.",
+    "expected_role": "baseline",
+    "llm_kwargs": {
+      "dtype": "bfloat16",
+      "enforce_eager": false,
+      "gpu_memory_utilization": 0.88,
+      "max_model_len": 4096,
+      "block_size": 16,
+      "trust_remote_code": true
+    },
+    "search_tags": {
+      "dtype": "bfloat16",
+      "quantization": "none",
+      "kv_cache_dtype": "auto",
+      "runtime_mode": "default"
+    }
+  },
+  "model_name": "meta-llama/Llama-3.1-8B",
+  "runtime": "vllm",
+  "hardware_label": "rtx3090-lab",
+  "seed": 42,
+  "num_prompts": 6,
+  "cuda_visible_devices": null,
+  "prompts": [
+    "Hardware-aware mixed precision assigns lower precision only where the model and backend can tolerate it.",
+    "The KV cache stores keys and values from previous tokens so autoregressive decoding can avoid recomputing the full prefix.",
+    "A useful inference benchmark should report prefill latency, decode throughput, peak memory, and quality change.",
+    "Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. ",
+    "Explain hardware-aware mixed precision for LLM serving in one paragraph.",
+    "Define KV cache quantization."
+  ]
+}
