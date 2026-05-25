@@ -4,7 +4,7 @@
   "n_artifacts": 10,
   "n_completed_policy_workloads": 21,
   "n_failed_policies": 1,
-  "n_quality_artifacts": 1,
+  "n_quality_artifacts": 7,
   "completed": [
     {
       "policy_name": "bf16_default",
@@ -50,12 +50,12 @@
         "output_tokens_per_sec_percent": -0.0,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": 0.0
       },
       "quality": {
-        "status": "dry_run",
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
+        "status": "completed",
+        "mean_prompt_nll": 0.6136744013726247,
+        "tokens_scored": 1202,
         "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_default/quality.json"
       },
       "pareto_non_dominated": true
@@ -104,13 +104,13 @@
         "output_tokens_per_sec_percent": 1.6778812809667167,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.04905717179948609
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -158,13 +158,13 @@
         "output_tokens_per_sec_percent": 1.7392503190700828,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.04905717179948609
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -212,13 +212,13 @@
         "output_tokens_per_sec_percent": -73.45959538124293,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 2.9994058096749807,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": 1.3240620476734015
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6217998312174866,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_bitsandbytes/quality.json"
       },
       "pareto_non_dominated": true
     },
@@ -266,13 +266,13 @@
         "output_tokens_per_sec_percent": 0.2699516153798842,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": 0.009037851360068348
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6137298643528556,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_default/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -320,13 +320,13 @@
         "output_tokens_per_sec_percent": 1.3681425237656994,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.19122817784447085
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -374,13 +374,13 @@
         "output_tokens_per_sec_percent": 1.4657752191577875,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.19122817784447085
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -428,12 +428,12 @@
         "output_tokens_per_sec_percent": -0.0,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": 0.0
       },
       "quality": {
-        "status": "dry_run",
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
+        "status": "completed",
+        "mean_prompt_nll": 0.6136744013726247,
+        "tokens_scored": 1202,
         "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_default/quality.json"
       },
       "pareto_non_dominated": false
@@ -482,13 +482,13 @@
         "output_tokens_per_sec_percent": 1.8119822108655517,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.641810528782186,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.04905717179948609
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -536,13 +536,13 @@
         "output_tokens_per_sec_percent": 1.9289342474935904,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.641810528782186,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.04905717179948609
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -590,13 +590,13 @@
         "output_tokens_per_sec_percent": 55.14668746318666,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 2.9902120763285107,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": 1.3240620476734015
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6217998312174866,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_bitsandbytes/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -644,13 +644,13 @@
         "output_tokens_per_sec_percent": -0.45245604696289565,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": 0.009037851360068348
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6137298643528556,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_default/quality.json"
       },
       "pareto_non_dominated": true
     },
@@ -698,13 +698,13 @@
         "output_tokens_per_sec_percent": 1.4444993241665185,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.641810528782186,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.19122817784447085
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -752,13 +752,13 @@
         "output_tokens_per_sec_percent": 1.2530441269209374,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.641810528782186,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.19122817784447085
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -806,12 +806,12 @@
         "output_tokens_per_sec_percent": -0.0,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": 0.0
       },
       "quality": {
-        "status": "dry_run",
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
+        "status": "completed",
+        "mean_prompt_nll": 0.6136744013726247,
+        "tokens_scored": 1202,
         "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_default/quality.json"
       },
       "pareto_non_dominated": false
@@ -860,13 +860,13 @@
         "output_tokens_per_sec_percent": 1.2605191330615897,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.04905717179948609
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -914,13 +914,13 @@
         "output_tokens_per_sec_percent": 1.005863239212106,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.04905717179948609
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -968,13 +968,13 @@
         "output_tokens_per_sec_percent": 61.35132205942423,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 2.9994058096749807,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": 1.3240620476734015
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6217998312174866,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_bitsandbytes/quality.json"
       },
       "pareto_non_dominated": true
     },
@@ -1022,13 +1022,13 @@
         "output_tokens_per_sec_percent": -0.5351424331442802,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": 0.009037851360068348
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6137298643528556,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_default/quality.json"
       },
       "pareto_non_dominated": true
     },
@@ -1076,13 +1076,13 @@
         "output_tokens_per_sec_percent": -0.007863687236006464,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.19122817784447085
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -1130,13 +1130,13 @@
         "output_tokens_per_sec_percent": 0.7175796028490644,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": null
+        "prompt_nll_percent": -0.19122817784447085
       },
       "quality": {
-        "status": null,
-        "mean_prompt_nll": null,
-        "tokens_scored": null,
-        "artifact_path": null
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": false
     }

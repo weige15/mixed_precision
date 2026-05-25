@@ -1,14 +1,15 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-25T23:11:31.128578+00:00",
+  "generated_at_utc": "2026-05-25T23:15:51.957446+00:00",
   "status": "completed",
-  "policy_name": "bf16_default",
+  "policy_name": "bf16_kv_fp8",
   "policy": {
-    "policy_name": "bf16_default",
-    "description": "Default bf16 vLLM baseline with automatic KV-cache dtype.",
-    "expected_role": "baseline",
+    "policy_name": "bf16_kv_fp8",
+    "description": "bf16 model weights with vLLM generic FP8 KV cache if supported.",
+    "expected_role": "kv_cache_memory_candidate",
     "llm_kwargs": {
       "dtype": "bfloat16",
+      "kv_cache_dtype": "fp8",
       "enforce_eager": false,
       "gpu_memory_utilization": 0.88,
       "max_model_len": 4096,
@@ -18,7 +19,7 @@
     "search_tags": {
       "dtype": "bfloat16",
       "quantization": "none",
-      "kv_cache_dtype": "auto",
+      "kv_cache_dtype": "fp8",
       "runtime_mode": "default"
     }
   },
@@ -28,9 +29,9 @@
   "seed": 42,
   "num_prompts": 6,
   "cuda_visible_devices": "0",
-  "load_time_sec": 46.52214776026085,
-  "quality_time_sec": 11.306441310793161,
-  "mean_prompt_nll": 0.6136744013726247,
+  "load_time_sec": 45.914612537715584,
+  "quality_time_sec": 4.863362179137766,
+  "mean_prompt_nll": 0.6133733500672539,
   "tokens_scored": 1202,
   "tokens_missing_logprob": 0
 }
