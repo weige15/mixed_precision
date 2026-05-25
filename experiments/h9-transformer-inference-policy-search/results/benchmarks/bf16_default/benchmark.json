@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-25T21:06:26.285395+00:00",
-  "status": "failed",
+  "generated_at_utc": "2026-05-25T21:14:10.714709+00:00",
+  "status": "completed",
   "policy_name": "bf16_default",
   "policy": {
     "policy_name": "bf16_default",
@@ -30,6 +30,142 @@
   "repeats": 3,
   "warmup_runs": 1,
   "cuda_visible_devices": "0",
-  "runs": [],
-  "error": "vLLM import failed: ModuleNotFoundError: No module named 'vllm'"
+  "runs": [
+    {
+      "workload_name": "smoke",
+      "repeat": 0,
+      "num_prompts": 1,
+      "max_tokens": 4,
+      "prompt_tokens": 7,
+      "generated_tokens": 4,
+      "total_tokens": 11,
+      "latency_sec": 0.08753937296569347,
+      "output_tokens_per_sec": 45.6937246005588,
+      "total_tokens_per_sec": 125.65774265153671,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875
+      },
+      "sample_outputs": [
+        " What is the difference"
+      ]
+    },
+    {
+      "workload_name": "smoke",
+      "repeat": 1,
+      "num_prompts": 1,
+      "max_tokens": 4,
+      "prompt_tokens": 7,
+      "generated_tokens": 4,
+      "total_tokens": 11,
+      "latency_sec": 0.08642569882795215,
+      "output_tokens_per_sec": 46.28253001416639,
+      "total_tokens_per_sec": 127.27695753895756,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875
+      },
+      "sample_outputs": [
+        " What is the difference"
+      ]
+    },
+    {
+      "workload_name": "smoke",
+      "repeat": 2,
+      "num_prompts": 1,
+      "max_tokens": 4,
+      "prompt_tokens": 7,
+      "generated_tokens": 4,
+      "total_tokens": 11,
+      "latency_sec": 0.08555215643718839,
+      "output_tokens_per_sec": 46.7551043314351,
+      "total_tokens_per_sec": 128.5765369114465,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875
+      },
+      "sample_outputs": [
+        " What is the difference"
+      ]
+    }
+  ],
+  "pre_load_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 0.0,
+    "reserved_gib": 0.0,
+    "max_allocated_gib": 0.0,
+    "max_reserved_gib": 0.0,
+    "free_gib": 23.31353759765625,
+    "total_gib": 23.56854248046875
+  },
+  "load_time_sec": 101.99292950890958,
+  "post_load_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 0.0,
+    "reserved_gib": 0.0,
+    "max_allocated_gib": 0.0,
+    "max_reserved_gib": 0.0,
+    "free_gib": 1.689208984375,
+    "total_gib": 23.56854248046875
+  },
+  "post_run_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 0.0,
+    "reserved_gib": 0.0,
+    "max_allocated_gib": 0.0,
+    "max_reserved_gib": 0.0,
+    "free_gib": 1.689208984375,
+    "total_gib": 23.56854248046875
+  }
 }
