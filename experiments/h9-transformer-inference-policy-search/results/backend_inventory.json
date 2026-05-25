@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-25T21:23:54.922204+00:00",
+  "generated_at_utc": "2026-05-25T22:25:29.914065+00:00",
   "platform": {
     "python": "3.12.3",
     "system": "Linux-6.8.0-90-generic-x86_64-with-glibc2.39"
@@ -46,9 +46,9 @@
     "torchao": {
       "import_name": "torchao",
       "distribution_name": "torchao",
-      "imported": false,
-      "version": null,
-      "import_error": "ModuleNotFoundError: No module named 'torchao'"
+      "imported": true,
+      "version": "0.17.0",
+      "import_error": null
     },
     "auto_gptq": {
       "import_name": "auto_gptq",
@@ -107,8 +107,7 @@
     ]
   },
   "policy_status_counts": {
-    "supported_unverified": 9,
-    "unsupported_backend": 1
+    "supported_unverified": 10
   },
   "policies": [
     {
@@ -223,9 +222,9 @@
     },
     {
       "policy_name": "fp16_torchao",
-      "status": "unsupported_backend",
+      "status": "supported_unverified",
       "reasons": [
-        "torchao is not importable."
+        "torchao imports locally, but benchmark must confirm torch/vLLM compatibility."
       ],
       "llm_kwargs": {
         "dtype": "float16",

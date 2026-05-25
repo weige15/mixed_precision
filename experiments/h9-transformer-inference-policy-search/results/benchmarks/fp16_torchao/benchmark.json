@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-25T21:54:16.465092+00:00",
+  "generated_at_utc": "2026-05-25T22:07:02.270856+00:00",
   "status": "failed",
   "policy_name": "fp16_torchao",
   "policy": {
@@ -32,5 +32,27 @@
   "warmup_runs": 1,
   "cuda_visible_devices": "0",
   "runs": [],
-  "error": "vLLM import failed: ImportError: /nfs/home/s314511048/.venv/lib/python3.12/site-packages/vllm/_C.abi3.so: undefined symbol: _ZN3c104cuda29c10_cuda_check_implementationEiPKcS2_ib"
+  "pre_load_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 0.0,
+    "reserved_gib": 0.0,
+    "max_allocated_gib": 0.0,
+    "max_reserved_gib": 0.0,
+    "free_gib": 23.31353759765625,
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 0.2550048828125
+  },
+  "error": "TypeError: TorchAOConfig.__init__() missing 1 required positional argument: 'torchao_config'",
+  "failure_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 0.0,
+    "reserved_gib": 0.0,
+    "max_allocated_gib": 0.0,
+    "max_reserved_gib": 0.0,
+    "free_gib": 23.31353759765625,
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 0.2550048828125
+  }
 }
