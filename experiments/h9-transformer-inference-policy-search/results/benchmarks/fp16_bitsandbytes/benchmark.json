@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-25T22:27:21.877003+00:00",
+  "generated_at_utc": "2026-05-25T22:52:21.223766+00:00",
   "status": "completed",
   "policy_name": "fp16_bitsandbytes",
   "policy": {
@@ -27,22 +27,22 @@
   "runtime": "vllm",
   "hardware_label": "rtx3090-lab",
   "seed": 42,
-  "smoke": true,
+  "smoke": false,
   "repeats": 3,
   "warmup_runs": 1,
   "cuda_visible_devices": "0",
   "runs": [
     {
-      "workload_name": "smoke",
+      "workload_name": "prefill_heavy",
       "repeat": 0,
       "num_prompts": 1,
-      "max_tokens": 4,
-      "prompt_tokens": 7,
-      "generated_tokens": 4,
-      "total_tokens": 11,
-      "latency_sec": 0.08515143068507314,
-      "output_tokens_per_sec": 46.975135565176025,
-      "total_tokens_per_sec": 129.18162280423405,
+      "max_tokens": 16,
+      "prompt_tokens": 1122,
+      "generated_tokens": 1,
+      "total_tokens": 1123,
+      "latency_sec": 0.05591988889500499,
+      "output_tokens_per_sec": 17.88272508691133,
+      "total_tokens_per_sec": 20082.300272601424,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -66,20 +66,20 @@
         "used_gib_from_mem_get_info": 22.53558349609375
       },
       "sample_outputs": [
-        " What is the difference"
+        ""
       ]
     },
     {
-      "workload_name": "smoke",
+      "workload_name": "prefill_heavy",
       "repeat": 1,
       "num_prompts": 1,
-      "max_tokens": 4,
-      "prompt_tokens": 7,
-      "generated_tokens": 4,
-      "total_tokens": 11,
-      "latency_sec": 0.08511754870414734,
-      "output_tokens_per_sec": 46.993834537026565,
-      "total_tokens_per_sec": 129.23304497682307,
+      "max_tokens": 16,
+      "prompt_tokens": 1122,
+      "generated_tokens": 1,
+      "total_tokens": 1123,
+      "latency_sec": 0.05572151159867644,
+      "output_tokens_per_sec": 17.946390385140827,
+      "total_tokens_per_sec": 20153.796402513148,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -103,20 +103,20 @@
         "used_gib_from_mem_get_info": 22.53558349609375
       },
       "sample_outputs": [
-        " What is the difference"
+        ""
       ]
     },
     {
-      "workload_name": "smoke",
+      "workload_name": "prefill_heavy",
       "repeat": 2,
       "num_prompts": 1,
-      "max_tokens": 4,
-      "prompt_tokens": 7,
-      "generated_tokens": 4,
-      "total_tokens": 11,
-      "latency_sec": 0.08545832382515073,
-      "output_tokens_per_sec": 46.80644109266726,
-      "total_tokens_per_sec": 128.71771300483493,
+      "max_tokens": 16,
+      "prompt_tokens": 1122,
+      "generated_tokens": 1,
+      "total_tokens": 1123,
+      "latency_sec": 0.05544534185901284,
+      "output_tokens_per_sec": 18.035780220145696,
+      "total_tokens_per_sec": 20254.181187223618,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -140,7 +140,235 @@
         "used_gib_from_mem_get_info": 22.53558349609375
       },
       "sample_outputs": [
-        " What is the difference"
+        ""
+      ]
+    },
+    {
+      "workload_name": "decode_heavy",
+      "repeat": 0,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 15,
+      "generated_tokens": 128,
+      "total_tokens": 143,
+      "latency_sec": 1.5219987551681697,
+      "output_tokens_per_sec": 84.0999373786327,
+      "total_tokens_per_sec": 93.95539879019123,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "sample_outputs": [
+        " (Optional)\nHardware-aware mixed precision is a technique used in machine learning to optimize the performance of deep learning models by using a combination of different floating-point data types. This technique is particularly useful for large language models (LLMs) that are used for serving, as it can help to reduce the computational cost and improve the speed of the model without sacrificing a"
+      ]
+    },
+    {
+      "workload_name": "decode_heavy",
+      "repeat": 1,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 15,
+      "generated_tokens": 128,
+      "total_tokens": 143,
+      "latency_sec": 1.5237976550124586,
+      "output_tokens_per_sec": 84.00065427253428,
+      "total_tokens_per_sec": 93.84448094509689,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "sample_outputs": [
+        " (Optional)\nHardware-aware mixed precision is a technique used in machine learning to optimize the performance of deep learning models by using a combination of different floating-point data types. This technique is particularly useful for large language models (LLMs) that are used for serving, as it can help to reduce the computational cost and improve the speed of the model without sacrificing a"
+      ]
+    },
+    {
+      "workload_name": "decode_heavy",
+      "repeat": 2,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 15,
+      "generated_tokens": 128,
+      "total_tokens": 143,
+      "latency_sec": 1.528358750976622,
+      "output_tokens_per_sec": 83.74997029866707,
+      "total_tokens_per_sec": 93.56441994304211,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "sample_outputs": [
+        " (Optional)\nHardware-aware mixed precision is a technique used in machine learning to optimize the performance of deep learning models by using a combination of different floating-point data types. This technique is particularly useful for large language models (LLMs) that are used for serving, as it can help to reduce the computational cost and improve the speed of the model without sacrificing a"
+      ]
+    },
+    {
+      "workload_name": "mixed",
+      "repeat": 0,
+      "num_prompts": 3,
+      "max_tokens": 64,
+      "prompt_tokens": 299,
+      "generated_tokens": 192,
+      "total_tokens": 491,
+      "latency_sec": 3.1096396069042385,
+      "output_tokens_per_sec": 61.74348936568348,
+      "total_tokens_per_sec": 157.89611082578432,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "sample_outputs": [
+        " The quantization of the cache is the process of dividing the cache into smaller units called cache lines. Each cache line contains a fixed number of bytes, typically 32 or 64 bytes. The size of the cache line determines the granularity of the cache and affects the performance of the cache.\nWhat is cache quantization in",
+        " Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency,",
+        " What are the risks of high-precision attention?\nLow-precision attention is a type of attention that is not as precise as high-precision attention. Low-precision attention is less likely to be able to focus on a specific task or goal, and may be more likely to be distracted by other stimuli. This can lead"
+      ]
+    },
+    {
+      "workload_name": "mixed",
+      "repeat": 1,
+      "num_prompts": 3,
+      "max_tokens": 64,
+      "prompt_tokens": 299,
+      "generated_tokens": 192,
+      "total_tokens": 491,
+      "latency_sec": 3.111217503901571,
+      "output_tokens_per_sec": 61.71217530089927,
+      "total_tokens_per_sec": 157.8160316288622,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "sample_outputs": [
+        " The quantization of the cache is the process of dividing the cache into smaller units called cache lines. Each cache line contains a fixed number of bytes, typically 32 or 64 bytes. The size of the cache line determines the granularity of the cache and affects the performance of the cache.\nWhat is cache quantization in",
+        " Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency,",
+        " What are the risks of high-precision attention?\nLow-precision attention is a type of attention that is not as precise as high-precision attention. Low-precision attention is less likely to be able to focus on a specific task or goal, and may be more likely to be distracted by other stimuli. This can lead"
+      ]
+    },
+    {
+      "workload_name": "mixed",
+      "repeat": 2,
+      "num_prompts": 3,
+      "max_tokens": 64,
+      "prompt_tokens": 299,
+      "generated_tokens": 192,
+      "total_tokens": 491,
+      "latency_sec": 3.098016664851457,
+      "output_tokens_per_sec": 61.97513466545732,
+      "total_tokens_per_sec": 158.48849542051846,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.032958984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.53558349609375
+      },
+      "sample_outputs": [
+        " The quantization of the cache is the process of dividing the cache into smaller units called cache lines. Each cache line contains a fixed number of bytes, typically 32 or 64 bytes. The size of the cache line determines the granularity of the cache and affects the performance of the cache.\nWhat is cache quantization in",
+        " Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency,",
+        " What are the risks of high-precision attention?\nLow-precision attention is a type of attention that is not as precise as high-precision attention. Low-precision attention is less likely to be able to focus on a specific task or goal, and may be more likely to be distracted by other stimuli. This can lead"
       ]
     }
   ],
@@ -155,7 +383,7 @@
     "total_gib": 23.56854248046875,
     "used_gib_from_mem_get_info": 0.2550048828125
   },
-  "load_time_sec": 54.79416823387146,
+  "load_time_sec": 54.49047763179988,
   "post_load_cuda": {
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",
