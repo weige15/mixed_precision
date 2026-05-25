@@ -263,7 +263,7 @@ experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
   baseline_value: 2.0906627424955366
   best_value: 2.086417777657509
-  total_runs: 31
+  total_runs: 32
   trajectory:
     - experiment_id: "h1_baseline_bf16_seed42"
       hypothesis: "H1"
@@ -705,11 +705,21 @@ experiments:
       wall_time_sec: null
       change_summary: "H6.4 conservative 7B fake-int8 training replicated across seeds 42-44. The selected modules were layers.26.mlp.gate_proj, layers.26.mlp.up_proj, layers.27.mlp.gate_proj, and layers.26.self_attn.o_proj. Eval-loss degradations versus matched bf16 were +0.161%, +0.223%, and +0.102% with mean +0.162%; all had zero loss spikes and zero NaN/Inf events. Memory was unchanged as expected for fake-int8 output hooks."
       artifact: "experiments/h6-adaptive-precision-assignment/results/train_h6_4_qwen7b_rank_int8_seed42_500/summary.json"
+    - experiment_id: "h8_llama31_8b_selective_rescue_seeds42_44"
+      hypothesis: "H8"
+      type: "resource_synthesis"
+      metric_value: 0.6817422222148406
+      metric_name: "mean_eval_delta_percent_vs_bf16"
+      baseline: 0.7983355262944801
+      delta: -0.11659330407963953
+      wall_time_sec: null
+      change_summary: "H8 selective bf16 projection rescue from QLoRA/NF4 on Llama-3.1-8B replicated across matched 500-step RTX 3090 seeds 42-44. H8 improved final eval loss over blanket QLoRA on every seed by about 0.0016 absolute on average, while keeping mean peak-memory savings of 25.28% versus bf16. Blanket QLoRA saved 26.70% memory, so rescue cost about 0.286 GiB peak memory. Both low-bit policies had zero loss spikes and zero NaN/Inf events, but both remained about 19% slower than bf16."
+      artifact: "experiments/h8-hardware-aware-precision-search/results/llama_h8_metrics_summary.json"
 
 outer_loop:
-  cycle: 18
-  last_direction: "write the paper-style report from final synthesis; treat hardware-backed selective precision as a future systems branch unless explicitly prioritized"
-  last_reflection: "Final synthesis is complete, and the 2026-05-23 literature refresh clarifies the next systems direction. H6/H7 support calibration-guided sensitivity ranking and cross-family quality preservation, while H6.3 supports a Qwen2.5-7B QLoRA memory-capacity trade-off. Related work suggests the next hardware-backed branch should be selective rescue from a low-bit baseline using a risk(module, format, backend) predictor plus measured cost model, not routine fake-int8 demotion repeats."
+  cycle: 19
+  last_direction: "close out H8 rigorously before starting H9 Transformer inference policy search"
+  last_reflection: "H8 is now supported as a narrow hardware-aware selective-rescue result. On Llama-3.1-8B, selective bf16 projection rescue from QLoRA/NF4 consistently improves final eval loss versus blanket QLoRA while retaining nearly all of the memory saving, but it does not provide a throughput win. Remaining H8 work should be documentation or optional robustness only; Transformer inference precision search should start as H9 with a separate objective over attention, MLP, KV cache, and backend-supported kernels."
 
 workspace:
   findings: "findings.md"

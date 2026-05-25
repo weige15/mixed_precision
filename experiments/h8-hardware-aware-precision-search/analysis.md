@@ -68,3 +68,41 @@ Implemented first real selective-rescue path in `experiments/h1-selective-fp32-n
 - records `h8_rescued_modules` in setup/training summaries
 
 Added `--setup-only` to verify model loading, replacement, LoRA wrapping, and peak setup memory without starting dataset processing or training. The next empirical step is a setup-only smoke test on the RTX 3090, followed by a 100-step selective-rescue run before spending a full 500-step run.
+
+## 2026-05-26 Close-Out
+
+H8 now has a complete first-pass empirical answer for Llama-3.1-8B LoRA on the lab RTX 3090. The implemented selective-rescue policy starts from QLoRA/NF4, reloads the selected high-risk projection modules in bf16, then applies LoRA. The matched comparison set covers bf16, blanket QLoRA/NF4, and H8 selective rescue for 500 optimizer steps across seeds 42, 43, and 44 under the same `rtx3090-lab` hardware label.
+
+Aggregated 500-step RTX 3090 results:
+
+| Policy | Mean eval delta vs bf16 | Mean peak-memory delta vs bf16 | Mean train-throughput delta vs bf16 | Instability |
+|---|---:|---:|---:|---|
+| QLoRA/NF4 | +0.798% | -26.697% | -19.698% | 0 spikes, 0 NaN/Inf |
+| H8 selective rescue | +0.682% | -25.280% | -19.174% | 0 spikes, 0 NaN/Inf |
+
+Paired seed-level H8 improvement over blanket QLoRA:
+
+| Seed | QLoRA eval loss | H8 eval loss | H8 improvement | Added memory vs QLoRA |
+|---:|---:|---:|---:|---:|
+| 42 | 1.398847 | 1.397240 | 0.001607 | +0.286 GiB |
+| 43 | 1.377077 | 1.375443 | 0.001634 | +0.286 GiB |
+| 44 | 1.371851 | 1.370295 | 0.001557 | +0.286 GiB |
+
+Mean H8 improvement over QLoRA is `0.001599` final eval loss. This is small but directionally consistent across all three seeds. H8 gives up about `0.286 GiB` peak memory relative to blanket QLoRA, while preserving most of the QLoRA memory benefit versus bf16. The throughput result should be reported cautiously: H8 is marginally faster than blanket QLoRA in these runs, but both low-bit policies remain about 19% slower than bf16.
+
+Decision against the locked protocol:
+
+- final eval loss is closer to bf16 than blanket QLoRA: supported across seeds 42-44.
+- final eval loss remains inside the 1% gate versus bf16: supported.
+- peak memory remains meaningfully below bf16: supported, about 25.3% lower.
+- instability events do not increase: supported, zero spikes and zero NaN/Inf events.
+- hardware and microbatching are matched: supported for the three 500-step RTX 3090 comparisons.
+
+Conclusion: H8 is supported as a narrow hardware-aware selective-rescue result. It does not establish a throughput win, and the quality improvement over blanket QLoRA is modest. The scientific value is that a calibration/prediction-driven policy can be expressed through a real low-bit backend plus high-precision module rescue, improving the quality side of a memory-saving low-bit baseline while retaining nearly all of the memory benefit.
+
+Remaining H8 work should be limited to documentation and optional robustness checks, not a new systems build-out:
+
+- Update the project-level findings and research state with the H8 result.
+- In a paper/report, present H8 as a systems feasibility extension rather than the main training contribution.
+- Optional only: repeat the same selective-rescue setup on Qwen2.5-7B if direct continuity from H6.3 is needed.
+- Do not fold Transformer inference policy search into H8; that should become H9 with a separate objective, cost model, and benchmark design.

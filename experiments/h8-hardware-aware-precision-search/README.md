@@ -9,9 +9,11 @@ Main files:
 - `code/build_h8_policy_candidates.py`: first conservative policy planner.
 - `results/`: generated candidate policies and experiment outputs.
 
-Current status: BF16 and blanket QLoRA/NF4 baselines are validated for
-Llama-3.1-8B seed 42 on the RTX 3090 lab machine. The policy candidate file
-now aligns Qwen2.5-7B and Llama-3.1-8B from the combined H7 dataset.
+Current status: H8 has a supported first-pass result on Llama-3.1-8B. Across
+500-step RTX 3090 seeds 42, 43, and 44, selective bf16 projection rescue from
+QLoRA/NF4 improves final eval loss versus blanket QLoRA on every seed while
+keeping about 25.3% peak-memory savings versus bf16. It is not a throughput
+win: both H8 and blanket QLoRA remain about 19% slower than bf16.
 
 First planning command:
 
@@ -19,10 +21,10 @@ First planning command:
 python experiments/h8-hardware-aware-precision-search/code/build_h8_policy_candidates.py
 ```
 
-Current implementation step: `run_lora_precision.py` now has a prototype
-`h8_qlora_nf4_rescue_projection_top4` policy. It starts from QLoRA/NF4,
-reloads the selected projection weights from checkpoint shards into frozen
-bf16/fp32 `torch.nn.Linear` modules, then applies LoRA wrapping.
+Implemented policy: `run_lora_precision.py` has
+`h8_qlora_nf4_rescue_projection_top4`. It starts from QLoRA/NF4, reloads the
+selected projection weights from checkpoint shards into frozen bf16/fp32
+`torch.nn.Linear` modules, then applies LoRA wrapping.
 
 Backend feasibility commands:
 
@@ -55,3 +57,14 @@ GPU_ID=0 HARDWARE_LABEL=rtx3090-lab RUN_BF16=0 RUN_QLORA=0 RUN_SELECTIVE_RESCUE=
 MAX_STEPS=100 EVAL_MAX_BATCHES=25 \
 bash experiments/h8-hardware-aware-precision-search/code/run_llama31_8b_h8_metrics.sh
 ```
+
+Summarize matched H8 metrics:
+
+```bash
+python experiments/h8-hardware-aware-precision-search/code/summarize_h8_llama_metrics.py
+```
+
+Close-out interpretation: H8 supports hardware-aware selective rescue as a
+small quality improvement over blanket QLoRA at nearly the same memory budget.
+Further Transformer inference policy search should start as H9, not as an H8
+extension.
