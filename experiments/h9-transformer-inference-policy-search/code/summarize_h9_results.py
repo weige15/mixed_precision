@@ -49,6 +49,18 @@ def get_peak_reserved_gib(run: dict[str, Any]) -> float | None:
     return float(value) if value is not None else None
 
 
+def get_used_gib(run: dict[str, Any]) -> float | None:
+    after = run.get("cuda_after") or {}
+    value = after.get("used_gib_from_mem_get_info")
+    if value is not None:
+        return float(value)
+    free = after.get("free_gib")
+    total = after.get("total_gib")
+    if free is None or total is None:
+        return None
+    return float(total) - float(free)
+
+
 def summarize_values(values: list[float]) -> dict[str, float | None]:
     if not values:
         return {"mean": None, "stdev": None, "min": None, "max": None}
@@ -87,6 +99,9 @@ def aggregate_completed(artifact: dict[str, Any]) -> list[dict[str, Any]]:
                 "peak_reserved_gib": summarize_values(
                     [value for run in runs for value in [get_peak_reserved_gib(run)] if value is not None]
                 ),
+                "used_gib_from_mem_get_info": summarize_values(
+                    [value for run in runs for value in [get_used_gib(run)] if value is not None]
+                ),
                 "artifact_path": artifact["_path"],
             }
         )
@@ -107,6 +122,9 @@ def dominates(a: dict[str, Any], b: dict[str, Any]) -> bool:
     b_tps = b["output_tokens_per_sec"]["mean"]
     a_mem = a["peak_reserved_gib"]["mean"]
     b_mem = b["peak_reserved_gib"]["mean"]
+    if a_mem in (None, 0.0) or b_mem in (None, 0.0):
+        a_mem = a["used_gib_from_mem_get_info"]["mean"]
+        b_mem = b["used_gib_from_mem_get_info"]["mean"]
     comparisons = []
     if a_latency is not None and b_latency is not None:
         comparisons.append((a_latency <= b_latency, a_latency < b_latency))
@@ -162,6 +180,10 @@ def add_baseline_deltas(
                     row["peak_reserved_gib"]["mean"],
                     baseline["peak_reserved_gib"]["mean"],
                 ),
+                "used_gib_from_mem_get_info_percent": rel_delta(
+                    row["used_gib_from_mem_get_info"]["mean"],
+                    baseline["used_gib_from_mem_get_info"]["mean"],
+                ),
                 "prompt_nll_percent": rel_delta(policy_nll, baseline_nll),
             }
         else:
@@ -204,7 +226,7 @@ def main() -> None:
         "n_quality_artifacts": len(quality),
         "completed": completed_rows,
         "failures": failures,
-        "note": "Quality metrics are not yet included unless a benchmark artifact records them explicitly. Pareto marking currently uses latency, output throughput, and peak reserved CUDA memory.",
+        "note": "Quality metrics are included when quality artifacts exist. Pareto marking uses latency, output throughput, and memory; memory falls back to cuda mem_get_info used GiB when PyTorch allocator stats do not capture vLLM worker allocations.",
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")

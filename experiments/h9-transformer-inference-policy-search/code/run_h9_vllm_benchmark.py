@@ -67,6 +67,8 @@ def cuda_snapshot() -> dict[str, Any]:
     if not torch.cuda.is_available():
         return {"cuda_available": False}
     free_bytes, total_bytes = torch.cuda.mem_get_info()
+    free_gib = free_bytes / 1024**3
+    total_gib = total_bytes / 1024**3
     return {
         "cuda_available": True,
         "device_name": torch.cuda.get_device_name(0),
@@ -74,8 +76,9 @@ def cuda_snapshot() -> dict[str, Any]:
         "reserved_gib": torch.cuda.memory_reserved() / 1024**3,
         "max_allocated_gib": torch.cuda.max_memory_allocated() / 1024**3,
         "max_reserved_gib": torch.cuda.max_memory_reserved() / 1024**3,
-        "free_gib": free_bytes / 1024**3,
-        "total_gib": total_bytes / 1024**3,
+        "free_gib": free_gib,
+        "total_gib": total_gib,
+        "used_gib_from_mem_get_info": total_gib - free_gib,
     }
 
 

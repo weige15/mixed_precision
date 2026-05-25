@@ -2,8 +2,13 @@
   "results_dir": "experiments/h9-transformer-inference-policy-search/results/benchmarks",
   "baseline_policy": "bf16_default",
   "n_artifacts": 10,
+<<<<<<< Updated upstream
   "n_completed_policy_workloads": 7,
   "n_failed_policies": 1,
+=======
+  "n_completed_policy_workloads": 1,
+  "n_failed_policies": 0,
+>>>>>>> Stashed changes
   "n_quality_artifacts": 1,
   "completed": [
     {
@@ -38,11 +43,24 @@
         "min": 0.0,
         "max": 0.0
       },
+<<<<<<< Updated upstream
+=======
+      "used_gib_from_mem_get_info": {
+        "mean": 21.87933349609375,
+        "stdev": 0.0,
+        "min": 21.87933349609375,
+        "max": 21.87933349609375
+      },
+>>>>>>> Stashed changes
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/benchmarks/bf16_default/benchmark.json",
       "delta_vs_baseline": {
         "latency_percent": 0.0,
         "output_tokens_per_sec_percent": -0.0,
         "peak_reserved_gib_percent": null,
+<<<<<<< Updated upstream
+=======
+        "used_gib_from_mem_get_info_percent": 0.0,
+>>>>>>> Stashed changes
         "prompt_nll_percent": null
       },
       "quality": {
@@ -51,6 +69,7 @@
         "tokens_scored": null,
         "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_default/quality.json"
       },
+<<<<<<< Updated upstream
       "pareto_non_dominated": false
     },
     {
@@ -345,4 +364,11 @@
     }
   ],
   "note": "Quality metrics are not yet included unless a benchmark artifact records them explicitly. Pareto marking currently uses latency, output throughput, and peak reserved CUDA memory."
+=======
+      "pareto_non_dominated": true
+    }
+  ],
+  "failures": [],
+  "note": "Quality metrics are included when quality artifacts exist. Pareto marking uses latency, output throughput, and memory; memory falls back to cuda mem_get_info used GiB when PyTorch allocator stats do not capture vLLM worker allocations."
+>>>>>>> Stashed changes
 }
