@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-25T21:46:04.546555+00:00",
+  "generated_at_utc": "2026-05-25T23:00:18.838774+00:00",
   "status": "completed",
   "policy_name": "bf16_kv_fp8",
   "policy": {
@@ -27,22 +27,22 @@
   "runtime": "vllm",
   "hardware_label": "rtx3090-lab",
   "seed": 42,
-  "smoke": true,
+  "smoke": false,
   "repeats": 3,
   "warmup_runs": 1,
   "cuda_visible_devices": "0",
   "runs": [
     {
-      "workload_name": "smoke",
+      "workload_name": "prefill_heavy",
       "repeat": 0,
       "num_prompts": 1,
-      "max_tokens": 4,
-      "prompt_tokens": 7,
-      "generated_tokens": 4,
-      "total_tokens": 11,
-      "latency_sec": 0.08850098308175802,
-      "output_tokens_per_sec": 45.19723804994079,
-      "total_tokens_per_sec": 124.29240463733719,
+      "max_tokens": 16,
+      "prompt_tokens": 1122,
+      "generated_tokens": 16,
+      "total_tokens": 1138,
+      "latency_sec": 0.3506547473371029,
+      "output_tokens_per_sec": 45.62892737516072,
+      "total_tokens_per_sec": 3245.3574595583063,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -51,7 +51,8 @@
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
         "free_gib": 0.890380859375,
-        "total_gib": 23.56854248046875
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -61,23 +62,24 @@
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
         "free_gib": 0.890380859375,
-        "total_gib": 23.56854248046875
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
       },
       "sample_outputs": [
-        " What is the difference"
+        "1. Summarize the following technical context for a systems researcher. Transformer inference"
       ]
     },
     {
-      "workload_name": "smoke",
+      "workload_name": "prefill_heavy",
       "repeat": 1,
       "num_prompts": 1,
-      "max_tokens": 4,
-      "prompt_tokens": 7,
-      "generated_tokens": 4,
-      "total_tokens": 11,
-      "latency_sec": 0.08912879601120949,
-      "output_tokens_per_sec": 44.87887393314424,
-      "total_tokens_per_sec": 123.41690331614667,
+      "max_tokens": 16,
+      "prompt_tokens": 1122,
+      "generated_tokens": 16,
+      "total_tokens": 1138,
+      "latency_sec": 0.34837514301761985,
+      "output_tokens_per_sec": 45.92750177698747,
+      "total_tokens_per_sec": 3266.593563888234,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -86,7 +88,8 @@
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
         "free_gib": 0.890380859375,
-        "total_gib": 23.56854248046875
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -96,23 +99,24 @@
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
         "free_gib": 0.890380859375,
-        "total_gib": 23.56854248046875
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
       },
       "sample_outputs": [
-        " What is the difference"
+        "1. Summarize the following technical context for a systems researcher. Transformer inference"
       ]
     },
     {
-      "workload_name": "smoke",
+      "workload_name": "prefill_heavy",
       "repeat": 2,
       "num_prompts": 1,
-      "max_tokens": 4,
-      "prompt_tokens": 7,
-      "generated_tokens": 4,
-      "total_tokens": 11,
-      "latency_sec": 0.08727368386462331,
-      "output_tokens_per_sec": 45.8328309620194,
-      "total_tokens_per_sec": 126.04028514555334,
+      "max_tokens": 16,
+      "prompt_tokens": 1122,
+      "generated_tokens": 16,
+      "total_tokens": 1138,
+      "latency_sec": 0.34739274298772216,
+      "output_tokens_per_sec": 46.05738122907618,
+      "total_tokens_per_sec": 3275.831239918043,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -121,7 +125,8 @@
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
         "free_gib": 0.890380859375,
-        "total_gib": 23.56854248046875
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -131,10 +136,239 @@
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
         "free_gib": 0.890380859375,
-        "total_gib": 23.56854248046875
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
       },
       "sample_outputs": [
-        " What is the difference"
+        "1. Summarize the following technical context for a systems researcher. Transformer inference"
+      ]
+    },
+    {
+      "workload_name": "decode_heavy",
+      "repeat": 0,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 15,
+      "generated_tokens": 128,
+      "total_tokens": 143,
+      "latency_sec": 2.678345449268818,
+      "output_tokens_per_sec": 47.79069855792639,
+      "total_tokens_per_sec": 53.391171045183384,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "sample_outputs": [
+        " What are the benefits of using hardware-aware mixed precision for LLM serving? How does it improve performance and efficiency?\nHardware-aware mixed precision is a technique used in machine learning to optimize the performance of deep learning models by reducing the precision of certain operations while maintaining the overall accuracy of the model. This technique is particularly useful for large "
+      ]
+    },
+    {
+      "workload_name": "decode_heavy",
+      "repeat": 1,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 15,
+      "generated_tokens": 128,
+      "total_tokens": 143,
+      "latency_sec": 2.6927830930799246,
+      "output_tokens_per_sec": 47.53446362944794,
+      "total_tokens_per_sec": 53.10490858602387,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "sample_outputs": [
+        " What are the benefits of using hardware-aware mixed precision for LLM serving? How does it improve performance and efficiency?\nHardware-aware mixed precision is a technique used in machine learning to optimize the performance of deep learning models by reducing the precision of certain operations while maintaining the overall accuracy of the model. This technique is particularly useful for large "
+      ]
+    },
+    {
+      "workload_name": "decode_heavy",
+      "repeat": 2,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 15,
+      "generated_tokens": 128,
+      "total_tokens": 143,
+      "latency_sec": 2.6986390477977693,
+      "output_tokens_per_sec": 47.43131546416135,
+      "total_tokens_per_sec": 52.98967274511776,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "sample_outputs": [
+        " What are the benefits of using hardware-aware mixed precision for LLM serving? How does it improve performance and efficiency?\nHardware-aware mixed precision is a technique used in machine learning to optimize the performance of deep learning models by reducing the precision of certain operations while maintaining the overall accuracy of the model. This technique is particularly useful for large "
+      ]
+    },
+    {
+      "workload_name": "mixed",
+      "repeat": 0,
+      "num_prompts": 3,
+      "max_tokens": 64,
+      "prompt_tokens": 299,
+      "generated_tokens": 192,
+      "total_tokens": 491,
+      "latency_sec": 1.4111994756385684,
+      "output_tokens_per_sec": 136.0544723226459,
+      "total_tokens_per_sec": 347.930968283433,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "sample_outputs": [
+        " More...\n\n#include <quantization.h>\n\n## Detailed Description\n\n## Field Documentation\n\n## \u25c6\u00a0 cache\n\n## \u25c6\u00a0 cache_size\n\n## \u25c6\u00a0 cache_size_bytes\n\n## \u25c6\u00a0 cache_size_bits\n\n## \u25c6\u00a0 cache_size_bits_per_entry\n\n## \u25c6\u00a0 cache_size_bits_per_entry_bits\n\n## \u25c6\u00a0 cache",
+        "1. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change",
+        " What are the risks of high-precision attention?\nA. Low-precision attention is not suitable for high-precision applications, and high-precision attention is not suitable for low-precision applications.\nB. Low-precision attention is not suitable for high-precision applications, and high-precision attention is suitable for low-"
+      ]
+    },
+    {
+      "workload_name": "mixed",
+      "repeat": 1,
+      "num_prompts": 3,
+      "max_tokens": 64,
+      "prompt_tokens": 299,
+      "generated_tokens": 192,
+      "total_tokens": 491,
+      "latency_sec": 1.4129429897293448,
+      "output_tokens_per_sec": 135.88658664620178,
+      "total_tokens_per_sec": 347.50163564210976,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "sample_outputs": [
+        " More...\n\n#include <quantization.h>\n\n## Detailed Description\n\n## Field Documentation\n\n## \u25c6\u00a0 cache\n\n## \u25c6\u00a0 cache_size\n\n## \u25c6\u00a0 cache_size_bytes\n\n## \u25c6\u00a0 cache_size_bits\n\n## \u25c6\u00a0 cache_size_bits_per_entry\n\n## \u25c6\u00a0 cache_size_bits_per_entry_bits\n\n## \u25c6\u00a0 cache",
+        "1. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change",
+        " What are the risks of high-precision attention?\nA. Low-precision attention is not suitable for high-precision applications, and high-precision attention is not suitable for low-precision applications.\nB. Low-precision attention is not suitable for high-precision applications, and high-precision attention is suitable for low-"
+      ]
+    },
+    {
+      "workload_name": "mixed",
+      "repeat": 2,
+      "num_prompts": 3,
+      "max_tokens": 64,
+      "prompt_tokens": 299,
+      "generated_tokens": 192,
+      "total_tokens": 491,
+      "latency_sec": 1.4330071439035237,
+      "output_tokens_per_sec": 133.9839796450633,
+      "total_tokens_per_sec": 342.6361146131566,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 0.890380859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 22.67816162109375
+      },
+      "sample_outputs": [
+        " More...\n\n#include <quantization.h>\n\n## Detailed Description\n\n## Field Documentation\n\n## \u25c6\u00a0 cache\n\n## \u25c6\u00a0 cache_size\n\n## \u25c6\u00a0 cache_size_bytes\n\n## \u25c6\u00a0 cache_size_bits\n\n## \u25c6\u00a0 cache_size_bits_per_entry\n\n## \u25c6\u00a0 cache_size_bits_per_entry_bits\n\n## \u25c6\u00a0 cache",
+        "1. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change",
+        " What are the risks of high-precision attention?\nA. Low-precision attention is not suitable for high-precision applications, and high-precision attention is not suitable for low-precision applications.\nB. Low-precision attention is not suitable for high-precision applications, and high-precision attention is suitable for low-"
       ]
     }
   ],
@@ -146,9 +380,10 @@
     "max_allocated_gib": 0.0,
     "max_reserved_gib": 0.0,
     "free_gib": 23.31353759765625,
-    "total_gib": 23.56854248046875
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 0.2550048828125
   },
-  "load_time_sec": 47.74698838731274,
+  "load_time_sec": 46.16305123409256,
   "post_load_cuda": {
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",
@@ -157,7 +392,8 @@
     "max_allocated_gib": 0.0,
     "max_reserved_gib": 0.0,
     "free_gib": 0.892333984375,
-    "total_gib": 23.56854248046875
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 22.67620849609375
   },
   "post_run_cuda": {
     "cuda_available": true,
@@ -167,6 +403,7 @@
     "max_allocated_gib": 0.0,
     "max_reserved_gib": 0.0,
     "free_gib": 0.890380859375,
-    "total_gib": 23.56854248046875
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 22.67816162109375
   }
 }
