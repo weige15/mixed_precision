@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import argparse
 import gc
+import importlib
+import importlib.metadata
 import json
 import os
 import time
@@ -101,6 +103,25 @@ def cleanup_cuda() -> None:
     except Exception:
         return
     gc.collect()
+
+
+def package_snapshot() -> dict[str, dict[str, Any]]:
+    packages = {}
+    for name in ["torch", "vllm", "bitsandbytes", "torchao", "flash_attn"]:
+        try:
+            module = importlib.import_module(name)
+            imported = True
+            error = None
+        except Exception as exc:  # noqa: BLE001 - diagnostic path.
+            module = None
+            imported = False
+            error = f"{exc.__class__.__name__}: {exc}"
+        try:
+            version = importlib.metadata.version("flash-attn" if name == "flash_attn" else name)
+        except Exception:
+            version = getattr(module, "__version__", None) if module is not None else None
+        packages[name] = {"imported": imported, "version": version, "error": error}
+    return packages
 
 
 def output_token_count(request_outputs: list[Any]) -> int:
@@ -204,6 +225,7 @@ def run_policy(
     except Exception as exc:  # noqa: BLE001
         payload["status"] = "failed"
         payload["error"] = f"vLLM import failed: {exc.__class__.__name__}: {exc}"
+        payload["package_snapshot"] = package_snapshot()
         return payload
 
     try:
