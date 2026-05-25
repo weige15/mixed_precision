@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-25T20:59:39.461357+00:00",
-  "status": "dry_run",
+  "generated_at_utc": "2026-05-25T21:54:11.789143+00:00",
+  "status": "failed",
   "policy_name": "fp16_bitsandbytes",
   "policy": {
     "policy_name": "fp16_bitsandbytes",
@@ -28,18 +28,9 @@
   "hardware_label": "rtx3090-lab",
   "seed": 42,
   "smoke": true,
-  "repeats": 1,
+  "repeats": 3,
   "warmup_runs": 1,
-  "cuda_visible_devices": null,
+  "cuda_visible_devices": "0",
   "runs": [],
-  "workloads": [
-    {
-      "name": "smoke",
-      "max_tokens": 4,
-      "prompts": [
-        "Briefly define KV cache."
-      ],
-      "description": "Tiny policy-instantiation smoke workload."
-    }
-  ]
+  "error": "vLLM import failed: ImportError: /nfs/home/s314511048/.venv/lib/python3.12/site-packages/vllm/_C.abi3.so: undefined symbol: _ZN3c104cuda29c10_cuda_check_implementationEiPKcS2_ib"
 }
