@@ -2,8 +2,8 @@
   "results_dir": "experiments/h9-transformer-inference-policy-search/results/benchmarks",
   "baseline_policy": "bf16_default",
   "n_artifacts": 10,
-  "n_completed_policy_workloads": 6,
-  "n_failed_policies": 2,
+  "n_completed_policy_workloads": 7,
+  "n_failed_policies": 1,
   "n_quality_artifacts": 1,
   "completed": [
     {
@@ -167,6 +167,60 @@
         "artifact_path": null
       },
       "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "fp16_bitsandbytes",
+      "workload_name": "smoke",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.0852424344047904,
+        "stdev": 0.000187731666283295,
+        "min": 0.08511754870414734,
+        "max": 0.08545832382515073
+      },
+      "output_tokens_per_sec": {
+        "mean": 46.925137064956616,
+        "stdev": 0.10321803750001274,
+        "min": 46.80644109266726,
+        "max": 46.993834537026565
+      },
+      "total_tokens_per_sec": {
+        "mean": 129.04412692863067,
+        "stdev": 0.28384960312504753,
+        "min": 128.71771300483493,
+        "max": 129.23304497682307
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.53558349609375,
+        "stdev": 0.0,
+        "min": 22.53558349609375,
+        "max": 22.53558349609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/benchmarks/fp16_bitsandbytes/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -1.4603751135519067,
+        "output_tokens_per_sec_percent": -1.4733887595686446,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 2.9994058096749807,
+        "prompt_nll_percent": null
+      },
+      "quality": {
+        "status": null,
+        "mean_prompt_nll": null,
+        "tokens_scored": null,
+        "artifact_path": null
+      },
+      "pareto_non_dominated": true
     },
     {
       "policy_name": "fp16_default",
@@ -333,15 +387,9 @@
   ],
   "failures": [
     {
-      "policy_name": "fp16_bitsandbytes",
-      "hardware_label": "rtx3090-lab",
-      "error": "vLLM import failed: ImportError: /nfs/home/s314511048/.venv/lib/python3.12/site-packages/vllm/_C.abi3.so: undefined symbol: _ZN3c104cuda29c10_cuda_check_implementationEiPKcS2_ib",
-      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/benchmarks/fp16_bitsandbytes/benchmark.json"
-    },
-    {
       "policy_name": "fp16_torchao",
       "hardware_label": "rtx3090-lab",
-      "error": "vLLM import failed: ImportError: /nfs/home/s314511048/.venv/lib/python3.12/site-packages/vllm/_C.abi3.so: undefined symbol: _ZN3c104cuda29c10_cuda_check_implementationEiPKcS2_ib",
+      "error": "Invalid H9 policy: vLLM torchao quantization requires an explicit torchao_config; skip fp16_torchao until a concrete torchao_config is added.",
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/benchmarks/fp16_torchao/benchmark.json"
     }
   ],

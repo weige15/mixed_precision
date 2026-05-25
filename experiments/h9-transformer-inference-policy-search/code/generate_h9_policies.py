@@ -166,10 +166,10 @@ def main() -> None:
         ),
         policy(
             "fp16_torchao",
-            "vLLM torchao quantization path; requires local torchao compatibility.",
+            "vLLM torchao quantization path placeholder; requires an explicit torchao_config before benchmarking.",
             dtype="float16",
             quantization="torchao",
-            expected_role="weight_quantization_candidate",
+            expected_role="requires_backend_config",
             **common,
         ),
         policy(

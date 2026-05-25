@@ -150,6 +150,11 @@ def run_policy(grid: dict[str, Any], policy: dict[str, Any], args: argparse.Name
         payload["status"] = "dry_run"
         payload["prompts"] = prompts
         return payload
+    if policy.get("llm_kwargs", {}).get("quantization") == "torchao" and "torchao_config" not in policy.get("llm_kwargs", {}):
+        payload["status"] = "failed"
+        payload["error"] = "Invalid H9 policy: vLLM torchao quantization requires an explicit torchao_config; skip fp16_torchao until a concrete torchao_config is added."
+        payload["package_snapshot"] = package_snapshot()
+        return payload
     try:
         from vllm import LLM, SamplingParams
     except Exception as exc:  # noqa: BLE001

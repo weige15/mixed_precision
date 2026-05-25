@@ -124,7 +124,8 @@ def classify_policy(policy: dict[str, Any], packages: dict[str, dict[str, Any]],
             status = "unsupported_backend"
             reasons.append("torchao is not importable.")
         else:
-            reasons.append("torchao imports locally, but benchmark must confirm torch/vLLM compatibility.")
+            status = "missing_config"
+            reasons.append("vLLM torchao quantization requires an explicit torchao_config; quantization='torchao' alone is not a runnable policy.")
     if quantization in {"awq", "gptq", "gptq_marlin", "awq_marlin", "bitblas"}:
         status = "missing_artifact"
         reasons.append("This policy requires a compatible quantized model artifact; H9.1 does not assume one.")
