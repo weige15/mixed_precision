@@ -1,0 +1,103 @@
+{
+  "source": "experiments/h10-peft-precision-risk/results/h10_rescue_policy_candidates_llama31_8b_top2.json",
+  "model_filters": [
+    "meta-llama/Llama-3.1-8B"
+  ],
+  "topk": 2,
+  "models": [
+    {
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "status": "candidate_ready",
+      "n_candidate_policies": 1,
+      "candidate_policies": [
+        {
+          "policy_name": "h10k2_oracle_perturbation_top4",
+          "source_selector": "oracle_perturbation_upper_bound",
+          "base_backend": "qlora_4bit_nf4",
+          "policy_type": "selective_rescue_from_low_bit",
+          "rescue_precision": "bf16_or_fp32_backend_dependent",
+          "rescue_modules": [
+            "base_model.model.model.layers.31.mlp.up_proj",
+            "base_model.model.model.layers.31.mlp.gate_proj"
+          ],
+          "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+          "backend_feasibility": "unverified_until_setup_only_smoke",
+          "expected_effect": "quality rescue with possible memory/dispatch overhead",
+          "selector_modules": [
+            {
+              "module_name": "base_model.model.model.layers.31.mlp.up_proj",
+              "module_short": "layers.31.mlp.up_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "up_proj",
+              "layer_idx": 31.0,
+              "selector_score": 0.0123337805271,
+              "mean_abs_delta": 0.00601427753766,
+              "max_abs_delta": 0.0123337805271,
+              "safe_all_seeds": 0,
+              "safe_rate": 0.3333333333333333
+            },
+            {
+              "module_name": "base_model.model.model.layers.31.mlp.gate_proj",
+              "module_short": "layers.31.mlp.gate_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "gate_proj",
+              "layer_idx": 31.0,
+              "selector_score": 0.00929999351501,
+              "mean_abs_delta": 0.0042029519875823,
+              "max_abs_delta": 0.00929999351501,
+              "safe_all_seeds": 0,
+              "safe_rate": 0.6666666666666666
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "candidate_policies_flat": [
+    {
+      "policy_name": "h10k2_oracle_perturbation_top4",
+      "source_selector": "oracle_perturbation_upper_bound",
+      "base_backend": "qlora_4bit_nf4",
+      "policy_type": "selective_rescue_from_low_bit",
+      "rescue_precision": "bf16_or_fp32_backend_dependent",
+      "rescue_modules": [
+        "base_model.model.model.layers.31.mlp.up_proj",
+        "base_model.model.model.layers.31.mlp.gate_proj"
+      ],
+      "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+      "backend_feasibility": "unverified_until_setup_only_smoke",
+      "expected_effect": "quality rescue with possible memory/dispatch overhead",
+      "selector_modules": [
+        {
+          "module_name": "base_model.model.model.layers.31.mlp.up_proj",
+          "module_short": "layers.31.mlp.up_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "up_proj",
+          "layer_idx": 31.0,
+          "selector_score": 0.0123337805271,
+          "mean_abs_delta": 0.00601427753766,
+          "max_abs_delta": 0.0123337805271,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.3333333333333333
+        },
+        {
+          "module_name": "base_model.model.model.layers.31.mlp.gate_proj",
+          "module_short": "layers.31.mlp.gate_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "gate_proj",
+          "layer_idx": 31.0,
+          "selector_score": 0.00929999351501,
+          "mean_abs_delta": 0.0042029519875823,
+          "max_abs_delta": 0.00929999351501,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        }
+      ],
+      "model_name": "meta-llama/Llama-3.1-8B"
+    }
+  ],
+  "notes": [
+    "This file intentionally uses the H8 candidate schema so run_lora_precision.py can execute H10 policies.",
+    "The runner ignores selector metadata and consumes only policy_name and rescue_modules."
+  ]
+}

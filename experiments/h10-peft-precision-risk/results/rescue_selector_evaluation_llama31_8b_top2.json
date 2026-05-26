@@ -1,0 +1,283 @@
+{
+  "input": "experiments/h10-peft-precision-risk/results/seed_aggregated_precision_dataset.csv",
+  "model_name": "meta-llama/Llama-3.1-8B",
+  "top_k": 2,
+  "candidate_filter": "projection modules only",
+  "train_models_for_cross_model_predictor": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B"
+  ],
+  "n_target_module_rows": 14,
+  "n_projection_candidates": 10,
+  "n_unsafe_projection_candidates": 3,
+  "selectors": [
+    {
+      "selector": "oracle_perturbation_upper_bound",
+      "score_column": "score_oracle_max_delta",
+      "module_names": [
+        "base_model.model.model.layers.31.mlp.up_proj",
+        "base_model.model.model.layers.31.mlp.gate_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.31.mlp.up_proj",
+          "module_short": "layers.31.mlp.up_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "up_proj",
+          "layer_idx": 31.0,
+          "selector_score": 0.0123337805271,
+          "mean_abs_delta": 0.00601427753766,
+          "max_abs_delta": 0.0123337805271,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.3333333333333333
+        },
+        {
+          "module_name": "base_model.model.model.layers.31.mlp.gate_proj",
+          "module_short": "layers.31.mlp.gate_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "gate_proj",
+          "layer_idx": 31.0,
+          "selector_score": 0.00929999351501,
+          "mean_abs_delta": 0.0042029519875823,
+          "max_abs_delta": 0.00929999351501,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        }
+      ],
+      "k": 2,
+      "captured_unsafe_count": 2,
+      "total_unsafe_projection_count": 3,
+      "unsafe_precision_at_k": 1.0,
+      "unsafe_recall_at_k": 0.6666666666666666,
+      "captured_max_abs_delta_sum": 0.021633774042109997,
+      "captured_mean_abs_delta_sum": 0.010217229525242299,
+      "selected_max_abs_delta_max": 0.0123337805271
+    },
+    {
+      "selector": "activation_outlier_rescue",
+      "score_column": "score_activation_outlier",
+      "module_names": [
+        "base_model.model.model.layers.28.mlp.down_proj",
+        "base_model.model.model.layers.30.self_attn.o_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.28.mlp.down_proj",
+          "module_short": "layers.28.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 28.0,
+          "selector_score": 182.958572388,
+          "mean_abs_delta": 0.0013767977555566,
+          "max_abs_delta": 0.00249549746513,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.30.self_attn.o_proj",
+          "module_short": "layers.30.self_attn.o_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "o_proj",
+          "layer_idx": 30.0,
+          "selector_score": 142.097732544,
+          "mean_abs_delta": 0.0012223819891603,
+          "max_abs_delta": 0.00173416733742,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        }
+      ],
+      "k": 2,
+      "captured_unsafe_count": 0,
+      "total_unsafe_projection_count": 3,
+      "unsafe_precision_at_k": 0.0,
+      "unsafe_recall_at_k": 0.0,
+      "captured_max_abs_delta_sum": 0.00422966480255,
+      "captured_mean_abs_delta_sum": 0.0025991797447169,
+      "selected_max_abs_delta_max": 0.00249549746513
+    },
+    {
+      "selector": "int8_mse_rescue",
+      "score_column": "score_int8_mse",
+      "module_names": [
+        "base_model.model.model.layers.30.self_attn.o_proj",
+        "base_model.model.model.layers.28.mlp.down_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.30.self_attn.o_proj",
+          "module_short": "layers.30.self_attn.o_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "o_proj",
+          "layer_idx": 30.0,
+          "selector_score": 0.077957585454,
+          "mean_abs_delta": 0.0012223819891603,
+          "max_abs_delta": 0.00173416733742,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.28.mlp.down_proj",
+          "module_short": "layers.28.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 28.0,
+          "selector_score": 0.049912589835,
+          "mean_abs_delta": 0.0013767977555566,
+          "max_abs_delta": 0.00249549746513,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        }
+      ],
+      "k": 2,
+      "captured_unsafe_count": 0,
+      "total_unsafe_projection_count": 3,
+      "unsafe_precision_at_k": 0.0,
+      "unsafe_recall_at_k": 0.0,
+      "captured_max_abs_delta_sum": 0.00422966480255,
+      "captured_mean_abs_delta_sum": 0.0025991797447169,
+      "selected_max_abs_delta_max": 0.00249549746513
+    },
+    {
+      "selector": "role_prior_rescue",
+      "score_column": "_role_prior_score",
+      "module_names": [
+        "base_model.model.model.layers.2.mlp.down_proj",
+        "base_model.model.model.layers.3.mlp.down_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": -0.000645161290323,
+          "mean_abs_delta": 0.0031848649183909,
+          "max_abs_delta": 0.0056254863739,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+          "module_short": "layers.3.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 3.0,
+          "selector_score": -0.000967741935484,
+          "mean_abs_delta": 0.0008325179417943,
+          "max_abs_delta": 0.00106200575829,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        }
+      ],
+      "k": 2,
+      "captured_unsafe_count": 1,
+      "total_unsafe_projection_count": 3,
+      "unsafe_precision_at_k": 0.5,
+      "unsafe_recall_at_k": 0.3333333333333333,
+      "captured_max_abs_delta_sum": 0.00668749213219,
+      "captured_mean_abs_delta_sum": 0.0040173828601852,
+      "selected_max_abs_delta_max": 0.0056254863739
+    },
+    {
+      "selector": "cross_model_logistic_unsafe",
+      "score_column": "score_cross_model_logistic_unsafe",
+      "module_names": [
+        "base_model.model.model.layers.2.mlp.down_proj",
+        "base_model.model.model.layers.3.mlp.down_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.977441686254814,
+          "mean_abs_delta": 0.0031848649183909,
+          "max_abs_delta": 0.0056254863739,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+          "module_short": "layers.3.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 3.0,
+          "selector_score": 0.9455238024585232,
+          "mean_abs_delta": 0.0008325179417943,
+          "max_abs_delta": 0.00106200575829,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        }
+      ],
+      "k": 2,
+      "captured_unsafe_count": 1,
+      "total_unsafe_projection_count": 3,
+      "unsafe_precision_at_k": 0.5,
+      "unsafe_recall_at_k": 0.3333333333333333,
+      "captured_max_abs_delta_sum": 0.00668749213219,
+      "captured_mean_abs_delta_sum": 0.0040173828601852,
+      "selected_max_abs_delta_max": 0.0056254863739
+    },
+    {
+      "selector": "cross_model_ridge",
+      "score_column": "score_cross_model_ridge",
+      "module_names": [
+        "base_model.model.model.layers.30.self_attn.o_proj",
+        "base_model.model.model.layers.2.mlp.down_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.30.self_attn.o_proj",
+          "module_short": "layers.30.self_attn.o_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "o_proj",
+          "layer_idx": 30.0,
+          "selector_score": 0.08520460092777299,
+          "mean_abs_delta": 0.0012223819891603,
+          "max_abs_delta": 0.00173416733742,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.08216352394878668,
+          "mean_abs_delta": 0.0031848649183909,
+          "max_abs_delta": 0.0056254863739,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        }
+      ],
+      "k": 2,
+      "captured_unsafe_count": 1,
+      "total_unsafe_projection_count": 3,
+      "unsafe_precision_at_k": 0.5,
+      "unsafe_recall_at_k": 0.3333333333333333,
+      "captured_max_abs_delta_sum": 0.00735965371132,
+      "captured_mean_abs_delta_sum": 0.0044072469075512,
+      "selected_max_abs_delta_max": 0.0056254863739
+    }
+  ],
+  "random_baseline": {
+    "selector": "random_rescue",
+    "k": 2,
+    "trials": 1000,
+    "captured_unsafe_count_mean": 0.587,
+    "captured_unsafe_count_p05": 0.0,
+    "captured_unsafe_count_p95": 2.0,
+    "captured_max_abs_delta_sum_mean": 0.00929643419384723,
+    "captured_max_abs_delta_sum_p05": 0.00292798876763,
+    "captured_max_abs_delta_sum_p95": 0.01691263914107
+  },
+  "notes": [
+    "Oracle perturbation uses target max_abs_delta and is an upper-bound diagnostic, not a deployable predictor.",
+    "Cross-model predictors train only on non-target model rows and use target calibration features.",
+    "Selector quality is a proxy; GPU training is still required for final PEFT quality and memory claims."
+  ]
+}
