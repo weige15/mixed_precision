@@ -111,10 +111,13 @@ Run long-context-specific prompt-logprob quality scoring for H9.2:
 
 ```bash
 for p in bf16_default fp16_default bf16_kv_fp8_e4m3 fp16_kv_fp8_e4m3 bf16_kv_fp8 fp16_kv_fp8; do
-  CUDA_VISIBLE_DEVICES=0 python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_quality.py \
+  PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True CUDA_VISIBLE_DEVICES=0 \
+  python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_quality.py \
     --policies experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_policy_candidates.json \
     --output-dir experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality \
     --policy-name "$p" \
+    --quality-batch-size 1 \
+    --gpu-memory-utilization 0.78 \
     --hardware-label rtx3090-lab
 done
 ```

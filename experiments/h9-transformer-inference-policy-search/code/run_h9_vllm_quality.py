@@ -27,6 +27,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--hardware-label", default=os.environ.get("HARDWARE_LABEL", "unknown"))
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--quality-batch-size",
+        type=int,
+        default=1,
+        help="Number of prompts to score per vLLM generate call. Use 1 for long-context prompt-logprob scoring.",
+    )
+    parser.add_argument(
+        "--gpu-memory-utilization",
+        type=float,
+        default=None,
+        help="Override the policy gpu_memory_utilization for quality scoring.",
+    )
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args()
 
@@ -94,6 +106,13 @@ def prompt_nll(request_outputs: list[Any]) -> dict[str, Any]:
     }
 
 
+def prompt_batches(prompts: list[str], batch_size: int) -> list[list[tuple[int, str]]]:
+    if batch_size < 1:
+        raise SystemExit("--quality-batch-size must be >= 1")
+    indexed = list(enumerate(prompts))
+    return [indexed[idx : idx + batch_size] for idx in range(0, len(indexed), batch_size)]
+
+
 def cleanup_cuda() -> None:
     try:
         import torch
@@ -144,11 +163,13 @@ def run_policy(grid: dict[str, Any], policy: dict[str, Any], args: argparse.Name
         "hardware_label": args.hardware_label,
         "seed": args.seed,
         "num_prompts": len(prompts),
+        "quality_batch_size": args.quality_batch_size,
+        "gpu_memory_utilization_override": args.gpu_memory_utilization,
         "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
     }
     if args.dry_run:
         payload["status"] = "dry_run"
-        payload["prompts"] = prompts
+        payload["prompts"] = [{"index": idx, "chars": len(prompt), "text": prompt} for idx, prompt in enumerate(prompts)]
         return payload
     if policy.get("llm_kwargs", {}).get("quantization") == "torchao" and "torchao_config" not in policy.get("llm_kwargs", {}):
         payload["status"] = "failed"
@@ -165,14 +186,41 @@ def run_policy(grid: dict[str, Any], policy: dict[str, Any], args: argparse.Name
     try:
         llm_kwargs = dict(policy.get("llm_kwargs", {}))
         llm_kwargs["seed"] = args.seed
+        if args.gpu_memory_utilization is not None:
+            llm_kwargs["gpu_memory_utilization"] = args.gpu_memory_utilization
         load_start = time.perf_counter()
         llm = LLM(model=grid["model_name"], **llm_kwargs)
         payload["load_time_sec"] = time.perf_counter() - load_start
         sampling_params = SamplingParams(temperature=0.0, max_tokens=1, prompt_logprobs=1, seed=args.seed)
         start = time.perf_counter()
-        outputs = llm.generate(prompts, sampling_params)
+        total_nll = 0.0
+        total_scored = 0
+        total_missing = 0
+        prompt_results = []
+        for batch in prompt_batches(prompts, args.quality_batch_size):
+            batch_indices = [idx for idx, _ in batch]
+            batch_prompts = [prompt for _, prompt in batch]
+            batch_start = time.perf_counter()
+            outputs = llm.generate(batch_prompts, sampling_params)
+            batch_stats = prompt_nll(outputs)
+            scored = int(batch_stats["tokens_scored"])
+            if scored and batch_stats["mean_prompt_nll"] is not None:
+                total_nll += float(batch_stats["mean_prompt_nll"]) * scored
+            total_scored += scored
+            total_missing += int(batch_stats["tokens_missing_logprob"])
+            prompt_results.append(
+                {
+                    "prompt_indices": batch_indices,
+                    "prompt_chars": [len(prompt) for prompt in batch_prompts],
+                    "quality_time_sec": time.perf_counter() - batch_start,
+                    **batch_stats,
+                }
+            )
         payload["quality_time_sec"] = time.perf_counter() - start
-        payload.update(prompt_nll(outputs))
+        payload["prompt_results"] = prompt_results
+        payload["mean_prompt_nll"] = total_nll / total_scored if total_scored else None
+        payload["tokens_scored"] = total_scored
+        payload["tokens_missing_logprob"] = total_missing
         payload["status"] = "completed"
         del llm
         cleanup_cuda()
