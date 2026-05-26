@@ -1,0 +1,687 @@
+{
+  "source": "experiments/h10-peft-precision-risk/results/h10_rescue_policy_candidates_llama31_8b.json",
+  "model_filters": [
+    "meta-llama/Llama-3.1-8B"
+  ],
+  "topk": 4,
+  "models": [
+    {
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "status": "candidate_ready",
+      "n_candidate_policies": 5,
+      "candidate_policies": [
+        {
+          "policy_name": "h10_oracle_perturbation_top4",
+          "source_selector": "oracle_perturbation_upper_bound",
+          "base_backend": "qlora_4bit_nf4",
+          "policy_type": "selective_rescue_from_low_bit",
+          "rescue_precision": "bf16_or_fp32_backend_dependent",
+          "rescue_modules": [
+            "base_model.model.model.layers.31.mlp.up_proj",
+            "base_model.model.model.layers.31.mlp.gate_proj",
+            "base_model.model.model.layers.2.mlp.down_proj",
+            "base_model.model.model.layers.30.mlp.gate_proj"
+          ],
+          "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+          "backend_feasibility": "unverified_until_setup_only_smoke",
+          "expected_effect": "quality rescue with possible memory/dispatch overhead",
+          "selector_modules": [
+            {
+              "module_name": "base_model.model.model.layers.31.mlp.up_proj",
+              "module_short": "layers.31.mlp.up_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "up_proj",
+              "layer_idx": 31.0,
+              "selector_score": 0.0123337805271,
+              "mean_abs_delta": 0.00601427753766,
+              "max_abs_delta": 0.0123337805271,
+              "safe_all_seeds": 0,
+              "safe_rate": 0.3333333333333333
+            },
+            {
+              "module_name": "base_model.model.model.layers.31.mlp.gate_proj",
+              "module_short": "layers.31.mlp.gate_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "gate_proj",
+              "layer_idx": 31.0,
+              "selector_score": 0.00929999351501,
+              "mean_abs_delta": 0.0042029519875823,
+              "max_abs_delta": 0.00929999351501,
+              "safe_all_seeds": 0,
+              "safe_rate": 0.6666666666666666
+            },
+            {
+              "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+              "module_short": "layers.2.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 2.0,
+              "selector_score": 0.0056254863739,
+              "mean_abs_delta": 0.0031848649183909,
+              "max_abs_delta": 0.0056254863739,
+              "safe_all_seeds": 0,
+              "safe_rate": 0.6666666666666666
+            },
+            {
+              "module_name": "base_model.model.model.layers.30.mlp.gate_proj",
+              "module_short": "layers.30.mlp.gate_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "gate_proj",
+              "layer_idx": 30.0,
+              "selector_score": 0.00457885861397,
+              "mean_abs_delta": 0.0021509130795806,
+              "max_abs_delta": 0.00457885861397,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            }
+          ]
+        },
+        {
+          "policy_name": "h10_activation_outlier_top4",
+          "source_selector": "activation_outlier_rescue",
+          "base_backend": "qlora_4bit_nf4",
+          "policy_type": "selective_rescue_from_low_bit",
+          "rescue_precision": "bf16_or_fp32_backend_dependent",
+          "rescue_modules": [
+            "base_model.model.model.layers.28.mlp.down_proj",
+            "base_model.model.model.layers.30.self_attn.o_proj",
+            "base_model.model.model.layers.2.mlp.down_proj",
+            "base_model.model.model.layers.3.mlp.down_proj"
+          ],
+          "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+          "backend_feasibility": "unverified_until_setup_only_smoke",
+          "expected_effect": "quality rescue with possible memory/dispatch overhead",
+          "selector_modules": [
+            {
+              "module_name": "base_model.model.model.layers.28.mlp.down_proj",
+              "module_short": "layers.28.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 28.0,
+              "selector_score": 182.958572388,
+              "mean_abs_delta": 0.0013767977555566,
+              "max_abs_delta": 0.00249549746513,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            },
+            {
+              "module_name": "base_model.model.model.layers.30.self_attn.o_proj",
+              "module_short": "layers.30.self_attn.o_proj",
+              "module_role": "attention_projection",
+              "module_leaf": "o_proj",
+              "layer_idx": 30.0,
+              "selector_score": 142.097732544,
+              "mean_abs_delta": 0.0012223819891603,
+              "max_abs_delta": 0.00173416733742,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            },
+            {
+              "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+              "module_short": "layers.2.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 2.0,
+              "selector_score": 122.376045227,
+              "mean_abs_delta": 0.0031848649183909,
+              "max_abs_delta": 0.0056254863739,
+              "safe_all_seeds": 0,
+              "safe_rate": 0.6666666666666666
+            },
+            {
+              "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+              "module_short": "layers.3.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 3.0,
+              "selector_score": 97.9583282471,
+              "mean_abs_delta": 0.0008325179417943,
+              "max_abs_delta": 0.00106200575829,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            }
+          ]
+        },
+        {
+          "policy_name": "h10_role_prior_top4",
+          "source_selector": "role_prior_rescue",
+          "base_backend": "qlora_4bit_nf4",
+          "policy_type": "selective_rescue_from_low_bit",
+          "rescue_precision": "bf16_or_fp32_backend_dependent",
+          "rescue_modules": [
+            "base_model.model.model.layers.2.mlp.down_proj",
+            "base_model.model.model.layers.3.mlp.down_proj",
+            "base_model.model.model.layers.28.mlp.down_proj",
+            "base_model.model.model.layers.2.self_attn.o_proj"
+          ],
+          "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+          "backend_feasibility": "unverified_until_setup_only_smoke",
+          "expected_effect": "quality rescue with possible memory/dispatch overhead",
+          "selector_modules": [
+            {
+              "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+              "module_short": "layers.2.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 2.0,
+              "selector_score": -0.000645161290323,
+              "mean_abs_delta": 0.0031848649183909,
+              "max_abs_delta": 0.0056254863739,
+              "safe_all_seeds": 0,
+              "safe_rate": 0.6666666666666666
+            },
+            {
+              "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+              "module_short": "layers.3.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 3.0,
+              "selector_score": -0.000967741935484,
+              "mean_abs_delta": 0.0008325179417943,
+              "max_abs_delta": 0.00106200575829,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            },
+            {
+              "module_name": "base_model.model.model.layers.28.mlp.down_proj",
+              "module_short": "layers.28.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 28.0,
+              "selector_score": -0.00903225806452,
+              "mean_abs_delta": 0.0013767977555566,
+              "max_abs_delta": 0.00249549746513,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            },
+            {
+              "module_name": "base_model.model.model.layers.2.self_attn.o_proj",
+              "module_short": "layers.2.self_attn.o_proj",
+              "module_role": "attention_projection",
+              "module_leaf": "o_proj",
+              "layer_idx": 2.0,
+              "selector_score": -1.000645161290323,
+              "mean_abs_delta": 0.00291258096695,
+              "max_abs_delta": 0.0040619969368,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            }
+          ]
+        },
+        {
+          "policy_name": "h10_cross_model_logistic_unsafe",
+          "source_selector": "cross_model_logistic_unsafe",
+          "base_backend": "qlora_4bit_nf4",
+          "policy_type": "selective_rescue_from_low_bit",
+          "rescue_precision": "bf16_or_fp32_backend_dependent",
+          "rescue_modules": [
+            "base_model.model.model.layers.2.mlp.down_proj",
+            "base_model.model.model.layers.3.mlp.down_proj",
+            "base_model.model.model.layers.2.self_attn.o_proj",
+            "base_model.model.model.layers.28.mlp.down_proj"
+          ],
+          "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+          "backend_feasibility": "unverified_until_setup_only_smoke",
+          "expected_effect": "quality rescue with possible memory/dispatch overhead",
+          "selector_modules": [
+            {
+              "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+              "module_short": "layers.2.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 2.0,
+              "selector_score": 0.977441686254814,
+              "mean_abs_delta": 0.0031848649183909,
+              "max_abs_delta": 0.0056254863739,
+              "safe_all_seeds": 0,
+              "safe_rate": 0.6666666666666666
+            },
+            {
+              "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+              "module_short": "layers.3.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 3.0,
+              "selector_score": 0.9455238024585233,
+              "mean_abs_delta": 0.0008325179417943,
+              "max_abs_delta": 0.00106200575829,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            },
+            {
+              "module_name": "base_model.model.model.layers.2.self_attn.o_proj",
+              "module_short": "layers.2.self_attn.o_proj",
+              "module_role": "attention_projection",
+              "module_leaf": "o_proj",
+              "layer_idx": 2.0,
+              "selector_score": 0.7984525753640381,
+              "mean_abs_delta": 0.00291258096695,
+              "max_abs_delta": 0.0040619969368,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            },
+            {
+              "module_name": "base_model.model.model.layers.28.mlp.down_proj",
+              "module_short": "layers.28.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 28.0,
+              "selector_score": 0.6814111931901378,
+              "mean_abs_delta": 0.0013767977555566,
+              "max_abs_delta": 0.00249549746513,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            }
+          ]
+        },
+        {
+          "policy_name": "h10_cross_model_ridge",
+          "source_selector": "cross_model_ridge",
+          "base_backend": "qlora_4bit_nf4",
+          "policy_type": "selective_rescue_from_low_bit",
+          "rescue_precision": "bf16_or_fp32_backend_dependent",
+          "rescue_modules": [
+            "base_model.model.model.layers.30.self_attn.o_proj",
+            "base_model.model.model.layers.2.mlp.down_proj",
+            "base_model.model.model.layers.28.mlp.down_proj",
+            "base_model.model.model.layers.30.self_attn.q_proj"
+          ],
+          "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+          "backend_feasibility": "unverified_until_setup_only_smoke",
+          "expected_effect": "quality rescue with possible memory/dispatch overhead",
+          "selector_modules": [
+            {
+              "module_name": "base_model.model.model.layers.30.self_attn.o_proj",
+              "module_short": "layers.30.self_attn.o_proj",
+              "module_role": "attention_projection",
+              "module_leaf": "o_proj",
+              "layer_idx": 30.0,
+              "selector_score": 0.08520460092777289,
+              "mean_abs_delta": 0.0012223819891603,
+              "max_abs_delta": 0.00173416733742,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            },
+            {
+              "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+              "module_short": "layers.2.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 2.0,
+              "selector_score": 0.08216352394878686,
+              "mean_abs_delta": 0.0031848649183909,
+              "max_abs_delta": 0.0056254863739,
+              "safe_all_seeds": 0,
+              "safe_rate": 0.6666666666666666
+            },
+            {
+              "module_name": "base_model.model.model.layers.28.mlp.down_proj",
+              "module_short": "layers.28.mlp.down_proj",
+              "module_role": "mlp_projection",
+              "module_leaf": "down_proj",
+              "layer_idx": 28.0,
+              "selector_score": 0.07981568222927557,
+              "mean_abs_delta": 0.0013767977555566,
+              "max_abs_delta": 0.00249549746513,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            },
+            {
+              "module_name": "base_model.model.model.layers.30.self_attn.q_proj",
+              "module_short": "layers.30.self_attn.q_proj",
+              "module_role": "attention_projection",
+              "module_leaf": "q_proj",
+              "layer_idx": 30.0,
+              "selector_score": 0.01288099573746291,
+              "mean_abs_delta": 0.0007645090421046,
+              "max_abs_delta": 0.00186598300934,
+              "safe_all_seeds": 1,
+              "safe_rate": 1.0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "candidate_policies_flat": [
+    {
+      "policy_name": "h10_oracle_perturbation_top4",
+      "source_selector": "oracle_perturbation_upper_bound",
+      "base_backend": "qlora_4bit_nf4",
+      "policy_type": "selective_rescue_from_low_bit",
+      "rescue_precision": "bf16_or_fp32_backend_dependent",
+      "rescue_modules": [
+        "base_model.model.model.layers.31.mlp.up_proj",
+        "base_model.model.model.layers.31.mlp.gate_proj",
+        "base_model.model.model.layers.2.mlp.down_proj",
+        "base_model.model.model.layers.30.mlp.gate_proj"
+      ],
+      "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+      "backend_feasibility": "unverified_until_setup_only_smoke",
+      "expected_effect": "quality rescue with possible memory/dispatch overhead",
+      "selector_modules": [
+        {
+          "module_name": "base_model.model.model.layers.31.mlp.up_proj",
+          "module_short": "layers.31.mlp.up_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "up_proj",
+          "layer_idx": 31.0,
+          "selector_score": 0.0123337805271,
+          "mean_abs_delta": 0.00601427753766,
+          "max_abs_delta": 0.0123337805271,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.3333333333333333
+        },
+        {
+          "module_name": "base_model.model.model.layers.31.mlp.gate_proj",
+          "module_short": "layers.31.mlp.gate_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "gate_proj",
+          "layer_idx": 31.0,
+          "selector_score": 0.00929999351501,
+          "mean_abs_delta": 0.0042029519875823,
+          "max_abs_delta": 0.00929999351501,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.0056254863739,
+          "mean_abs_delta": 0.0031848649183909,
+          "max_abs_delta": 0.0056254863739,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.30.mlp.gate_proj",
+          "module_short": "layers.30.mlp.gate_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "gate_proj",
+          "layer_idx": 30.0,
+          "selector_score": 0.00457885861397,
+          "mean_abs_delta": 0.0021509130795806,
+          "max_abs_delta": 0.00457885861397,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        }
+      ],
+      "model_name": "meta-llama/Llama-3.1-8B"
+    },
+    {
+      "policy_name": "h10_activation_outlier_top4",
+      "source_selector": "activation_outlier_rescue",
+      "base_backend": "qlora_4bit_nf4",
+      "policy_type": "selective_rescue_from_low_bit",
+      "rescue_precision": "bf16_or_fp32_backend_dependent",
+      "rescue_modules": [
+        "base_model.model.model.layers.28.mlp.down_proj",
+        "base_model.model.model.layers.30.self_attn.o_proj",
+        "base_model.model.model.layers.2.mlp.down_proj",
+        "base_model.model.model.layers.3.mlp.down_proj"
+      ],
+      "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+      "backend_feasibility": "unverified_until_setup_only_smoke",
+      "expected_effect": "quality rescue with possible memory/dispatch overhead",
+      "selector_modules": [
+        {
+          "module_name": "base_model.model.model.layers.28.mlp.down_proj",
+          "module_short": "layers.28.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 28.0,
+          "selector_score": 182.958572388,
+          "mean_abs_delta": 0.0013767977555566,
+          "max_abs_delta": 0.00249549746513,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.30.self_attn.o_proj",
+          "module_short": "layers.30.self_attn.o_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "o_proj",
+          "layer_idx": 30.0,
+          "selector_score": 142.097732544,
+          "mean_abs_delta": 0.0012223819891603,
+          "max_abs_delta": 0.00173416733742,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": 122.376045227,
+          "mean_abs_delta": 0.0031848649183909,
+          "max_abs_delta": 0.0056254863739,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+          "module_short": "layers.3.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 3.0,
+          "selector_score": 97.9583282471,
+          "mean_abs_delta": 0.0008325179417943,
+          "max_abs_delta": 0.00106200575829,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        }
+      ],
+      "model_name": "meta-llama/Llama-3.1-8B"
+    },
+    {
+      "policy_name": "h10_role_prior_top4",
+      "source_selector": "role_prior_rescue",
+      "base_backend": "qlora_4bit_nf4",
+      "policy_type": "selective_rescue_from_low_bit",
+      "rescue_precision": "bf16_or_fp32_backend_dependent",
+      "rescue_modules": [
+        "base_model.model.model.layers.2.mlp.down_proj",
+        "base_model.model.model.layers.3.mlp.down_proj",
+        "base_model.model.model.layers.28.mlp.down_proj",
+        "base_model.model.model.layers.2.self_attn.o_proj"
+      ],
+      "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+      "backend_feasibility": "unverified_until_setup_only_smoke",
+      "expected_effect": "quality rescue with possible memory/dispatch overhead",
+      "selector_modules": [
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": -0.000645161290323,
+          "mean_abs_delta": 0.0031848649183909,
+          "max_abs_delta": 0.0056254863739,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+          "module_short": "layers.3.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 3.0,
+          "selector_score": -0.000967741935484,
+          "mean_abs_delta": 0.0008325179417943,
+          "max_abs_delta": 0.00106200575829,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.28.mlp.down_proj",
+          "module_short": "layers.28.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 28.0,
+          "selector_score": -0.00903225806452,
+          "mean_abs_delta": 0.0013767977555566,
+          "max_abs_delta": 0.00249549746513,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.self_attn.o_proj",
+          "module_short": "layers.2.self_attn.o_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "o_proj",
+          "layer_idx": 2.0,
+          "selector_score": -1.000645161290323,
+          "mean_abs_delta": 0.00291258096695,
+          "max_abs_delta": 0.0040619969368,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        }
+      ],
+      "model_name": "meta-llama/Llama-3.1-8B"
+    },
+    {
+      "policy_name": "h10_cross_model_logistic_unsafe",
+      "source_selector": "cross_model_logistic_unsafe",
+      "base_backend": "qlora_4bit_nf4",
+      "policy_type": "selective_rescue_from_low_bit",
+      "rescue_precision": "bf16_or_fp32_backend_dependent",
+      "rescue_modules": [
+        "base_model.model.model.layers.2.mlp.down_proj",
+        "base_model.model.model.layers.3.mlp.down_proj",
+        "base_model.model.model.layers.2.self_attn.o_proj",
+        "base_model.model.model.layers.28.mlp.down_proj"
+      ],
+      "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+      "backend_feasibility": "unverified_until_setup_only_smoke",
+      "expected_effect": "quality rescue with possible memory/dispatch overhead",
+      "selector_modules": [
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.977441686254814,
+          "mean_abs_delta": 0.0031848649183909,
+          "max_abs_delta": 0.0056254863739,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+          "module_short": "layers.3.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 3.0,
+          "selector_score": 0.9455238024585233,
+          "mean_abs_delta": 0.0008325179417943,
+          "max_abs_delta": 0.00106200575829,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.self_attn.o_proj",
+          "module_short": "layers.2.self_attn.o_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "o_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.7984525753640381,
+          "mean_abs_delta": 0.00291258096695,
+          "max_abs_delta": 0.0040619969368,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.28.mlp.down_proj",
+          "module_short": "layers.28.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 28.0,
+          "selector_score": 0.6814111931901378,
+          "mean_abs_delta": 0.0013767977555566,
+          "max_abs_delta": 0.00249549746513,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        }
+      ],
+      "model_name": "meta-llama/Llama-3.1-8B"
+    },
+    {
+      "policy_name": "h10_cross_model_ridge",
+      "source_selector": "cross_model_ridge",
+      "base_backend": "qlora_4bit_nf4",
+      "policy_type": "selective_rescue_from_low_bit",
+      "rescue_precision": "bf16_or_fp32_backend_dependent",
+      "rescue_modules": [
+        "base_model.model.model.layers.30.self_attn.o_proj",
+        "base_model.model.model.layers.2.mlp.down_proj",
+        "base_model.model.model.layers.28.mlp.down_proj",
+        "base_model.model.model.layers.30.self_attn.q_proj"
+      ],
+      "rationale": "H10 selector policy exported for the existing H8 selective-rescue runner. Use oracle policies only as perturbation-informed upper-bound controls.",
+      "backend_feasibility": "unverified_until_setup_only_smoke",
+      "expected_effect": "quality rescue with possible memory/dispatch overhead",
+      "selector_modules": [
+        {
+          "module_name": "base_model.model.model.layers.30.self_attn.o_proj",
+          "module_short": "layers.30.self_attn.o_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "o_proj",
+          "layer_idx": 30.0,
+          "selector_score": 0.08520460092777289,
+          "mean_abs_delta": 0.0012223819891603,
+          "max_abs_delta": 0.00173416733742,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.08216352394878686,
+          "mean_abs_delta": 0.0031848649183909,
+          "max_abs_delta": 0.0056254863739,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.28.mlp.down_proj",
+          "module_short": "layers.28.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 28.0,
+          "selector_score": 0.07981568222927557,
+          "mean_abs_delta": 0.0013767977555566,
+          "max_abs_delta": 0.00249549746513,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.30.self_attn.q_proj",
+          "module_short": "layers.30.self_attn.q_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "q_proj",
+          "layer_idx": 30.0,
+          "selector_score": 0.01288099573746291,
+          "mean_abs_delta": 0.0007645090421046,
+          "max_abs_delta": 0.00186598300934,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        }
+      ],
+      "model_name": "meta-llama/Llama-3.1-8B"
+    }
+  ],
+  "notes": [
+    "This file intentionally uses the H8 candidate schema so run_lora_precision.py can execute H10 policies.",
+    "The runner ignores selector metadata and consumes only policy_name and rescue_modules."
+  ]
+}

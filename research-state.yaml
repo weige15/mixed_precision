@@ -806,11 +806,21 @@ experiments:
       wall_time_sec: null
       change_summary: "Created a human-facing H10 progress memo that summarizes the HAQ-for-PEFT method, H8 memory-quality evidence, generated action table, selector-aware planning result, claim boundary, and next step."
       artifact: "to_human/h10-haq-peft-progress-2026-05-27.md"
+    - experiment_id: "h10_paper_draft_integration_2026_05_27"
+      hypothesis: "H10"
+      type: "writeup"
+      metric_value: 1
+      metric_name: "paper_draft_updated"
+      baseline: null
+      delta: null
+      wall_time_sec: null
+      change_summary: "Integrated H10 into the main paper draft by adding backend-aware assignment as a method stage, adding H8/H10 selective rescue results, and clarifying that target perturbation-guided rescue is the current defensible HAQ-for-PEFT method while pure learned predictors remain extensions."
+      artifact: "paper/calibration_guided_precision_assignment_draft.md"
 
 outer_loop:
-  cycle: 26
+  cycle: 27
   last_direction: "formalize H10 HAQ-for-PEFT assignment"
-  last_reflection: "H10 now connects backend cost to selector-specific rescue candidates, and a human-facing progress memo is available in to_human. The current defensible method is target perturbation-guided selective rescue from QLoRA/NF4. Cheap selectors and cross-model predictors should be reported as baselines/extensions because they recover only one of three unsafe Llama projection candidates at k=4. The next useful step is either real GPU validation of the perturbation-selected rescue set or paper-method writing."
+  last_reflection: "H10 now connects backend cost to selector-specific rescue candidates, has a human-facing progress memo, and is integrated into the main paper draft as a method/results component. The current defensible method is target perturbation-guided selective rescue from QLoRA/NF4. Cheap selectors and cross-model predictors should be reported as baselines/extensions because they recover only one of three unsafe Llama projection candidates at k=4. The next useful step is real GPU validation of the perturbation-selected rescue set if compute is available; otherwise continue paper refinement and citation verification."
 
 workspace:
   findings: "findings.md"
