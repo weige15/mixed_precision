@@ -3,9 +3,46 @@
   "baseline_policy": "bf16_default",
   "n_artifacts": 6,
   "n_completed_policy_workloads": 0,
-  "n_failed_policies": 0,
+  "n_failed_policies": 6,
   "n_quality_artifacts": 7,
   "completed": [],
-  "failures": [],
+  "failures": [
+    {
+      "policy_name": "bf16_default",
+      "hardware_label": "rtx3090-lab",
+      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_default/benchmark.json"
+    },
+    {
+      "policy_name": "bf16_kv_fp8",
+      "hardware_label": "rtx3090-lab",
+      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_kv_fp8/benchmark.json"
+    },
+    {
+      "policy_name": "bf16_kv_fp8_e4m3",
+      "hardware_label": "rtx3090-lab",
+      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_kv_fp8_e4m3/benchmark.json"
+    },
+    {
+      "policy_name": "fp16_default",
+      "hardware_label": "rtx3090-lab",
+      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_default/benchmark.json"
+    },
+    {
+      "policy_name": "fp16_kv_fp8",
+      "hardware_label": "rtx3090-lab",
+      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_kv_fp8/benchmark.json"
+    },
+    {
+      "policy_name": "fp16_kv_fp8_e4m3",
+      "hardware_label": "rtx3090-lab",
+      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_kv_fp8_e4m3/benchmark.json"
+    }
+  ],
   "note": "Quality metrics are included when quality artifacts exist. Pareto marking uses latency, output throughput, and memory; memory falls back to cuda mem_get_info used GiB when PyTorch allocator stats do not capture vLLM worker allocations."
 }
