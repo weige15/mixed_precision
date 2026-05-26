@@ -121,3 +121,61 @@ The dry-run benchmark plan was generated successfully under:
 No H9.2 runtime evidence exists yet. The next empirical step is to run the six
 policies one process at a time on the RTX 3090, then summarize with
 `h9_2_long_context_summary.json`.
+
+## 2026-05-26 H9.2 Long-Context RTX 3090 Results
+
+The H9.2 benchmark pass completed for all six focused policies on the lab RTX
+3090:
+
+- 6 policy artifacts
+- 18 completed policy-workload rows
+- 0 failed policies
+- 3 repeats per policy-workload
+
+The workloads are long-context stress tests rather than the shorter H9.1 suite:
+
+- `prefill_4k`: 3542 prompt tokens, 16 generated tokens.
+- `decode_2k_context`: long prompt, 128 generated tokens.
+- `batch_mixed_long`: four long prompts, 64 generated tokens each.
+
+The main result is negative for the original FP8 KV-cache memory hypothesis.
+Even under longer-context pressure, every FP8 KV-cache policy used about
+`22.678 GiB`, while the default KV-cache policies used about `21.879-21.881
+GiB`. That is a measured memory increase of about `+3.6%`, not a memory saving.
+
+H9.2 benchmark summary:
+
+| Workload | Best/important policy | Latency delta vs `bf16_default` | Memory delta | Interpretation |
+|---|---|---:|---:|---|
+| `batch_mixed_long` | `fp16_kv_fp8` | -2.06% | +3.64% | Fastest batch-long policy, but memory-costly. |
+| `batch_mixed_long` | `fp16_default` | -0.43% | +0.00% | Clean small win with no memory cost. |
+| `decode_2k_context` | `bf16_default` | 0.00% | +0.00% | Best decode-context baseline; FP8 KV variants are slower and larger. |
+| `prefill_4k` | `bf16_kv_fp8_e4m3` | -3.61% | +3.65% | Fastest prefill policy, but memory-costly. |
+| `prefill_4k` | `fp16_default` | -2.06% | +0.00% | Clean prefill improvement with no memory cost. |
+
+Interpretation:
+
+- H9.2 does not rescue FP8 KV cache as a memory-saving policy on this
+  RTX 3090/vLLM stack. It can produce small latency improvements in prefill and
+  long-batch settings, but the measured memory direction is wrong.
+- Decode remains the least favorable regime for FP8 KV cache. The
+  `decode_2k_context` workload is best served by `bf16_default`; all KV-cache
+  variants add memory and slightly increase latency.
+- `fp16_default` remains the safest backend-real policy found so far. It keeps
+  measured memory unchanged and improves `prefill_4k` latency by about `2.06%`
+  and `batch_mixed_long` latency by about `0.43%`, with only the earlier H9.1
+  small decode regression.
+- The H9.2 summary currently links to the H9.1 quality directory. Therefore the
+  quality deltas in `h9_2_long_context_summary.json` are policy-level prompt-NLL
+  diagnostics from the earlier prompt suite, not a long-context-specific quality
+  measurement. Before making a final H9.2 quality claim, run quality scoring
+  with `--policies results/h9_2_long_context_policy_candidates.json` and a
+  separate `results/h9_2_long_context_quality/` output directory.
+
+H9.2 therefore strengthens the H9.1 conclusion: the infrastructure can evaluate
+backend-real vLLM policies by workload, but the current vLLM-accessible FP8 KV
+cache knob is not the missing memory-saving policy on the RTX 3090. The next
+step toward a HAQ-style Transformer module assignment is not another global KV
+dtype toggle; it is a richer search space over backend-supported module or
+group policies, such as AWQ/GPTQ/Marlin artifacts, TorchAO configs, or
+selective high-precision rescue from a quantized weight baseline.
