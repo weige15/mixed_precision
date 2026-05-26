@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-26T02:09:24.261625+00:00",
-  "status": "failed",
+  "generated_at_utc": "2026-05-26T04:12:23.345578+00:00",
+  "status": "completed",
   "policy_name": "bf16_default",
   "policy": {
     "policy_name": "bf16_default",
@@ -30,7 +30,347 @@
   "repeats": 3,
   "warmup_runs": 1,
   "cuda_visible_devices": "0",
-  "runs": [],
+  "runs": [
+    {
+      "workload_name": "prefill_4k",
+      "repeat": 0,
+      "num_prompts": 1,
+      "max_tokens": 16,
+      "prompt_tokens": 3542,
+      "generated_tokens": 16,
+      "total_tokens": 3558,
+      "latency_sec": 0.37243465427309275,
+      "output_tokens_per_sec": 42.96055647997725,
+      "total_tokens_per_sec": 9553.35374723494,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "sample_outputs": [
+        " Transformer serving systems must manage prompt prefill, autoregressive decode, attention kernels"
+      ]
+    },
+    {
+      "workload_name": "prefill_4k",
+      "repeat": 1,
+      "num_prompts": 1,
+      "max_tokens": 16,
+      "prompt_tokens": 3542,
+      "generated_tokens": 16,
+      "total_tokens": 3558,
+      "latency_sec": 0.3747557024471462,
+      "output_tokens_per_sec": 42.694480418897875,
+      "total_tokens_per_sec": 9494.185083152415,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "sample_outputs": [
+        " Transformer serving systems must manage prompt prefill, autoregressive decode, attention kernels"
+      ]
+    },
+    {
+      "workload_name": "prefill_4k",
+      "repeat": 2,
+      "num_prompts": 1,
+      "max_tokens": 16,
+      "prompt_tokens": 3542,
+      "generated_tokens": 16,
+      "total_tokens": 3558,
+      "latency_sec": 0.377188871614635,
+      "output_tokens_per_sec": 42.41906695578979,
+      "total_tokens_per_sec": 9432.940014293754,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "sample_outputs": [
+        " Transformer serving systems must manage prompt prefill, autoregressive decode, attention kernels"
+      ]
+    },
+    {
+      "workload_name": "decode_2k_context",
+      "repeat": 0,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 2834,
+      "generated_tokens": 128,
+      "total_tokens": 2962,
+      "latency_sec": 2.7418607138097286,
+      "output_tokens_per_sec": 46.68362596076153,
+      "total_tokens_per_sec": 1080.2882819982474,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "sample_outputs": [
+        " Transformer serving systems must manage prompt prefill, autoregressive decode, attention kernels, model-weight layout, and KV-cache storage. Hardware-aware mixed precision can choose different formats for model weights and cached keys and values, but the benefit depends on whether the runtime actually uses efficient kernels and whether quality remains stable. In a long-context workload, KV-cache "
+      ]
+    },
+    {
+      "workload_name": "decode_2k_context",
+      "repeat": 1,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 2834,
+      "generated_tokens": 128,
+      "total_tokens": 2962,
+      "latency_sec": 2.763058206066489,
+      "output_tokens_per_sec": 46.32548084545124,
+      "total_tokens_per_sec": 1072.00058018927,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "sample_outputs": [
+        " Transformer serving systems must manage prompt prefill, autoregressive decode, attention kernels, model-weight layout, and KV-cache storage. Hardware-aware mixed precision can choose different formats for model weights and cached keys and values, but the benefit depends on whether the runtime actually uses efficient kernels and whether quality remains stable. In a long-context workload, KV-cache "
+      ]
+    },
+    {
+      "workload_name": "decode_2k_context",
+      "repeat": 2,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 2834,
+      "generated_tokens": 128,
+      "total_tokens": 2962,
+      "latency_sec": 2.763720009010285,
+      "output_tokens_per_sec": 46.314387703057534,
+      "total_tokens_per_sec": 1071.7438779410656,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.689208984375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.87933349609375
+      },
+      "sample_outputs": [
+        " Transformer serving systems must manage prompt prefill, autoregressive decode, attention kernels, model-weight layout, and KV-cache storage. Hardware-aware mixed precision can choose different formats for model weights and cached keys and values, but the benefit depends on whether the runtime actually uses efficient kernels and whether quality remains stable. In a long-context workload, KV-cache "
+      ]
+    },
+    {
+      "workload_name": "batch_mixed_long",
+      "repeat": 0,
+      "num_prompts": 4,
+      "max_tokens": 64,
+      "prompt_tokens": 5699,
+      "generated_tokens": 256,
+      "total_tokens": 5955,
+      "latency_sec": 1.4779393733479083,
+      "output_tokens_per_sec": 173.21414167354845,
+      "total_tokens_per_sec": 4029.2586471327386,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.687255859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.88128662109375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.687255859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.88128662109375
+      },
+      "sample_outputs": [
+        " Transformer serving systems must manage prompt prefill, autoregressive decode, attention kernels, model-weight layout, and KV-cache storage. Hardware-aware mixed precision can choose different formats for model weights and cached keys and values, but the benefit depends on whether the runtime actually uses efficient kernels and whether quality remains stable. In a long",
+        "  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV",
+        " Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain"
+      ]
+    },
+    {
+      "workload_name": "batch_mixed_long",
+      "repeat": 1,
+      "num_prompts": 4,
+      "max_tokens": 64,
+      "prompt_tokens": 5699,
+      "generated_tokens": 256,
+      "total_tokens": 5955,
+      "latency_sec": 1.4840577198192477,
+      "output_tokens_per_sec": 172.50002919777256,
+      "total_tokens_per_sec": 4012.6471635653734,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.687255859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.88128662109375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.687255859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.88128662109375
+      },
+      "sample_outputs": [
+        " Transformer serving systems must manage prompt prefill, autoregressive decode, attention kernels, model-weight layout, and KV-cache storage. Hardware-aware mixed precision can choose different formats for model weights and cached keys and values, but the benefit depends on whether the runtime actually uses efficient kernels and whether quality remains stable. In a long",
+        "  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV",
+        " Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain"
+      ]
+    },
+    {
+      "workload_name": "batch_mixed_long",
+      "repeat": 2,
+      "num_prompts": 4,
+      "max_tokens": 64,
+      "prompt_tokens": 5699,
+      "generated_tokens": 256,
+      "total_tokens": 5955,
+      "latency_sec": 1.4811979169026017,
+      "output_tokens_per_sec": 172.8330813044437,
+      "total_tokens_per_sec": 4020.3945279998525,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.687255859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.88128662109375
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 0.0,
+        "reserved_gib": 0.0,
+        "max_allocated_gib": 0.0,
+        "max_reserved_gib": 0.0,
+        "free_gib": 1.687255859375,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 21.88128662109375
+      },
+      "sample_outputs": [
+        " Transformer serving systems must manage prompt prefill, autoregressive decode, attention kernels, model-weight layout, and KV-cache storage. Hardware-aware mixed precision can choose different formats for model weights and cached keys and values, but the benefit depends on whether the runtime actually uses efficient kernels and whether quality remains stable. In a long",
+        "  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV cache.  Compare FP8 KV cache with default KV",
+        " Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain why quality gates are needed. Explain"
+      ]
+    }
+  ],
   "pre_load_cuda": {
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",
@@ -42,7 +382,7 @@
     "total_gib": 23.56854248046875,
     "used_gib_from_mem_get_info": 0.2550048828125
   },
-  "load_time_sec": 46.31032855482772,
+  "load_time_sec": 46.84004978975281,
   "post_load_cuda": {
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",
@@ -54,16 +394,15 @@
     "total_gib": 23.56854248046875,
     "used_gib_from_mem_get_info": 21.87933349609375
   },
-  "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
-  "failure_cuda": {
+  "post_run_cuda": {
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",
     "allocated_gib": 0.0,
     "reserved_gib": 0.0,
     "max_allocated_gib": 0.0,
     "max_reserved_gib": 0.0,
-    "free_gib": 1.689208984375,
+    "free_gib": 1.687255859375,
     "total_gib": 23.56854248046875,
-    "used_gib_from_mem_get_info": 21.87933349609375
+    "used_gib_from_mem_get_info": 21.88128662109375
   }
 }

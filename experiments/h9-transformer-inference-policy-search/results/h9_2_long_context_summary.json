@@ -2,47 +2,983 @@
   "results_dir": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks",
   "baseline_policy": "bf16_default",
   "n_artifacts": 6,
-  "n_completed_policy_workloads": 0,
-  "n_failed_policies": 6,
+  "n_completed_policy_workloads": 18,
+  "n_failed_policies": 0,
   "n_quality_artifacts": 7,
-  "completed": [],
-  "failures": [
+  "completed": [
     {
       "policy_name": "bf16_default",
+      "workload_name": "batch_mixed_long",
+      "status": "completed",
       "hardware_label": "rtx3090-lab",
-      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
-      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_default/benchmark.json"
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 1.481065003356586,
+        "stdev": 0.0030613380071259516,
+        "min": 1.4779393733479083,
+        "max": 1.4840577198192477
+      },
+      "output_tokens_per_sec": {
+        "mean": 172.84908405858823,
+        "stdev": 0.35732509444461236,
+        "min": 172.50002919777256,
+        "max": 173.21414167354845
+      },
+      "total_tokens_per_sec": {
+        "mean": 4020.766779565988,
+        "stdev": 8.31199584928788,
+        "min": 4012.6471635653734,
+        "max": 4029.2586471327386
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.88128662109375,
+        "stdev": 0.0,
+        "min": 21.88128662109375,
+        "max": 21.88128662109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.0,
+        "output_tokens_per_sec_percent": -0.0,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.0
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6136744013726247,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_default/quality.json"
+      },
+      "pareto_non_dominated": false
     },
     {
       "policy_name": "bf16_kv_fp8",
+      "workload_name": "batch_mixed_long",
+      "status": "completed",
       "hardware_label": "rtx3090-lab",
-      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
-      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_kv_fp8/benchmark.json"
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 1.4600711582849424,
+        "stdev": 0.003908283157777775,
+        "min": 1.4555857349187136,
+        "max": 1.4627444627694786
+      },
+      "output_tokens_per_sec": {
+        "mean": 175.33475898891243,
+        "stdev": 0.47001892800358713,
+        "min": 175.01348083403707,
+        "max": 175.8742160346166
+      },
+      "total_tokens_per_sec": {
+        "mean": 4078.5878506991157,
+        "stdev": 10.933448110395762,
+        "min": 4071.114368619886,
+        "max": 4091.1365487739918
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_kv_fp8/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -1.4174830290408966,
+        "output_tokens_per_sec_percent": -1.4380608053911699,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.641810528782186,
+        "prompt_nll_percent": -0.04905717179948609
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8/quality.json"
+      },
+      "pareto_non_dominated": false
     },
     {
       "policy_name": "bf16_kv_fp8_e4m3",
+      "workload_name": "batch_mixed_long",
+      "status": "completed",
       "hardware_label": "rtx3090-lab",
-      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
-      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_kv_fp8_e4m3/benchmark.json"
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 1.4644537802475195,
+        "stdev": 0.00217286010863954,
+        "min": 1.4626415171660483,
+        "max": 1.466862608678639
+      },
+      "output_tokens_per_sec": {
+        "mean": 174.8094606729962,
+        "stdev": 0.25922447272100774,
+        "min": 174.52213894156506,
+        "max": 175.02579886834792
+      },
+      "total_tokens_per_sec": {
+        "mean": 4066.3685090144236,
+        "stdev": 6.030006777552891,
+        "min": 4059.684911707109,
+        "max": 4071.400907269577
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_kv_fp8_e4m3/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -1.1215728594909695,
+        "output_tokens_per_sec_percent": -1.134155049235607,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.641810528782186,
+        "prompt_nll_percent": -0.04905717179948609
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8_e4m3/quality.json"
+      },
+      "pareto_non_dominated": false
     },
     {
       "policy_name": "fp16_default",
+      "workload_name": "batch_mixed_long",
+      "status": "completed",
       "hardware_label": "rtx3090-lab",
-      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
-      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_default/benchmark.json"
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 1.4747437671758235,
+        "stdev": 0.001374208675505551,
+        "min": 1.4731864458881319,
+        "max": 1.4757860796526074
+      },
+      "output_tokens_per_sec": {
+        "mean": 173.589578037544,
+        "stdev": 0.16182864901712238,
+        "min": 173.46687540260652,
+        "max": 173.77298081619716
+      },
+      "total_tokens_per_sec": {
+        "mean": 4037.991942240525,
+        "stdev": 3.7644125191286153,
+        "min": 4035.137668056726,
+        "max": 4042.2582060955237
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.88128662109375,
+        "stdev": 0.0,
+        "min": 21.88128662109375,
+        "max": 21.88128662109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -0.42680342634769575,
+        "output_tokens_per_sec_percent": -0.42840491923275664,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.009037851360068348
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6137298643528556,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_default/quality.json"
+      },
+      "pareto_non_dominated": true
     },
     {
       "policy_name": "fp16_kv_fp8",
+      "workload_name": "batch_mixed_long",
+      "status": "completed",
       "hardware_label": "rtx3090-lab",
-      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
-      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_kv_fp8/benchmark.json"
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 1.4505492998287082,
+        "stdev": 0.0035583547933920366,
+        "min": 1.446477493736893,
+        "max": 1.4530618423596025
+      },
+      "output_tokens_per_sec": {
+        "mean": 176.48557577621193,
+        "stdev": 0.43350323476116487,
+        "min": 176.17970036587428,
+        "max": 176.98166830002896
+      },
+      "total_tokens_per_sec": {
+        "mean": 4105.357827138055,
+        "stdev": 10.084030324229278,
+        "min": 4098.24263937024,
+        "max": 4116.897791901064
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_kv_fp8/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -2.060389210380305,
+        "output_tokens_per_sec_percent": -2.10385362319368,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.641810528782186,
+        "prompt_nll_percent": -0.19122817784447085
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8/quality.json"
+      },
+      "pareto_non_dominated": true
     },
     {
       "policy_name": "fp16_kv_fp8_e4m3",
+      "workload_name": "batch_mixed_long",
+      "status": "completed",
       "hardware_label": "rtx3090-lab",
-      "error": "ValueError: The decoder prompt (length 5666) is longer than the maximum model length of 4096. Make sure that `max_model_len` is no smaller than the number of text tokens.",
-      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_kv_fp8_e4m3/benchmark.json"
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 1.4625412542372942,
+        "stdev": 0.004606319615137079,
+        "min": 1.458863900974393,
+        "max": 1.4677079911343753
+      },
+      "output_tokens_per_sec": {
+        "mean": 175.03895353079128,
+        "stdev": 0.5505388243821268,
+        "min": 174.4216162522495,
+        "max": 175.47901475183153
+      },
+      "total_tokens_per_sec": {
+        "mean": 4071.7069073275866,
+        "stdev": 12.806479293732915,
+        "min": 4057.3465811802566,
+        "max": 4081.9434876842065
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_kv_fp8_e4m3/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -1.2507046670680084,
+        "output_tokens_per_sec_percent": -1.2669257023431917,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.641810528782186,
+        "prompt_nll_percent": -0.19122817784447085
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8_e4m3/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "bf16_default",
+      "workload_name": "decode_2k_context",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 2.756212976295501,
+        "stdev": 0.012433827834962406,
+        "min": 2.7418607138097286,
+        "max": 2.763720009010285
+      },
+      "output_tokens_per_sec": {
+        "mean": 46.44116483642343,
+        "stdev": 0.21005073687924156,
+        "min": 46.314387703057534,
+        "max": 46.68362596076153
+      },
+      "total_tokens_per_sec": {
+        "mean": 1074.677580042861,
+        "stdev": 4.860705333096265,
+        "min": 1071.7438779410656,
+        "max": 1080.2882819982474
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.87933349609375,
+        "stdev": 0.0,
+        "min": 21.87933349609375,
+        "max": 21.87933349609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.0,
+        "output_tokens_per_sec_percent": -0.0,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.0
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6136744013726247,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_default/quality.json"
+      },
+      "pareto_non_dominated": true
+    },
+    {
+      "policy_name": "bf16_kv_fp8",
+      "workload_name": "decode_2k_context",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 2.7799465603505573,
+        "stdev": 0.0071815761700830495,
+        "min": 2.7728617936372757,
+        "max": 2.787221181206405
+      },
+      "output_tokens_per_sec": {
+        "mean": 46.044255404098166,
+        "stdev": 0.11893666702617099,
+        "min": 45.923876032183856,
+        "max": 46.1616948575346
+      },
+      "total_tokens_per_sec": {
+        "mean": 1065.4928477104593,
+        "stdev": 2.7522688104025477,
+        "min": 1062.7071938072545,
+        "max": 1068.2104700626367
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_kv_fp8/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.8610939814584119,
+        "output_tokens_per_sec_percent": 0.854650036714784,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.6510624290388902,
+        "prompt_nll_percent": -0.04905717179948609
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "bf16_kv_fp8_e4m3",
+      "workload_name": "decode_2k_context",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 2.770574095969399,
+        "stdev": 0.010585449965122333,
+        "min": 2.758919275831431,
+        "max": 2.7795914318412542
+      },
+      "output_tokens_per_sec": {
+        "mean": 46.20026135661381,
+        "stdev": 0.17675350106567675,
+        "min": 46.04993328649397,
+        "max": 46.39497832404892
+      },
+      "total_tokens_per_sec": {
+        "mean": 1069.1029229553915,
+        "stdev": 4.0901864855979895,
+        "min": 1065.6242374577744,
+        "max": 1073.6087952799446
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_kv_fp8_e4m3/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.5210453545284476,
+        "output_tokens_per_sec_percent": 0.5187283321986913,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.6510624290388902,
+        "prompt_nll_percent": -0.04905717179948609
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8_e4m3/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "fp16_default",
+      "workload_name": "decode_2k_context",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 2.766408750166496,
+        "stdev": 0.003038539067678413,
+        "min": 2.762900557834655,
+        "max": 2.7682093176990747
+      },
+      "output_tokens_per_sec": {
+        "mean": 46.26941083999295,
+        "stdev": 0.05085312517852864,
+        "min": 46.23927792656703,
+        "max": 46.32812412920006
+      },
+      "total_tokens_per_sec": {
+        "mean": 1070.703085219212,
+        "stdev": 1.176773099834487,
+        "min": 1070.0057907694652,
+        "max": 1072.0617474272703
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.87933349609375,
+        "stdev": 0.0,
+        "min": 21.87933349609375,
+        "max": 21.87933349609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.369919667263829,
+        "output_tokens_per_sec_percent": 0.36983137058564186,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.009037851360068348
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6137298643528556,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_default/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "fp16_kv_fp8",
+      "workload_name": "decode_2k_context",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 2.763223496886591,
+        "stdev": 0.007909998332886945,
+        "min": 2.7562398687005043,
+        "max": 2.771813327912241
+      },
+      "output_tokens_per_sec": {
+        "mean": 46.32296259301692,
+        "stdev": 0.13249366905785231,
+        "min": 46.179155973829936,
+        "max": 46.44007999940465
+      },
+      "total_tokens_per_sec": {
+        "mean": 1071.9423062540322,
+        "stdev": 3.065986310541831,
+        "min": 1068.6145312069084,
+        "max": 1074.6524762362233
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_kv_fp8/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.25435337005460634,
+        "output_tokens_per_sec_percent": 0.2545204105513942,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.6510624290388902,
+        "prompt_nll_percent": -0.19122817784447085
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "fp16_kv_fp8_e4m3",
+      "workload_name": "decode_2k_context",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 2.7656719209626317,
+        "stdev": 0.008710556451622803,
+        "min": 2.757036678958684,
+        "max": 2.7744558872655034
+      },
+      "output_tokens_per_sec": {
+        "mean": 46.28200671066676,
+        "stdev": 0.14575536533910669,
+        "min": 46.13517215664094,
+        "max": 46.42665836725278
+      },
+      "total_tokens_per_sec": {
+        "mean": 1070.994561539023,
+        "stdev": 3.3728702510502386,
+        "min": 1067.5967181872693,
+        "max": 1074.3418912797088
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_kv_fp8_e4m3/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.34318627582415784,
+        "output_tokens_per_sec_percent": 0.3427091596803563,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.6510624290388902,
+        "prompt_nll_percent": -0.19122817784447085
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8_e4m3/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "bf16_default",
+      "workload_name": "prefill_4k",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.37479307611162466,
+        "stdev": 0.0023773290108339363,
+        "min": 0.37243465427309275,
+        "max": 0.377188871614635
+      },
+      "output_tokens_per_sec": {
+        "mean": 42.69136795155497,
+        "stdev": 0.2707581795457183,
+        "min": 42.41906695578979,
+        "max": 42.96055647997725
+      },
+      "total_tokens_per_sec": {
+        "mean": 9493.492948227036,
+        "stdev": 60.20985017647872,
+        "min": 9432.940014293754,
+        "max": 9553.35374723494
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.87933349609375,
+        "stdev": 0.0,
+        "min": 21.87933349609375,
+        "max": 21.87933349609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.0,
+        "output_tokens_per_sec_percent": -0.0,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.0
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6136744013726247,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_default/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "bf16_kv_fp8",
+      "workload_name": "prefill_4k",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.36999217917521793,
+        "stdev": 0.0026809980614500477,
+        "min": 0.36739635979756713,
+        "max": 0.37275092490017414
+      },
+      "output_tokens_per_sec": {
+        "mean": 43.24567010890764,
+        "stdev": 0.31316412266662397,
+        "min": 42.92410543122042,
+        "max": 43.54969659692842
+      },
+      "total_tokens_per_sec": {
+        "mean": 9616.755890468337,
+        "stdev": 69.6398717779903,
+        "min": 9545.247945267642,
+        "max": 9684.363780741958
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_kv_fp8/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -1.2809460052503416,
+        "output_tokens_per_sec_percent": -1.2983939937967628,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.6510624290388902,
+        "prompt_nll_percent": -0.04905717179948609
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "bf16_kv_fp8_e4m3",
+      "workload_name": "prefill_4k",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.36126112767184776,
+        "stdev": 0.005246787190977877,
+        "min": 0.356089374050498,
+        "max": 0.366579859983176
+      },
+      "output_tokens_per_sec": {
+        "mean": 44.295518747961026,
+        "stdev": 0.6430027631395822,
+        "min": 43.64669679543855,
+        "max": 44.93253987896588
+      },
+      "total_tokens_per_sec": {
+        "mean": 9850.215981577832,
+        "stdev": 142.98773945316478,
+        "min": 9705.934199885647,
+        "max": 9991.873555585038
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/bf16_kv_fp8_e4m3/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -3.6105118536786085,
+        "output_tokens_per_sec_percent": -3.7575530449771497,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.6510624290388902,
+        "prompt_nll_percent": -0.04905717179948609
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6133733500672539,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8_e4m3/quality.json"
+      },
+      "pareto_non_dominated": true
+    },
+    {
+      "policy_name": "fp16_default",
+      "workload_name": "prefill_4k",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.3670722443299989,
+        "stdev": 0.0036855755049225256,
+        "min": 0.36447833804413676,
+        "max": 0.371291046962142
+      },
+      "output_tokens_per_sec": {
+        "mean": 43.59106393569331,
+        "stdev": 0.4353489581611093,
+        "min": 43.09287856766288,
+        "max": 43.898356445157155
+      },
+      "total_tokens_per_sec": {
+        "mean": 9693.562842699801,
+        "stdev": 96.81072457107629,
+        "min": 9582.778871484034,
+        "max": 9761.897014491822
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.87933349609375,
+        "stdev": 0.0,
+        "min": 21.87933349609375,
+        "max": 21.87933349609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -2.0600251908939353,
+        "output_tokens_per_sec_percent": -2.1074423877897077,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.009037851360068348
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6137298643528556,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_default/quality.json"
+      },
+      "pareto_non_dominated": true
+    },
+    {
+      "policy_name": "fp16_kv_fp8",
+      "workload_name": "prefill_4k",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.36829628190025687,
+        "stdev": 0.0019956126650578425,
+        "min": 0.3660858357325196,
+        "max": 0.369965345133096
+      },
+      "output_tokens_per_sec": {
+        "mean": 43.444136174830426,
+        "stdev": 0.23588578184485173,
+        "min": 43.24729386273722,
+        "max": 43.7055969892547
+      },
+      "total_tokens_per_sec": {
+        "mean": 9660.889781877915,
+        "stdev": 52.45510073774858,
+        "min": 9617.11697272619,
+        "max": 9719.032130485513
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_kv_fp8/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -1.733434960637545,
+        "output_tokens_per_sec_percent": -1.763279696564594,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.6510624290388902,
+        "prompt_nll_percent": -0.19122817784447085
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "fp16_kv_fp8_e4m3",
+      "workload_name": "prefill_4k",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.3674532895286878,
+        "stdev": 0.000834844322796046,
+        "min": 0.3667872529476881,
+        "max": 0.3683898486196995
+      },
+      "output_tokens_per_sec": {
+        "mean": 43.543099114148674,
+        "stdev": 0.09883121909627243,
+        "min": 43.432249992635676,
+        "max": 43.622017590349444
+      },
+      "total_tokens_per_sec": {
+        "mean": 9682.896665508812,
+        "stdev": 21.977592346533566,
+        "min": 9658.246592112358,
+        "max": 9700.446161653957
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 22.67816162109375,
+        "stdev": 0.0,
+        "min": 22.67816162109375,
+        "max": 22.67816162109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks/fp16_kv_fp8_e4m3/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -1.9583570377246966,
+        "output_tokens_per_sec_percent": -1.99508988224557,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 3.6510624290388902,
+        "prompt_nll_percent": -0.19122817784447085
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6125008829969819,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8_e4m3/quality.json"
+      },
+      "pareto_non_dominated": false
     }
   ],
+  "failures": [],
   "note": "Quality metrics are included when quality artifacts exist. Pareto marking uses latency, output throughput, and memory; memory falls back to cuda mem_get_info used GiB when PyTorch allocator stats do not capture vLLM worker allocations."
 }
