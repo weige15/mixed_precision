@@ -260,11 +260,11 @@ hypotheses:
     priority: high
   - id: H9
     statement: "A vLLM-backed hardware-aware policy search can identify Transformer inference precision/backend policies that improve the latency-memory-quality Pareto frontier versus default bf16/fp16 serving."
-    status: scaffolded
+    status: partially_supported_h9_1
     plain_language_question: "Can we search real LLM serving backends for better precision choices across model dtype, quantized weights, and KV-cache dtype?"
     motivation: "H8 showed that backend-real low-bit plus high-precision rescue can improve a memory-quality trade-off during LoRA. Inference shifts the bottleneck to prefill latency, decode throughput, KV-cache memory, and serving kernels."
     why_it_matters: "HAQ-style hardware-aware search is more meaningful for Transformer inference if candidate policies map to real vLLM kernels and cache formats instead of fake precision hooks."
-    expected_result: "At least one backend-real vLLM policy is non-dominated against bf16/fp16 defaults on either memory or latency while staying inside a quality gate; otherwise H9 records which backend constraints prevent a win."
+    expected_result: "H9.1 found one clean backend-real policy, fp16_default, that is essentially quality-neutral and slightly improves prefill/mixed latency versus bf16_default without changing memory. It did not find a memory-saving policy: FP8 KV-cache variants were dominated, and fp16_bitsandbytes failed the 1% prompt-NLL gate despite a decode-heavy speed win."
     required_experiment: "Generate a concrete vLLM policy grid for Llama-3.1-8B, inspect backend support, run smoke instantiation checks, benchmark prefill-heavy, decode-heavy, and mixed workloads on the RTX 3090, then summarize Pareto non-dominated policies."
     metric: "Primary: end-to-end latency, output tokens/sec, total tokens/sec, peak CUDA memory, policy failure status, and Pareto non-domination by workload. Secondary: quality proxy from NLL/perplexity or deterministic logprob/output agreement versus bf16."
     estimated_compute_cost: "Thorough single-GPU pilot: one RTX 3090, about 10 candidate policies, smoke checks first, then repeated full workload benchmarks for viable policies."
@@ -278,7 +278,7 @@ experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
   baseline_value: 2.0906627424955366
   best_value: 2.086417777657509
-  total_runs: 32
+  total_runs: 33
   trajectory:
     - experiment_id: "h1_baseline_bf16_seed42"
       hypothesis: "H1"
@@ -730,11 +730,21 @@ experiments:
       wall_time_sec: null
       change_summary: "H8 selective bf16 projection rescue from QLoRA/NF4 on Llama-3.1-8B replicated across matched 500-step RTX 3090 seeds 42-44. H8 improved final eval loss over blanket QLoRA on every seed by about 0.0016 absolute on average, while keeping mean peak-memory savings of 25.28% versus bf16. Blanket QLoRA saved 26.70% memory, so rescue cost about 0.286 GiB peak memory. Both low-bit policies had zero loss spikes and zero NaN/Inf events, but both remained about 19% slower than bf16."
       artifact: "experiments/h8-hardware-aware-precision-search/results/llama_h8_metrics_summary.json"
+    - experiment_id: "h9_1_llama31_8b_vllm_policy_search_rtx3090"
+      hypothesis: "H9"
+      type: "inference_policy_search"
+      metric_value: 0.009037851360068348
+      metric_name: "fp16_default_prompt_nll_delta_percent_vs_bf16"
+      baseline: 0.0
+      delta: 0.009037851360068348
+      wall_time_sec: null
+      change_summary: "H9.1 vLLM policy search on Llama-3.1-8B and lab RTX 3090. Seven runnable policies completed prompt-logprob quality scoring over 1202 tokens. fp16_default was the clean supported candidate: prompt NLL changed by +0.009%, memory was unchanged, prefill-heavy latency improved by 0.53%, mixed latency improved by 0.45%, and decode-heavy latency was 0.27% slower. FP8 KV-cache policies passed quality but were dominated, using about 3.6% more measured memory and running slightly slower. fp16_bitsandbytes improved decode-heavy throughput but failed the 1% quality gate at +1.324% prompt NLL and was much slower on mixed."
+      artifact: "experiments/h9-transformer-inference-policy-search/results/h9_benchmark_summary.json"
 
 outer_loop:
-  cycle: 19
-  last_direction: "run H9 vLLM smoke instantiation checks on the RTX 3090, then benchmark viable policies"
-  last_reflection: "H9 is scaffolded as a separate Transformer inference policy-search branch. The local non-GPU shell can generate policies, inspect installed packages, dry-run benchmark configs, and summarize artifacts, but all candidate policies remain not_tested until vLLM instantiates them on the RTX 3090. The first empirical step is smoke-running bf16_default, fp16_default, FP8 KV-cache variants, and bitsandbytes/torchao candidates one policy per process."
+  cycle: 20
+  last_direction: "decide whether H9.2 should pursue longer-context KV stress, quantized model artifacts, or TorchAO config support"
+  last_reflection: "H9.1 is partially supported. The vLLM policy-search workflow works and identifies fp16_default as a quality-neutral small latency improvement over bf16_default. The first grid does not produce a memory-saving policy on RTX 3090: FP8 KV-cache policies are dominated, and fp16_bitsandbytes fails the quality gate despite a decode-heavy speed win. The next H9 step should change the candidate space or workload rather than repeat the same grid."
 
 workspace:
   findings: "findings.md"

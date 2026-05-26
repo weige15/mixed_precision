@@ -70,6 +70,8 @@ The 2026-05-23 literature refresh on hardware-backed selective precision strengt
 
 H8 now closes the first hardware-aware selective-rescue loop on Llama-3.1-8B. The implemented policy starts from QLoRA/NF4 and reloads selected high-risk projection modules in bf16 before LoRA wrapping. Across matched 500-step RTX 3090 seeds 42, 43, and 44, blanket QLoRA/NF4 has mean eval-loss degradation `+0.798%` versus bf16, mean peak-memory saving `26.70%`, and mean throughput penalty `19.70%`. H8 selective rescue has mean eval-loss degradation `+0.682%`, mean peak-memory saving `25.28%`, and mean throughput penalty `19.17%`. H8 improves final eval loss over blanket QLoRA on every seed by about `0.0016` absolute while adding about `0.286 GiB` peak memory. Both policies have zero loss spikes and zero NaN/Inf events. This supports H8 as a narrow memory-quality trade-off improvement, not as a speedup.
 
+H9.1 now has a first vLLM inference policy-search result on Llama-3.1-8B and the lab RTX 3090. Seven runnable policies completed quality scoring over 1202 prompt tokens each, and all except `fp16_bitsandbytes` stayed inside the 1% prompt-NLL gate. `fp16_default` is the cleanest candidate: compared with `bf16_default`, prompt NLL changes by only `+0.009%`, memory is unchanged, prefill-heavy latency improves by `0.53%`, mixed latency improves by `0.45%`, and decode-heavy latency is `0.27%` slower. FP8 KV-cache policies pass quality but are dominated in this setup: they add about `3.6%` measured memory and are slightly slower. `fp16_bitsandbytes` gives a large decode-heavy throughput win (`83.95` versus `48.40` output tokens/sec) but fails the quality gate with `+1.324%` prompt-NLL degradation, is much slower on the mixed workload, and generated only one token in the prefill-heavy run. Treat it as an interesting backend artifact, not a supported policy.
+
 ## Patterns and Insights
 
 - The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.
@@ -113,6 +115,8 @@ H8 now closes the first hardware-aware selective-rescue loop on Llama-3.1-8B. Th
 - Related work supports treating precision assignment as a constrained combinatorial optimization problem. The practical optimizer needs both predicted quality risk and measured hardware benefit; risk-only ranking is not enough for a resource claim.
 - The strongest hardware-backed next branch is likely low-bit baseline plus high-precision rescue. Blanket bf16 with a few selectively demoted modules is scientifically useful for sensitivity validation, but probably too weak for a meaningful resource win.
 - H8 validates that this low-bit-plus-rescue framing is implementable with current bitsandbytes/PEFT machinery by replacing selected packed 4-bit projections with frozen high-precision linear modules before LoRA wrapping. The result is useful because the policy is hardware-realistic, but it is still modest: it improves quality versus blanket QLoRA while preserving most memory savings, without removing the low-bit throughput penalty.
+- H9.1 shows that an inference policy search must report prefill, decode, mixed workload, memory, and quality together. A decode-only win can be misleading: `fp16_bitsandbytes` improves decode throughput but fails the prompt-NLL quality gate and is dominated on the mixed workload.
+- On the current RTX 3090/vLLM setup, FP8 KV cache should not be assumed to save memory. The measured H9.1 policies used more memory than default KV cache and were slightly slower, despite passing quality.
 - bitsandbytes 8-bit LoRA casts bf16/fp32 activations to fp16 inside `MatMul8bitLt`; reports should not describe the 8-bit path as pure bf16 compute.
 - Low-bit perturbation probes can identify sensitivity, but real throughput or memory claims require hardware-supported kernels on the target machine.
 - Boundary dtype probes are not enough for normalization layers. For Qwen2RMSNorm, source-level/internal-operation validation is required because bf16 boundaries can coexist with fp32 internal reductions.
@@ -137,7 +141,7 @@ H8 now closes the first hardware-aware selective-rescue loop on Llama-3.1-8B. Th
 - Is there a hardware-backed implementation path beyond generic bitsandbytes k-bit loading that can exploit the H6.1 selected module set, or should the paper contribution stop at calibration-guided sensitivity ranking with resource savings left as future systems work?
 - Can H7 be upgraded from `risk(module)` to `risk(module, format, backend)` and combined with a measured memory/throughput cost model to select Pareto-optimal policies?
 - Does H8's small but consistent selective-rescue gain transfer to Qwen2.5-7B, or is one cross-family Llama result enough to treat hardware-backed rescue as a feasibility extension?
-- For H9, how should a Transformer inference policy search jointly choose attention precision, MLP precision, KV-cache precision, and backend-supported kernels under measured latency, memory, and quality constraints?
+- Can H9.2 find a real memory-saving inference policy by using actual AWQ/GPTQ/Marlin artifacts, a longer-context KV-cache stress workload, or a valid TorchAO configuration?
 
 ## Optimization Trajectory
 
