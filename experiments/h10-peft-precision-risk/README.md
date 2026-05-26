@@ -30,3 +30,35 @@ python experiments/h10-peft-precision-risk/code/evaluate_rescue_selectors.py \
 
 The generated policies are planning artifacts. Only GPU training runs against
 matched bf16 and QLoRA baselines can support a final resource-quality claim.
+
+## Next Step Commands
+
+Current next run: 500-step seed-42 validation for the perturbation-guided H10
+upper-bound policy. The 100-step screen showed `h10_oracle_perturbation_top4`
+improves over blanket QLoRA and the previous H8 top-3 rescue, while
+`h10_activation_outlier_top4` was worse than blanket QLoRA.
+
+```bash
+GPU_ID=0 \
+HARDWARE_LABEL=rtx3090-lab \
+SETUP_ONLY=0 \
+SEEDS=42 \
+MAX_STEPS=500 \
+EVAL_MAX_BATCHES=100 \
+H10_POLICIES="h10_oracle_perturbation_top4" \
+bash experiments/h10-peft-precision-risk/code/run_llama31_8b_h10_rescue_controls.sh
+```
+
+If the 500-step seed-42 run remains better than blanket QLoRA and stays inside
+the 1% bf16 quality gate, replicate the same policy on seeds 43 and 44:
+
+```bash
+GPU_ID=0 \
+HARDWARE_LABEL=rtx3090-lab \
+SETUP_ONLY=0 \
+SEEDS="43 44" \
+MAX_STEPS=500 \
+EVAL_MAX_BATCHES=100 \
+H10_POLICIES="h10_oracle_perturbation_top4" \
+bash experiments/h10-peft-precision-risk/code/run_llama31_8b_h10_rescue_controls.sh
+```
