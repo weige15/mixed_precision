@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-26T09:16:37.792162+00:00",
+  "status": "failed",
+  "policy_name": "bf16_default",
+  "policy": {
+    "policy_name": "bf16_default",
+    "description": "Default bf16 vLLM baseline with automatic KV-cache dtype.",
+    "expected_role": "baseline",
+    "llm_kwargs": {
+      "dtype": "bfloat16",
+      "enforce_eager": false,
+      "gpu_memory_utilization": 0.88,
+      "max_model_len": 4096,
+      "block_size": 16,
+      "trust_remote_code": true
+    },
+    "search_tags": {
+      "dtype": "bfloat16",
+      "quantization": "none",
+      "kv_cache_dtype": "auto",
+      "runtime_mode": "default"
+    }
+  },
+  "model_name": "meta-llama/Llama-3.1-8B",
+  "runtime": "vllm",
+  "hardware_label": "rtx3090-lab",
+  "seed": 42,
+  "num_prompts": 6,
+  "cuda_visible_devices": "0",
+  "load_time_sec": 45.91358746495098,
+  "error": "EngineDeadError: EngineCore encountered an issue. See stack trace (above) for the root cause."
+}
