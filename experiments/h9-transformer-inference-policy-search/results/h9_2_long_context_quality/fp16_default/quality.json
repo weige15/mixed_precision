@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-26T09:58:06.604305+00:00",
+  "generated_at_utc": "2026-05-26T10:25:12.635405+00:00",
   "status": "completed",
   "policy_name": "fp16_default",
   "policy": {
@@ -24,14 +24,14 @@
   },
   "model_name": "meta-llama/Llama-3.1-8B",
   "runtime": "vllm",
-  "hardware_label": "unknown",
+  "hardware_label": "rtx3090-lab",
   "seed": 42,
   "num_prompts": 6,
   "quality_batch_size": 1,
-  "gpu_memory_utilization_override": null,
+  "gpu_memory_utilization_override": 0.78,
   "cuda_visible_devices": "3",
-  "load_time_sec": 54.47956064529717,
-  "quality_time_sec": 7.729349564295262,
+  "load_time_sec": 68.12772312294692,
+  "quality_time_sec": 9.404218618758023,
   "prompt_results": [
     {
       "prompt_indices": [
@@ -40,7 +40,7 @@
       "prompt_chars": [
         104
       ],
-      "quality_time_sec": 5.43506523501128,
+      "quality_time_sec": 7.155875118914992,
       "mean_prompt_nll": 4.995091766119003,
       "tokens_scored": 17,
       "tokens_missing_logprob": 0
@@ -52,7 +52,7 @@
       "prompt_chars": [
         122
       ],
-      "quality_time_sec": 0.03401702828705311,
+      "quality_time_sec": 0.029651370830833912,
       "mean_prompt_nll": 4.413788314753522,
       "tokens_scored": 24,
       "tokens_missing_logprob": 0
@@ -64,7 +64,7 @@
       "prompt_chars": [
         111
       ],
-      "quality_time_sec": 0.033143427688628435,
+      "quality_time_sec": 0.03126252721995115,
       "mean_prompt_nll": 6.012343475222588,
       "tokens_scored": 20,
       "tokens_missing_logprob": 0
@@ -76,7 +76,7 @@
       "prompt_chars": [
         19830
       ],
-      "quality_time_sec": 1.032777313143015,
+      "quality_time_sec": 0.9887718982063234,
       "mean_prompt_nll": 0.1420426178671357,
       "tokens_scored": 3541,
       "tokens_missing_logprob": 0
@@ -88,7 +88,7 @@
       "prompt_chars": [
         15864
       ],
-      "quality_time_sec": 0.7831344353035092,
+      "quality_time_sec": 0.7762801549397409,
       "mean_prompt_nll": 0.1773407682566325,
       "tokens_scored": 2833,
       "tokens_missing_logprob": 0
@@ -100,7 +100,7 @@
       "prompt_chars": [
         7932
       ],
-      "quality_time_sec": 0.41116441413760185,
+      "quality_time_sec": 0.4223390338011086,
       "mean_prompt_nll": 0.35285155951298236,
       "tokens_scored": 1417,
       "tokens_missing_logprob": 0

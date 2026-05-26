@@ -4,7 +4,7 @@
   "n_artifacts": 6,
   "n_completed_policy_workloads": 18,
   "n_failed_policies": 0,
-  "n_quality_artifacts": 7,
+  "n_quality_artifacts": 6,
   "completed": [
     {
       "policy_name": "bf16_default",
@@ -54,9 +54,9 @@
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6136744013726247,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_default/quality.json"
+        "mean_prompt_nll": 0.231372132833005,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/bf16_default/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -104,13 +104,13 @@
         "output_tokens_per_sec_percent": -1.4380608053911699,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.641810528782186,
-        "prompt_nll_percent": -0.04905717179948609
+        "prompt_nll_percent": 0.051478654900394875
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6133733500672539,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8/quality.json"
+        "mean_prompt_nll": 0.2314912400948018,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/bf16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -158,13 +158,13 @@
         "output_tokens_per_sec_percent": -1.134155049235607,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.641810528782186,
-        "prompt_nll_percent": -0.04905717179948609
+        "prompt_nll_percent": 0.051478654900394875
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6133733500672539,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8_e4m3/quality.json"
+        "mean_prompt_nll": 0.2314912400948018,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/bf16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -212,13 +212,13 @@
         "output_tokens_per_sec_percent": -0.42840491923275664,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
-        "prompt_nll_percent": 0.009037851360068348
+        "prompt_nll_percent": -0.014843766652764401
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6137298643528556,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_default/quality.json"
+        "mean_prompt_nll": 0.23133778849350775,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/fp16_default/quality.json"
       },
       "pareto_non_dominated": true
     },
@@ -266,13 +266,13 @@
         "output_tokens_per_sec_percent": -2.10385362319368,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.641810528782186,
-        "prompt_nll_percent": -0.19122817784447085
+        "prompt_nll_percent": -0.01960662193908832
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6125008829969819,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8/quality.json"
+        "mean_prompt_nll": 0.23132676857364803,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/fp16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": true
     },
@@ -320,13 +320,13 @@
         "output_tokens_per_sec_percent": -1.2669257023431917,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.641810528782186,
-        "prompt_nll_percent": -0.19122817784447085
+        "prompt_nll_percent": -0.01960662193908832
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6125008829969819,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8_e4m3/quality.json"
+        "mean_prompt_nll": 0.23132676857364803,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/fp16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -378,9 +378,9 @@
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6136744013726247,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_default/quality.json"
+        "mean_prompt_nll": 0.231372132833005,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/bf16_default/quality.json"
       },
       "pareto_non_dominated": true
     },
@@ -428,13 +428,13 @@
         "output_tokens_per_sec_percent": 0.854650036714784,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": -0.04905717179948609
+        "prompt_nll_percent": 0.051478654900394875
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6133733500672539,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8/quality.json"
+        "mean_prompt_nll": 0.2314912400948018,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/bf16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -482,13 +482,13 @@
         "output_tokens_per_sec_percent": 0.5187283321986913,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": -0.04905717179948609
+        "prompt_nll_percent": 0.051478654900394875
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6133733500672539,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8_e4m3/quality.json"
+        "mean_prompt_nll": 0.2314912400948018,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/bf16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -536,13 +536,13 @@
         "output_tokens_per_sec_percent": 0.36983137058564186,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
-        "prompt_nll_percent": 0.009037851360068348
+        "prompt_nll_percent": -0.014843766652764401
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6137298643528556,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_default/quality.json"
+        "mean_prompt_nll": 0.23133778849350775,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/fp16_default/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -590,13 +590,13 @@
         "output_tokens_per_sec_percent": 0.2545204105513942,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": -0.19122817784447085
+        "prompt_nll_percent": -0.01960662193908832
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6125008829969819,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8/quality.json"
+        "mean_prompt_nll": 0.23132676857364803,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/fp16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -644,13 +644,13 @@
         "output_tokens_per_sec_percent": 0.3427091596803563,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": -0.19122817784447085
+        "prompt_nll_percent": -0.01960662193908832
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6125008829969819,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8_e4m3/quality.json"
+        "mean_prompt_nll": 0.23132676857364803,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/fp16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -702,9 +702,9 @@
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6136744013726247,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_default/quality.json"
+        "mean_prompt_nll": 0.231372132833005,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/bf16_default/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -752,13 +752,13 @@
         "output_tokens_per_sec_percent": -1.2983939937967628,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": -0.04905717179948609
+        "prompt_nll_percent": 0.051478654900394875
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6133733500672539,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8/quality.json"
+        "mean_prompt_nll": 0.2314912400948018,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/bf16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -806,13 +806,13 @@
         "output_tokens_per_sec_percent": -3.7575530449771497,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": -0.04905717179948609
+        "prompt_nll_percent": 0.051478654900394875
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6133733500672539,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/bf16_kv_fp8_e4m3/quality.json"
+        "mean_prompt_nll": 0.2314912400948018,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/bf16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": true
     },
@@ -860,13 +860,13 @@
         "output_tokens_per_sec_percent": -2.1074423877897077,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
-        "prompt_nll_percent": 0.009037851360068348
+        "prompt_nll_percent": -0.014843766652764401
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6137298643528556,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_default/quality.json"
+        "mean_prompt_nll": 0.23133778849350775,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/fp16_default/quality.json"
       },
       "pareto_non_dominated": true
     },
@@ -914,13 +914,13 @@
         "output_tokens_per_sec_percent": -1.763279696564594,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": -0.19122817784447085
+        "prompt_nll_percent": -0.01960662193908832
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6125008829969819,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8/quality.json"
+        "mean_prompt_nll": 0.23132676857364803,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/fp16_kv_fp8/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -968,13 +968,13 @@
         "output_tokens_per_sec_percent": -1.99508988224557,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 3.6510624290388902,
-        "prompt_nll_percent": -0.19122817784447085
+        "prompt_nll_percent": -0.01960662193908832
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.6125008829969819,
-        "tokens_scored": 1202,
-        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/quality/fp16_kv_fp8_e4m3/quality.json"
+        "mean_prompt_nll": 0.23132676857364803,
+        "tokens_scored": 7852,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality/fp16_kv_fp8_e4m3/quality.json"
       },
       "pareto_non_dominated": false
     }
