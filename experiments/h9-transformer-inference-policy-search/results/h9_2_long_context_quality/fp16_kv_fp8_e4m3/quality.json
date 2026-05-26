@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-26T09:19:54.971547+00:00",
+  "generated_at_utc": "2026-05-26T10:00:12.728489+00:00",
   "status": "failed",
   "policy_name": "fp16_kv_fp8_e4m3",
   "policy": {
@@ -25,10 +25,12 @@
   },
   "model_name": "meta-llama/Llama-3.1-8B",
   "runtime": "vllm",
-  "hardware_label": "rtx3090-lab",
+  "hardware_label": "unknown",
   "seed": 42,
   "num_prompts": 6,
-  "cuda_visible_devices": "0",
-  "load_time_sec": 48.15164737123996,
+  "quality_batch_size": 1,
+  "gpu_memory_utilization_override": null,
+  "cuda_visible_devices": "3",
+  "load_time_sec": 59.94290999742225,
   "error": "EngineDeadError: EngineCore encountered an issue. See stack trace (above) for the root cause."
 }

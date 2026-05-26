@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-26T09:17:44.969280+00:00",
-  "status": "failed",
+  "generated_at_utc": "2026-05-26T09:58:06.604305+00:00",
+  "status": "completed",
   "policy_name": "fp16_default",
   "policy": {
     "policy_name": "fp16_default",
@@ -24,10 +24,89 @@
   },
   "model_name": "meta-llama/Llama-3.1-8B",
   "runtime": "vllm",
-  "hardware_label": "rtx3090-lab",
+  "hardware_label": "unknown",
   "seed": 42,
   "num_prompts": 6,
-  "cuda_visible_devices": "0",
-  "load_time_sec": 47.46244590962306,
-  "error": "EngineDeadError: EngineCore encountered an issue. See stack trace (above) for the root cause."
+  "quality_batch_size": 1,
+  "gpu_memory_utilization_override": null,
+  "cuda_visible_devices": "3",
+  "load_time_sec": 54.47956064529717,
+  "quality_time_sec": 7.729349564295262,
+  "prompt_results": [
+    {
+      "prompt_indices": [
+        0
+      ],
+      "prompt_chars": [
+        104
+      ],
+      "quality_time_sec": 5.43506523501128,
+      "mean_prompt_nll": 4.995091766119003,
+      "tokens_scored": 17,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        1
+      ],
+      "prompt_chars": [
+        122
+      ],
+      "quality_time_sec": 0.03401702828705311,
+      "mean_prompt_nll": 4.413788314753522,
+      "tokens_scored": 24,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        2
+      ],
+      "prompt_chars": [
+        111
+      ],
+      "quality_time_sec": 0.033143427688628435,
+      "mean_prompt_nll": 6.012343475222588,
+      "tokens_scored": 20,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        3
+      ],
+      "prompt_chars": [
+        19830
+      ],
+      "quality_time_sec": 1.032777313143015,
+      "mean_prompt_nll": 0.1420426178671357,
+      "tokens_scored": 3541,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        4
+      ],
+      "prompt_chars": [
+        15864
+      ],
+      "quality_time_sec": 0.7831344353035092,
+      "mean_prompt_nll": 0.1773407682566325,
+      "tokens_scored": 2833,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        5
+      ],
+      "prompt_chars": [
+        7932
+      ],
+      "quality_time_sec": 0.41116441413760185,
+      "mean_prompt_nll": 0.35285155951298236,
+      "tokens_scored": 1417,
+      "tokens_missing_logprob": 0
+    }
+  ],
+  "mean_prompt_nll": 0.23133778849350775,
+  "tokens_scored": 7852,
+  "tokens_missing_logprob": 0
 }
