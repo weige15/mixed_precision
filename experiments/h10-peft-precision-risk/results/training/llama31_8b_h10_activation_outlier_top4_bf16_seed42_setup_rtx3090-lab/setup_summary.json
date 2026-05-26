@@ -1,0 +1,78 @@
+{
+  "model_name": "meta-llama/Llama-3.1-8B",
+  "precision_policy": "h8_qlora_nf4_rescue_projection_top4",
+  "device": "cuda",
+  "hardware_label": "rtx3090-lab",
+  "cuda_visible_devices": "2",
+  "cuda_device_name": "NVIDIA GeForce RTX 3090",
+  "bf16_autocast": true,
+  "qlora_config": {
+    "load_in_4bit": true,
+    "bnb_4bit_compute_dtype": "bfloat16",
+    "bnb_4bit_quant_type": "nf4",
+    "bnb_4bit_use_double_quant": true
+  },
+  "lora_targets": [
+    "down_proj",
+    "gate_proj",
+    "k_proj",
+    "o_proj",
+    "q_proj",
+    "up_proj",
+    "v_proj"
+  ],
+  "trainable_params": 20971520,
+  "total_params": 4658040832,
+  "fp32_norm_wrapped_modules": [],
+  "h6_fake_int8_output_modules": [],
+  "h8_policy_name": "h10_activation_outlier_top4",
+  "h8_candidates": "experiments/h10-peft-precision-risk/results/h10_h8_runner_candidates_llama31_8b.json",
+  "h8_rescue_precision": "bf16",
+  "h8_rescued_modules": [
+    {
+      "candidate_name": "base_model.model.model.layers.28.mlp.down_proj",
+      "runtime_name": "model.layers.28.mlp.down_proj",
+      "checkpoint_weight": "model.layers.28.mlp.down_proj.weight",
+      "original_class": "Linear4bit",
+      "replacement_class": "Linear",
+      "replacement_dtype": "torch.bfloat16",
+      "in_features": 14336,
+      "out_features": 4096,
+      "bias": false
+    },
+    {
+      "candidate_name": "base_model.model.model.layers.30.self_attn.o_proj",
+      "runtime_name": "model.layers.30.self_attn.o_proj",
+      "checkpoint_weight": "model.layers.30.self_attn.o_proj.weight",
+      "original_class": "Linear4bit",
+      "replacement_class": "Linear",
+      "replacement_dtype": "torch.bfloat16",
+      "in_features": 4096,
+      "out_features": 4096,
+      "bias": false
+    },
+    {
+      "candidate_name": "base_model.model.model.layers.2.mlp.down_proj",
+      "runtime_name": "model.layers.2.mlp.down_proj",
+      "checkpoint_weight": "model.layers.2.mlp.down_proj.weight",
+      "original_class": "Linear4bit",
+      "replacement_class": "Linear",
+      "replacement_dtype": "torch.bfloat16",
+      "in_features": 14336,
+      "out_features": 4096,
+      "bias": false
+    },
+    {
+      "candidate_name": "base_model.model.model.layers.3.mlp.down_proj",
+      "runtime_name": "model.layers.3.mlp.down_proj",
+      "checkpoint_weight": "model.layers.3.mlp.down_proj.weight",
+      "original_class": "Linear4bit",
+      "replacement_class": "Linear",
+      "replacement_dtype": "torch.bfloat16",
+      "in_features": 14336,
+      "out_features": 4096,
+      "bias": false
+    }
+  ],
+  "peak_cuda_memory_gib": 8.248612880706787
+}
