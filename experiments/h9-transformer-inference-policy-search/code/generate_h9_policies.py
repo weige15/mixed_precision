@@ -124,7 +124,7 @@ def long_context_workloads() -> list[dict[str, Any]]:
         "enough that cache allocation and bandwidth become visible in measured "
         "latency and memory. "
     )
-    long_prompt_4kish = (base + section) * 48
+    long_prompt_4kish = (base + section) * 30
     long_prompt_2kish = (base + section) * 24
     mixed_prompt_1kish = (base + section) * 12
     return [
