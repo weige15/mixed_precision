@@ -206,21 +206,23 @@ Mean eval degradation was +0.162%, with zero loss spikes and zero NaN/Inf events
 
 The central result is not that fake-int8 hooks make training faster. They do not. The central result is that module sensitivity is measurable before training, and those measurements identify low-risk modules whose reduced-precision perturbation remains harmless during actual LoRA updates.
 
-This suggests a useful future formulation: a precision assignment predictor. Instead of hand-tuned thresholds, we can construct a table where each row is a candidate module-format pair:
+This suggests a useful future formulation: a PEFT adaptation of the HAQ principle. The durable HAQ idea is not reinforcement learning over CNN layer bitwidths; it is hardware-aware precision assignment under measured quality and resource constraints. In this project, the corresponding move is to construct a table where each row is a candidate module-format-backend action:
 
 ```text
 model_size, seed, module_name, layer_idx, module_role,
 activation_outlier_score, int8_rel_mse, perturbation_delta,
+backend, candidate_action, backend_feasible,
+measured_memory_delta, measured_throughput_delta,
 selected_by_policy, training_safe_label
 ```
 
 A simple predictor can then estimate:
 
 ```text
-risk(module_i, format_f) = expected quality degradation
+risk(module_i, format_f, backend_b) = expected quality degradation
 ```
 
-and a budgeted optimizer can choose assignments under a memory, throughput, or quality constraint. This turns the high-school-style permutation/combination space into a constrained prediction and optimization problem.
+and a budgeted optimizer can choose assignments under a memory, throughput, or quality constraint. This turns the high-school-style permutation/combination space into a constrained prediction and optimization problem. The PEFT-specific constraint is backend feasibility: an assignment is only useful if the LoRA/QLoRA stack can actually express it without destroying the intended memory or throughput benefit. A focused design note for this framing is in `paper/haq_principle_for_peft.md`.
 
 ## 6. Limitations
 
@@ -240,7 +242,7 @@ Mixed precision training was formalized by Micikevicius et al. as a recipe combi
 
 LoRA and QLoRA define the low-resource adaptation setting closest to this project. QLoRA is especially relevant because it demonstrates that quantized base models can support effective parameter-efficient fine-tuning. Our work differs by studying module-level sensitivity and selective precision assignment rather than applying a single global quantized backend.
 
-LLM.int8(), SmoothQuant, and ZeroQuant motivate activation-aware and module-aware quantization for Transformers. These works support our use of activation outlier statistics as a signal, although they primarily target inference or post-training quantization. HAWQ and HAWQ-V3 frame mixed precision as sensitivity-aware constrained optimization. Recent adaptive and subbyte training work, including convergence-aware operator-wise mixed precision, FP4 LLM training, SNIP-style adaptive subbyte training, and attention quantization-aware training, further motivates operation-wise precision assignment during training.
+LLM.int8(), SmoothQuant, and ZeroQuant motivate activation-aware and module-aware quantization for Transformers. These works support our use of activation outlier statistics as a signal, although they primarily target inference or post-training quantization. HAQ, HAWQ, and HAWQ-V3 frame mixed precision as sensitivity-aware or hardware-aware constrained optimization. Recent adaptive and subbyte training work, including convergence-aware operator-wise mixed precision, FP4 LLM training, SNIP-style adaptive subbyte training, and attention quantization-aware training, further motivates operation-wise precision assignment during training.
 
 This project contributes a small but concrete LoRA-focused empirical result: cheap calibration and perturbation probes can select low-risk module precision assignments that preserve training quality across seeds and scale to a conservative 7B panel.
 
@@ -250,7 +252,7 @@ Precision assignment in Transformer fine-tuning is a structured combinatorial pr
 
 The current evidence supports calibration-guided sensitivity ranking and quality-preserving policy selection. It does not yet support a resource-saving claim for the selective fake-int8 implementation. Hardware-backed QLoRA separately gives a robust 7B memory-capacity trade-off, saving 23.32% peak memory at the cost of about 20% throughput.
 
-The next step is to turn the ranking workflow into an explicit predictor and assignment optimizer: predict per-module precision risk from calibration features, then choose precision formats under a hardware-aware budget.
+The next step is to turn the ranking workflow into an explicit predictor and assignment optimizer: predict per-module precision risk from calibration features, attach backend feasibility and cost measurements, then choose precision formats under a hardware-aware budget.
 
 ## Citation Notes
 

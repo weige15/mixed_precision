@@ -1,0 +1,369 @@
+{
+  "source_evaluation": "experiments/h10-peft-precision-risk/results/rescue_selector_evaluation_qwen25_7b.json",
+  "model_name": "Qwen/Qwen2.5-7B",
+  "base_backend": "qlora_4bit_nf4",
+  "policy_type": "selective_bf16_rescue_from_low_bit",
+  "top_k": 4,
+  "policies": [
+    {
+      "selector": "oracle_perturbation_upper_bound",
+      "score_column": "score_oracle_max_delta",
+      "module_names": [
+        "base_model.model.model.layers.3.mlp.down_proj",
+        "base_model.model.model.layers.24.mlp.down_proj",
+        "base_model.model.model.layers.2.self_attn.o_proj",
+        "base_model.model.model.layers.2.mlp.down_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+          "module_short": "layers.3.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 3.0,
+          "selector_score": 0.0605845451355,
+          "mean_abs_delta": 0.0463651021321666,
+          "max_abs_delta": 0.0605845451355,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.24.mlp.down_proj",
+          "module_short": "layers.24.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 24.0,
+          "selector_score": 0.0117001533508,
+          "mean_abs_delta": 0.0071089565753833,
+          "max_abs_delta": 0.0117001533508,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.3333333333333333
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.self_attn.o_proj",
+          "module_short": "layers.2.self_attn.o_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "o_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.0110846459866,
+          "mean_abs_delta": 0.00694535175961,
+          "max_abs_delta": 0.0110846459866,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.3333333333333333
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.00757718086243,
+          "mean_abs_delta": 0.00538053115209,
+          "max_abs_delta": 0.00757718086243,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        }
+      ]
+    },
+    {
+      "selector": "activation_outlier_rescue",
+      "score_column": "score_activation_outlier",
+      "module_names": [
+        "base_model.model.model.layers.3.mlp.down_proj",
+        "base_model.model.model.layers.2.mlp.down_proj",
+        "base_model.model.model.layers.2.self_attn.o_proj",
+        "base_model.model.model.layers.24.mlp.down_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+          "module_short": "layers.3.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 3.0,
+          "selector_score": 756.275695801,
+          "mean_abs_delta": 0.0463651021321666,
+          "max_abs_delta": 0.0605845451355,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": 586.9375,
+          "mean_abs_delta": 0.00538053115209,
+          "max_abs_delta": 0.00757718086243,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.self_attn.o_proj",
+          "module_short": "layers.2.self_attn.o_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "o_proj",
+          "layer_idx": 2.0,
+          "selector_score": 171.86907959,
+          "mean_abs_delta": 0.00694535175961,
+          "max_abs_delta": 0.0110846459866,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.3333333333333333
+        },
+        {
+          "module_name": "base_model.model.model.layers.24.mlp.down_proj",
+          "module_short": "layers.24.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 24.0,
+          "selector_score": 129.940765381,
+          "mean_abs_delta": 0.0071089565753833,
+          "max_abs_delta": 0.0117001533508,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.3333333333333333
+        }
+      ]
+    },
+    {
+      "selector": "int8_mse_rescue",
+      "score_column": "score_int8_mse",
+      "module_names": [
+        "base_model.model.model.layers.2.self_attn.o_proj",
+        "base_model.model.model.layers.2.mlp.down_proj",
+        "base_model.model.model.layers.24.mlp.down_proj",
+        "base_model.model.model.layers.26.mlp.gate_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.2.self_attn.o_proj",
+          "module_short": "layers.2.self_attn.o_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "o_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.123013788834,
+          "mean_abs_delta": 0.00694535175961,
+          "max_abs_delta": 0.0110846459866,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.3333333333333333
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.079185272567,
+          "mean_abs_delta": 0.00538053115209,
+          "max_abs_delta": 0.00757718086243,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.24.mlp.down_proj",
+          "module_short": "layers.24.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 24.0,
+          "selector_score": 0.0654406892136,
+          "mean_abs_delta": 0.0071089565753833,
+          "max_abs_delta": 0.0117001533508,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.3333333333333333
+        },
+        {
+          "module_name": "base_model.model.model.layers.26.mlp.gate_proj",
+          "module_short": "layers.26.mlp.gate_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "gate_proj",
+          "layer_idx": 26.0,
+          "selector_score": 0.0466424692422,
+          "mean_abs_delta": 0.0014051695664736,
+          "max_abs_delta": 0.00337037444115,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        }
+      ]
+    },
+    {
+      "selector": "role_prior_rescue",
+      "score_column": "_role_prior_score",
+      "module_names": [
+        "base_model.model.model.layers.2.mlp.down_proj",
+        "base_model.model.model.layers.3.mlp.down_proj",
+        "base_model.model.model.layers.24.mlp.down_proj",
+        "base_model.model.model.layers.2.self_attn.o_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": -0.0007407407407409999,
+          "mean_abs_delta": 0.00538053115209,
+          "max_abs_delta": 0.00757718086243,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+          "module_short": "layers.3.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 3.0,
+          "selector_score": -0.00111111111111,
+          "mean_abs_delta": 0.0463651021321666,
+          "max_abs_delta": 0.0605845451355,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.24.mlp.down_proj",
+          "module_short": "layers.24.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 24.0,
+          "selector_score": -0.008888888888889999,
+          "mean_abs_delta": 0.0071089565753833,
+          "max_abs_delta": 0.0117001533508,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.3333333333333333
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.self_attn.o_proj",
+          "module_short": "layers.2.self_attn.o_proj",
+          "module_role": "attention_projection",
+          "module_leaf": "o_proj",
+          "layer_idx": 2.0,
+          "selector_score": -1.000740740740741,
+          "mean_abs_delta": 0.00694535175961,
+          "max_abs_delta": 0.0110846459866,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.3333333333333333
+        }
+      ]
+    },
+    {
+      "selector": "cross_model_logistic_unsafe",
+      "score_column": "score_cross_model_logistic_unsafe",
+      "module_names": [
+        "base_model.model.model.layers.3.mlp.down_proj",
+        "base_model.model.model.layers.26.mlp.up_proj",
+        "base_model.model.model.layers.27.mlp.up_proj",
+        "base_model.model.model.layers.2.mlp.down_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+          "module_short": "layers.3.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 3.0,
+          "selector_score": 0.9243162662181311,
+          "mean_abs_delta": 0.0463651021321666,
+          "max_abs_delta": 0.0605845451355,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.26.mlp.up_proj",
+          "module_short": "layers.26.mlp.up_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "up_proj",
+          "layer_idx": 26.0,
+          "selector_score": 0.7115196285774686,
+          "mean_abs_delta": 0.0022479792435973,
+          "max_abs_delta": 0.00440987944603,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.27.mlp.up_proj",
+          "module_short": "layers.27.mlp.up_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "up_proj",
+          "layer_idx": 27.0,
+          "selector_score": 0.6200732888652449,
+          "mean_abs_delta": 0.0025502244631463,
+          "max_abs_delta": 0.00513631105423,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.5946064184782114,
+          "mean_abs_delta": 0.00538053115209,
+          "max_abs_delta": 0.00757718086243,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        }
+      ]
+    },
+    {
+      "selector": "cross_model_ridge",
+      "score_column": "score_cross_model_ridge",
+      "module_names": [
+        "base_model.model.model.layers.3.mlp.down_proj",
+        "base_model.model.model.layers.2.mlp.down_proj",
+        "base_model.model.model.layers.26.mlp.up_proj",
+        "base_model.model.model.layers.26.mlp.gate_proj"
+      ],
+      "modules": [
+        {
+          "module_name": "base_model.model.model.layers.3.mlp.down_proj",
+          "module_short": "layers.3.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 3.0,
+          "selector_score": 0.24735516743705982,
+          "mean_abs_delta": 0.0463651021321666,
+          "max_abs_delta": 0.0605845451355,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.2.mlp.down_proj",
+          "module_short": "layers.2.mlp.down_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "down_proj",
+          "layer_idx": 2.0,
+          "selector_score": 0.10186595102420704,
+          "mean_abs_delta": 0.00538053115209,
+          "max_abs_delta": 0.00757718086243,
+          "safe_all_seeds": 0,
+          "safe_rate": 0.6666666666666666
+        },
+        {
+          "module_name": "base_model.model.model.layers.26.mlp.up_proj",
+          "module_short": "layers.26.mlp.up_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "up_proj",
+          "layer_idx": 26.0,
+          "selector_score": 0.07720673172475256,
+          "mean_abs_delta": 0.0022479792435973,
+          "max_abs_delta": 0.00440987944603,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        },
+        {
+          "module_name": "base_model.model.model.layers.26.mlp.gate_proj",
+          "module_short": "layers.26.mlp.gate_proj",
+          "module_role": "mlp_projection",
+          "module_leaf": "gate_proj",
+          "layer_idx": 26.0,
+          "selector_score": 0.032373333977700675,
+          "mean_abs_delta": 0.0014051695664736,
+          "max_abs_delta": 0.00337037444115,
+          "safe_all_seeds": 1,
+          "safe_rate": 1.0
+        }
+      ]
+    }
+  ]
+}

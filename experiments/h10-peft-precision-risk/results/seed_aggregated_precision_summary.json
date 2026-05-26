@@ -1,0 +1,32 @@
+{
+  "source": "experiments/h7-precision-predictor/results/precision_dataset_with_llama31_8b.csv",
+  "safe_threshold": 0.005,
+  "seed_level_labeled_rows": 114,
+  "module_level_rows": 38,
+  "models": [
+    {
+      "model_name": "Qwen/Qwen2.5-0.5B",
+      "module_rows": 10,
+      "projection_rows": 7,
+      "safe_all_seed_rows": 5,
+      "unsafe_any_seed_rows": 5,
+      "mean_labeled_seeds": 3.0
+    },
+    {
+      "model_name": "Qwen/Qwen2.5-7B",
+      "module_rows": 14,
+      "projection_rows": 10,
+      "safe_all_seed_rows": 4,
+      "unsafe_any_seed_rows": 10,
+      "mean_labeled_seeds": 3.0
+    },
+    {
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "module_rows": 14,
+      "projection_rows": 10,
+      "safe_all_seed_rows": 8,
+      "unsafe_any_seed_rows": 6,
+      "mean_labeled_seeds": 3.0
+    }
+  ]
+}

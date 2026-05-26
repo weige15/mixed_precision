@@ -1,0 +1,38 @@
+{
+  "constraints": {
+    "epsilon": 0.01,
+    "tau": 0.0,
+    "max_memory_delta_gib": -4.0,
+    "alpha": 1.0
+  },
+  "metrics": {
+    "objective": 0.00565148,
+    "predicted_quality_risk": 0.00681742,
+    "predicted_instability_risk": 0.0,
+    "quality_recovery_vs_lowbit": 0.00116594,
+    "memory_delta_gib_vs_bf16": -5.105074,
+    "throughput_delta_pct_vs_bf16": -19.174164
+  },
+  "selected_actions": [
+    {
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "group_name": "norm_logits",
+      "candidate_action": "backend_default",
+      "backend": "bitsandbytes",
+      "hardware_label": "rtx3090-lab",
+      "module_names": "already non-quantized paths",
+      "source_artifact": "experiments/h8-hardware-aware-precision-search/results/llama_h8_metrics_summary.json",
+      "notes": "H8 feasibility probes found norm/logit rescue mostly no-op under QLoRA/NF4."
+    },
+    {
+      "model_name": "meta-llama/Llama-3.1-8B",
+      "group_name": "projection_storage",
+      "candidate_action": "qlora_nf4_bf16_rescue_oracle_perturbation_upper_bound",
+      "backend": "bitsandbytes+torch",
+      "hardware_label": "rtx3090-lab",
+      "module_names": "base_model.model.model.layers.31.mlp.up_proj;base_model.model.model.layers.31.mlp.gate_proj;base_model.model.model.layers.2.mlp.down_proj;base_model.model.model.layers.30.mlp.gate_proj",
+      "source_artifact": "experiments/h10-peft-precision-risk/results/rescue_selector_evaluation_llama31_8b.json",
+      "notes": "Planning row from selector oracle_perturbation_upper_bound; expected recovery scales measured H8 top-4 recovery by unsafe_recall_at_k=1.000."
+    }
+  ]
+}
