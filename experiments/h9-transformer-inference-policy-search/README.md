@@ -110,8 +110,9 @@ python experiments/h9-transformer-inference-policy-search/code/summarize_h9_resu
 Run long-context-specific prompt-logprob quality scoring for H9.2:
 
 ```bash
+GPU_ID=0
 for p in bf16_default fp16_default bf16_kv_fp8_e4m3 fp16_kv_fp8_e4m3 bf16_kv_fp8 fp16_kv_fp8; do
-  PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True CUDA_VISIBLE_DEVICES=0 \
+  PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True CUDA_VISIBLE_DEVICES=$GPU_ID \
   python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_quality.py \
     --policies experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_policy_candidates.json \
     --output-dir experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality \
@@ -122,6 +123,19 @@ for p in bf16_default fp16_default bf16_kv_fp8_e4m3 fp16_kv_fp8_e4m3 bf16_kv_fp8
 done
 ```
 
+If the quality run still OOMs on a busy RTX 3090, lower the reservation:
+
+```bash
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True CUDA_VISIBLE_DEVICES=0 \
+python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_quality.py \
+  --policies experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_policy_candidates.json \
+  --output-dir experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality \
+  --policy-name bf16_default \
+  --quality-batch-size 1 \
+  --gpu-memory-utilization 0.70 \
+  --hardware-label rtx3090-lab
+```
+
 Regenerate the H9.2 summary with the long-context quality artifacts:
 
 ```bash
@@ -129,4 +143,53 @@ python experiments/h9-transformer-inference-policy-search/code/summarize_h9_resu
   --results-dir experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks \
   --quality-dir experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality \
   --output experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_summary.json
+```
+
+Audit H9.2 benchmark and quality statuses:
+
+```bash
+python - <<'PY'
+import json
+from pathlib import Path
+
+for root in [
+    Path("experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks"),
+    Path("experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality"),
+]:
+    print(f"\n{root}")
+    for path in sorted(root.glob("*/benchmark.json")) + sorted(root.glob("*/quality.json")):
+        payload = json.loads(path.read_text())
+        print(
+            path.parent.name,
+            payload.get("status"),
+            "runs=", len(payload.get("runs", [])),
+            "tokens=", payload.get("tokens_scored"),
+            "missing=", payload.get("tokens_missing_logprob"),
+            "error=", (payload.get("error") or "")[:120],
+        )
+PY
+```
+
+Print the compact H9.2 quality table:
+
+```bash
+python - <<'PY'
+import json
+from pathlib import Path
+
+quality_dir = Path("experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality")
+rows = {}
+for path in sorted(quality_dir.glob("*/quality.json")):
+    rows[path.parent.name] = json.loads(path.read_text())
+baseline = rows["bf16_default"]["mean_prompt_nll"]
+for name, payload in rows.items():
+    delta = (payload["mean_prompt_nll"] - baseline) / baseline * 100
+    print(
+        name,
+        f"nll={payload['mean_prompt_nll']:.9f}",
+        f"delta={delta:+.4f}%",
+        f"tokens={payload['tokens_scored']}",
+        f"missing={payload['tokens_missing_logprob']}",
+    )
+PY
 ```

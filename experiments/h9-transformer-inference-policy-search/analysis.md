@@ -165,17 +165,19 @@ Interpretation:
   measured memory unchanged and improves `prefill_4k` latency by about `2.06%`
   and `batch_mixed_long` latency by about `0.43%`, with only the earlier H9.1
   small decode regression.
-- The H9.2 summary currently links to the H9.1 quality directory. Therefore the
-  quality deltas in `h9_2_long_context_summary.json` are policy-level prompt-NLL
-  diagnostics from the earlier prompt suite, not a long-context-specific quality
-  measurement. Before making a final H9.2 quality claim, run quality scoring
-  with `--policies results/h9_2_long_context_policy_candidates.json` and a
-  separate `results/h9_2_long_context_quality/` output directory.
+- Long-context prompt-logprob quality scoring is now complete for all six
+  policies. Each policy scored 7852 prompt tokens with zero missing logprobs.
+  Versus `bf16_default`, prompt-NLL deltas are tiny: `fp16_default` is
+  `-0.0148%`, `fp16_kv_fp8` and `fp16_kv_fp8_e4m3` are `-0.0196%`, and the
+  bf16 FP8 KV-cache policies are `+0.0515%`. All are well inside the 1%
+  quality gate.
 
 H9.2 therefore strengthens the H9.1 conclusion: the infrastructure can evaluate
 backend-real vLLM policies by workload, but the current vLLM-accessible FP8 KV
-cache knob is not the missing memory-saving policy on the RTX 3090. The next
-step toward a HAQ-style Transformer module assignment is not another global KV
-dtype toggle; it is a richer search space over backend-supported module or
-group policies, such as AWQ/GPTQ/Marlin artifacts, TorchAO configs, or
-selective high-precision rescue from a quantized weight baseline.
+cache knob is not the missing memory-saving policy on the RTX 3090. FP8 KV
+cache preserves quality in this long-context suite, but it fails the memory
+objective and only helps latency in selected prefill/batch cases. The next step
+toward a HAQ-style Transformer module assignment is not another global KV dtype
+toggle; it is a richer search space over backend-supported module or group
+policies, such as AWQ/GPTQ/Marlin artifacts, TorchAO configs, or selective
+high-precision rescue from a quantized weight baseline.

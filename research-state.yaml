@@ -260,11 +260,11 @@ hypotheses:
     priority: high
   - id: H9
     statement: "A vLLM-backed hardware-aware policy search can identify Transformer inference precision/backend policies that improve the latency-memory-quality Pareto frontier versus default bf16/fp16 serving."
-    status: partially_supported_h9_2_benchmarks_complete
+    status: partially_supported_h9_2_complete
     plain_language_question: "Can we search real LLM serving backends for better precision choices across model dtype, quantized weights, and KV-cache dtype?"
     motivation: "H8 showed that backend-real low-bit plus high-precision rescue can improve a memory-quality trade-off during LoRA. Inference shifts the bottleneck to prefill latency, decode throughput, KV-cache memory, and serving kernels."
     why_it_matters: "HAQ-style hardware-aware search is more meaningful for Transformer inference if candidate policies map to real vLLM kernels and cache formats instead of fake precision hooks."
-    expected_result: "H9.1 found one clean backend-real policy, fp16_default, that is essentially quality-neutral and slightly improves prefill/mixed latency versus bf16_default without changing memory. H9.2 completed a longer-context KV-cache stress benchmark and still did not find a memory-saving FP8 KV-cache policy: default KV used about 21.88 GiB, while FP8 KV policies used about 22.68 GiB. FP8 KV gave small prefill or long-batch latency wins only with a memory cost, and bf16_default remained best for decode-context latency."
+    expected_result: "H9.1 found one clean backend-real policy, fp16_default, that is essentially quality-neutral and slightly improves prefill/mixed latency versus bf16_default without changing memory. H9.2 completed a longer-context KV-cache stress benchmark and long-context prompt-NLL scoring. It still did not find a memory-saving FP8 KV-cache policy: default KV used about 21.88 GiB, while FP8 KV policies used about 22.68 GiB. FP8 KV preserved quality but gave small prefill or long-batch latency wins only with a memory cost, and bf16_default remained best for decode-context latency."
     required_experiment: "Generate a concrete vLLM policy grid for Llama-3.1-8B, inspect backend support, run smoke instantiation checks, benchmark prefill-heavy, decode-heavy, and mixed workloads on the RTX 3090, then summarize Pareto non-dominated policies."
     metric: "Primary: end-to-end latency, output tokens/sec, total tokens/sec, peak CUDA memory, policy failure status, and Pareto non-domination by workload. Secondary: quality proxy from NLL/perplexity or deterministic logprob/output agreement versus bf16."
     estimated_compute_cost: "Thorough single-GPU pilot: one RTX 3090, about 10 candidate policies, smoke checks first, then repeated full workload benchmarks for viable policies."
@@ -748,13 +748,13 @@ experiments:
       baseline: null
       delta: null
       wall_time_sec: null
-      change_summary: "H9.2 long-context KV-cache stress completed on Llama-3.1-8B and lab RTX 3090. Six focused policies completed three workloads each with zero failures. FP8 KV cache did not save measured memory: default KV policies used about 21.88 GiB and FP8 KV policies used about 22.68 GiB, roughly +3.6%. bf16_kv_fp8_e4m3 improved prefill_4k latency by 3.61%, and fp16_kv_fp8 improved batch_mixed_long latency by 2.06%, but both used more memory. bf16_default remained best for decode_2k_context; fp16_default remained the cleanest low-risk policy with unchanged memory and small prefill/batch wins. Long-context-specific quality scoring remains to be run because the current summary links to H9.1 quality artifacts."
+      change_summary: "H9.2 long-context KV-cache stress completed on Llama-3.1-8B and lab RTX 3090. Six focused policies completed three workloads each with zero failures and all six completed long-context quality scoring over 7852 prompt tokens with zero missing logprobs. FP8 KV cache did not save measured memory: default KV policies used about 21.88 GiB and FP8 KV policies used about 22.68 GiB, roughly +3.6%. Quality deltas were tiny and inside the 1% gate: fp16_default -0.0148%, fp16 FP8 KV -0.0196%, and bf16 FP8 KV +0.0515%. bf16_kv_fp8_e4m3 improved prefill_4k latency by 3.61%, and fp16_kv_fp8 improved batch_mixed_long latency by 2.06%, but both used more memory. bf16_default remained best for decode_2k_context; fp16_default remained the cleanest low-risk policy with unchanged memory and small prefill/batch wins."
       artifact: "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_summary.json"
 
 outer_loop:
   cycle: 22
-  last_direction: "score H9.2 long-context quality, then design H9.3 HAQ-style module/group assignment"
-  last_reflection: "H9.2 benchmark evidence is complete and negative for FP8 KV cache as a memory-saving lever on RTX 3090/vLLM. The remaining validation step is long-context-specific prompt-NLL scoring. After that, the next substantial research step is H9.3: move from coarse global vLLM launch policies to HAQ-style Transformer module/group assignment using backend-supported quantized weight artifacts or selective high-precision rescue."
+  last_direction: "design H9.3 HAQ-style module/group assignment"
+  last_reflection: "H9.2 benchmark and quality evidence are complete. FP8 KV cache preserves long-context prompt NLL but is negative as a memory-saving lever on RTX 3090/vLLM because it increases measured memory by about 3.6% and does not help decode-context latency. The next substantial research step is H9.3: move from coarse global vLLM launch policies to HAQ-style Transformer module/group assignment using backend-supported quantized weight artifacts or selective high-precision rescue."
 
 workspace:
   findings: "findings.md"
