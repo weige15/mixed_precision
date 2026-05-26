@@ -28,6 +28,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--warmup-runs", type=int, default=1)
+    parser.add_argument("--workload-name", action="append", default=[], help="Run only selected workload name(s) from the policy grid.")
     parser.add_argument("--smoke", action="store_true", help="Use one tiny prompt/workload for fast policy instantiation checks.")
     parser.add_argument("--dry-run", action="store_true", help="Write the planned benchmark configs without loading vLLM.")
     return parser.parse_args()
@@ -59,6 +60,16 @@ def smoke_workloads() -> list[dict[str, Any]]:
             "description": "Tiny policy-instantiation smoke workload.",
         }
     ]
+
+
+def select_workloads(workloads: list[dict[str, Any]], names: list[str]) -> list[dict[str, Any]]:
+    if not names:
+        return workloads
+    by_name = {workload["name"]: workload for workload in workloads}
+    missing = [name for name in names if name not in by_name]
+    if missing:
+        raise SystemExit(f"Unknown workload name(s): {missing}. Available: {sorted(by_name)}")
+    return [by_name[name] for name in names]
 
 
 def cuda_snapshot() -> dict[str, Any]:
@@ -263,7 +274,7 @@ def main() -> None:
     args = parse_args()
     grid = load_policy_grid(args.policies)
     policies = select_policies(grid, args.policy_name)
-    workloads = smoke_workloads() if args.smoke else grid.get("workloads", [])
+    workloads = smoke_workloads() if args.smoke else select_workloads(grid.get("workloads", []), args.workload_name)
     if not workloads:
         raise SystemExit("No workloads found in policy grid.")
 

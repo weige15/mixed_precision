@@ -66,3 +66,43 @@ policy in one Python process.
 
 `fp16_torchao` is a placeholder until a concrete vLLM `torchao_config` is
 added. Do not treat its config-missing failure as a backend performance result.
+
+## H9.2 Long-Context KV Stress
+
+Generate the focused H9.2 policy/workload file:
+
+```bash
+python experiments/h9-transformer-inference-policy-search/code/generate_h9_policies.py \
+  --profile h9_2_long_context \
+  --output experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_policy_candidates.json
+```
+
+Dry-run the long-context benchmark plan:
+
+```bash
+python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_benchmark.py \
+  --policies experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_policy_candidates.json \
+  --dry-run \
+  --hardware-label rtx3090-lab
+```
+
+Run H9.2 one policy per process:
+
+```bash
+for p in bf16_default fp16_default bf16_kv_fp8_e4m3 fp16_kv_fp8_e4m3 bf16_kv_fp8 fp16_kv_fp8; do
+  CUDA_VISIBLE_DEVICES=0 python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_benchmark.py \
+    --policies experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_policy_candidates.json \
+    --output-dir experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks \
+    --policy-name "$p" \
+    --repeats 3 \
+    --hardware-label rtx3090-lab
+done
+```
+
+Summarize H9.2 separately from H9.1:
+
+```bash
+python experiments/h9-transformer-inference-policy-search/code/summarize_h9_results.py \
+  --results-dir experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks \
+  --output experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_summary.json
+```

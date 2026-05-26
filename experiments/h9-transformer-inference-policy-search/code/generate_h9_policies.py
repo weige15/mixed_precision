@@ -18,6 +18,12 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model-name", default=DEFAULT_MODEL)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--profile",
+        choices=["h9_1_default", "h9_2_long_context"],
+        default="h9_1_default",
+        help="Policy/workload profile to generate.",
+    )
     parser.add_argument("--gpu-memory-utilization", type=float, default=0.88)
     parser.add_argument("--max-model-len", type=int, default=4096)
     parser.add_argument("--block-size", type=int, default=16)
@@ -102,14 +108,59 @@ def workloads() -> list[dict[str, Any]]:
     ]
 
 
-def main() -> None:
-    args = parse_args()
+def long_context_workloads() -> list[dict[str, Any]]:
+    base = (
+        "Transformer serving systems must manage prompt prefill, autoregressive "
+        "decode, attention kernels, model-weight layout, and KV-cache storage. "
+        "Hardware-aware mixed precision can choose different formats for model "
+        "weights and cached keys and values, but the benefit depends on whether "
+        "the runtime actually uses efficient kernels and whether quality remains "
+        "stable. "
+    )
+    section = (
+        "In a long-context workload, KV-cache memory grows with sequence length, "
+        "number of layers, hidden size, number of KV heads, and dtype width. "
+        "A lower-precision KV cache should matter most when contexts are long "
+        "enough that cache allocation and bandwidth become visible in measured "
+        "latency and memory. "
+    )
+    long_prompt_4kish = (base + section) * 48
+    long_prompt_2kish = (base + section) * 24
+    mixed_prompt_1kish = (base + section) * 12
+    return [
+        {
+            "name": "prefill_4k",
+            "max_tokens": 16,
+            "prompts": [long_prompt_4kish],
+            "description": "Near-4k prompt with short generation; stresses prefill and large KV allocation.",
+        },
+        {
+            "name": "decode_2k_context",
+            "max_tokens": 128,
+            "prompts": [long_prompt_2kish],
+            "description": "Long prompt plus longer decode; stresses decode after a large KV cache exists.",
+        },
+        {
+            "name": "batch_mixed_long",
+            "max_tokens": 64,
+            "prompts": [
+                mixed_prompt_1kish,
+                mixed_prompt_1kish + " Compare FP8 KV cache with default KV cache.",
+                mixed_prompt_1kish + " Explain why quality gates are needed.",
+                mixed_prompt_1kish + " Identify when a decode-only speedup is misleading.",
+            ],
+            "description": "Batch of long prompts with moderate generation; stresses memory pressure and batching.",
+        },
+    ]
+
+
+def candidate_policies(args: argparse.Namespace) -> list[dict[str, Any]]:
     common = {
         "gpu_memory_utilization": args.gpu_memory_utilization,
         "max_model_len": args.max_model_len,
         "block_size": args.block_size,
     }
-    policies = [
+    all_policies = [
         policy(
             "bf16_default",
             "Default bf16 vLLM baseline with automatic KV-cache dtype.",
@@ -189,14 +240,32 @@ def main() -> None:
             **common,
         ),
     ]
+    if args.profile == "h9_2_long_context":
+        keep = {
+            "bf16_default",
+            "fp16_default",
+            "bf16_kv_fp8_e4m3",
+            "fp16_kv_fp8_e4m3",
+            "bf16_kv_fp8",
+            "fp16_kv_fp8",
+        }
+        return [candidate for candidate in all_policies if candidate["policy_name"] in keep]
+    return all_policies
+
+
+def main() -> None:
+    args = parse_args()
+    policies = candidate_policies(args)
+    selected_workloads = long_context_workloads() if args.profile == "h9_2_long_context" else workloads()
     payload = {
         "schema_version": 1,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "model_name": args.model_name,
         "runtime": "vllm",
+        "profile": args.profile,
         "search_objective": "pareto_latency_memory_quality",
         "candidate_policies": policies,
-        "workloads": workloads(),
+        "workloads": selected_workloads,
         "notes": [
             "Policies are launch configurations, not claims of support.",
             "Run inspect_h9_backend_inventory.py before benchmarking.",

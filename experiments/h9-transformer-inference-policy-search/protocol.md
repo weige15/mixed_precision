@@ -59,7 +59,7 @@ Initial candidates:
 5. torchao-backed weight quantization only if local package compatibility is sufficient.
 6. eager-mode controls for bf16/fp16, used to diagnose compile/runtime effects rather than as expected winners.
 
-AWQ, GPTQ, Marlin, and BitBLAS policies are H9.2 candidates unless compatible quantized model artifacts are already available.
+AWQ, GPTQ, Marlin, and BitBLAS policies are later candidates unless compatible quantized model artifacts are already available. H9.2 focuses first on KV-cache stress with longer-context workloads.
 
 ## Workloads
 
@@ -72,6 +72,16 @@ mixed: varied prompt lengths and generation lengths
 ```
 
 This is mandatory because prefill and decode stress different parts of Transformer inference. A policy that wins prefill can lose decode.
+
+H9.2 adds long-context KV-cache stress workloads:
+
+```text
+prefill_4k: near-4k prompt, short generation
+decode_2k_context: long prompt, longer decode
+batch_mixed_long: small batch of long prompts
+```
+
+These workloads test whether FP8 KV-cache policies become useful only when context length and cache pressure are high enough.
 
 ## Metrics
 

@@ -85,3 +85,39 @@ the first policy grid does not find a strong memory-saving policy on the RTX
 under this vLLM/GPU/prompt setup; bitsandbytes needs either quality rescue,
 different artifacts, or a narrower decode-only framing before it can be treated
 as useful.
+
+## 2026-05-26 H9.2 Setup
+
+H9.2 targets the main unresolved question from H9.1: FP8 KV-cache policies may
+need longer contexts before their intended memory benefit appears. The focused
+H9.2 policy file is:
+
+- `results/h9_2_long_context_policy_candidates.json`
+
+It contains six policies:
+
+- `bf16_default`
+- `fp16_default`
+- `bf16_kv_fp8_e4m3`
+- `fp16_kv_fp8_e4m3`
+- `bf16_kv_fp8`
+- `fp16_kv_fp8`
+
+It intentionally excludes `fp16_bitsandbytes`, because H9.2 is about KV-cache
+stress rather than weight quantization, and H9.1 bitsandbytes failed the quality
+gate. It also excludes `fp16_torchao`, which still lacks a concrete
+`torchao_config`.
+
+The H9.2 workloads are:
+
+- `prefill_4k`: near-4k prompt, 16-token generation.
+- `decode_2k_context`: long prompt, 128-token generation.
+- `batch_mixed_long`: four long prompts, 64-token generation.
+
+The dry-run benchmark plan was generated successfully under:
+
+- `results/h9_2_long_context_benchmarks/`
+
+No H9.2 runtime evidence exists yet. The next empirical step is to run the six
+policies one process at a time on the RTX 3090, then summarize with
+`h9_2_long_context_summary.json`.

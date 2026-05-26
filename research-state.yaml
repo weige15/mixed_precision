@@ -742,9 +742,9 @@ experiments:
       artifact: "experiments/h9-transformer-inference-policy-search/results/h9_benchmark_summary.json"
 
 outer_loop:
-  cycle: 20
-  last_direction: "decide whether H9.2 should pursue longer-context KV stress, quantized model artifacts, or TorchAO config support"
-  last_reflection: "H9.1 is partially supported. The vLLM policy-search workflow works and identifies fp16_default as a quality-neutral small latency improvement over bf16_default. The first grid does not produce a memory-saving policy on RTX 3090: FP8 KV-cache policies are dominated, and fp16_bitsandbytes fails the quality gate despite a decode-heavy speed win. The next H9 step should change the candidate space or workload rather than repeat the same grid."
+  cycle: 21
+  last_direction: "run H9.2 long-context KV-cache stress policies on the RTX 3090"
+  last_reflection: "H9.2 is scaffolded with a focused six-policy grid and three long-context workloads. It tests whether FP8 KV-cache policies become useful under longer context and batch pressure, after H9.1 found them dominated on shorter workloads. The next step is to run the H9.2 policies one process at a time and summarize h9_2_long_context_summary.json."
 
 workspace:
   findings: "findings.md"

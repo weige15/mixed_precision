@@ -1,0 +1,11 @@
+{
+  "results_dir": "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks",
+  "baseline_policy": "bf16_default",
+  "n_artifacts": 6,
+  "n_completed_policy_workloads": 0,
+  "n_failed_policies": 0,
+  "n_quality_artifacts": 7,
+  "completed": [],
+  "failures": [],
+  "note": "Quality metrics are included when quality artifacts exist. Pareto marking uses latency, output throughput, and memory; memory falls back to cuda mem_get_info used GiB when PyTorch allocator stats do not capture vLLM worker allocations."
+}
