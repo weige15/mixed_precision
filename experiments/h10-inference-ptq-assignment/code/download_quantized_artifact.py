@@ -14,6 +14,7 @@ from typing import Any
 
 
 DEFAULT_DOWNLOAD_ROOT = Path("models/hf_quantized")
+DEFAULT_RUNTIME_CACHE_DIR = Path("tmp/h10_ptq_runtime_cache")
 PIPELINE = Path("experiments/h10-inference-ptq-assignment/code/run_artifact_ptq_pipeline.py")
 
 
@@ -58,6 +59,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--run-smoke", action="store_true")
     parser.add_argument("--run-full", action="store_true")
+    parser.add_argument("--skip-smoke", action="store_true")
+    parser.add_argument("--skip-benchmark", action="store_true")
+    parser.add_argument("--skip-quality", action="store_true")
+    parser.add_argument("--runtime-cache-dir", type=Path, default=DEFAULT_RUNTIME_CACHE_DIR)
     parser.add_argument("--hardware-label", default=os.environ.get("HARDWARE_LABEL", "rtx3090-lab"))
     parser.add_argument("--cuda-visible-devices", default=os.environ.get("CUDA_VISIBLE_DEVICES"))
     return parser.parse_args()
@@ -145,9 +150,17 @@ def run_pipeline(args: argparse.Namespace, spec: dict[str, str], local_dir: Path
         spec["quantization"],
         "--hardware-label",
         args.hardware_label,
+        "--runtime-cache-dir",
+        str(args.runtime_cache_dir),
     ]
     if args.run_smoke and not args.run_full:
         cmd.append("--smoke-only")
+    if args.skip_smoke:
+        cmd.append("--skip-smoke")
+    if args.skip_benchmark:
+        cmd.append("--skip-benchmark")
+    if args.skip_quality:
+        cmd.append("--skip-quality")
     if args.cuda_visible_devices is not None:
         cmd.extend(["--cuda-visible-devices", str(args.cuda_visible_devices)])
     printable = " ".join(cmd)

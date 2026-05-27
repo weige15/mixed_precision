@@ -31,6 +31,7 @@ DEFAULT_QUALITY_DIR = Path(
 DEFAULT_H9_SUMMARY = Path(
     "experiments/h9-transformer-inference-policy-search/results/h9_benchmark_summary.json"
 )
+DEFAULT_RUNTIME_CACHE_DIR = Path("tmp/h10_ptq_runtime_cache")
 
 
 def parse_args() -> argparse.Namespace:
@@ -53,8 +54,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--h9-summary-output", type=Path, default=DEFAULT_H9_SUMMARY)
     parser.add_argument("--quality-gpu-memory-utilization", type=float, default=0.78)
     parser.add_argument("--quality-batch-size", type=int, default=1)
+    parser.add_argument("--runtime-cache-dir", type=Path, default=DEFAULT_RUNTIME_CACHE_DIR)
     parser.add_argument("--smoke-only", action="store_true")
     parser.add_argument("--skip-smoke", action="store_true")
+    parser.add_argument("--skip-benchmark", action="store_true")
+    parser.add_argument("--skip-quality", action="store_true")
     parser.add_argument("--dry-run", action="store_true", help="Print commands without running them.")
     return parser.parse_args()
 
@@ -88,6 +92,18 @@ def command_env(args: argparse.Namespace) -> dict[str, str]:
     if args.cuda_visible_devices is not None:
         env["CUDA_VISIBLE_DEVICES"] = str(args.cuda_visible_devices)
     env["HARDWARE_LABEL"] = args.hardware_label
+    runtime_cache = args.runtime_cache_dir
+    runtime_cache.mkdir(parents=True, exist_ok=True)
+    for child in ["tmp", "torchinductor", "triton", "cuda", "xdg", "vllm"]:
+        (runtime_cache / child).mkdir(parents=True, exist_ok=True)
+    env["TMPDIR"] = str(runtime_cache / "tmp")
+    env["TEMP"] = str(runtime_cache / "tmp")
+    env["TMP"] = str(runtime_cache / "tmp")
+    env["TORCHINDUCTOR_CACHE_DIR"] = str(runtime_cache / "torchinductor")
+    env["TRITON_CACHE_DIR"] = str(runtime_cache / "triton")
+    env["CUDA_CACHE_PATH"] = str(runtime_cache / "cuda")
+    env["XDG_CACHE_HOME"] = str(runtime_cache / "xdg")
+    env["VLLM_CACHE_ROOT"] = str(runtime_cache / "vllm")
     return env
 
 
@@ -162,45 +178,51 @@ def main() -> None:
 
     benchmark_result = args.benchmark_output_dir / args.policy_name / "benchmark.json"
     quality_result = args.quality_output_dir / args.policy_name / "quality.json"
-    run(
-        [
-            python,
-            "experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_benchmark.py",
-            "--policies",
-            str(args.policy_grid),
-            "--policy-name",
-            args.policy_name,
-            "--output-dir",
-            str(args.benchmark_output_dir),
-            "--hardware-label",
-            args.hardware_label,
-        ],
-        args,
-    )
-    if not args.dry_run:
-        require_completed(benchmark_result, "full benchmark")
+    if not args.skip_benchmark:
+        run(
+            [
+                python,
+                "experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_benchmark.py",
+                "--policies",
+                str(args.policy_grid),
+                "--policy-name",
+                args.policy_name,
+                "--output-dir",
+                str(args.benchmark_output_dir),
+                "--hardware-label",
+                args.hardware_label,
+            ],
+            args,
+        )
+        if not args.dry_run:
+            require_completed(benchmark_result, "full benchmark")
+    else:
+        print(f"\nskipping benchmark; expecting existing artifact at {benchmark_result}")
 
-    run(
-        [
-            python,
-            "experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_quality.py",
-            "--policies",
-            str(args.policy_grid),
-            "--policy-name",
-            args.policy_name,
-            "--output-dir",
-            str(args.quality_output_dir),
-            "--hardware-label",
-            args.hardware_label,
-            "--quality-batch-size",
-            str(args.quality_batch_size),
-            "--gpu-memory-utilization",
-            str(args.quality_gpu_memory_utilization),
-        ],
-        args,
-    )
-    if not args.dry_run:
-        require_completed(quality_result, "quality run")
+    if not args.skip_quality:
+        run(
+            [
+                python,
+                "experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_quality.py",
+                "--policies",
+                str(args.policy_grid),
+                "--policy-name",
+                args.policy_name,
+                "--output-dir",
+                str(args.quality_output_dir),
+                "--hardware-label",
+                args.hardware_label,
+                "--quality-batch-size",
+                str(args.quality_batch_size),
+                "--gpu-memory-utilization",
+                str(args.quality_gpu_memory_utilization),
+            ],
+            args,
+        )
+        if not args.dry_run:
+            require_completed(quality_result, "quality run")
+    else:
+        print(f"\nskipping quality; expecting existing artifact at {quality_result}")
 
     run(
         [

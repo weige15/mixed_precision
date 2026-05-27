@@ -115,6 +115,23 @@ python experiments/h10-inference-ptq-assignment/code/download_quantized_artifact
   --hardware-label rtx3090-lab
 ```
 
+If the quality step fails with a TorchDynamo/TorchInductor C++ compile error
+ending in `No space left on device` for `/tmp`, rerun only the failed quality
+and summary stages with compiler temp files redirected into the repo:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h10-inference-ptq-assignment/code/download_quantized_artifact.py \
+  --candidate llama31_8b_base_gptq \
+  --run-full \
+  --skip-smoke \
+  --skip-benchmark \
+  --runtime-cache-dir tmp/h10_ptq_runtime_cache \
+  --hardware-label rtx3090-lab
+```
+
+If the benchmark did not complete either, omit `--skip-benchmark`.
+
 Default smoke test, using `shuyuej/Meta-Llama-3.1-8B-GPTQ`:
 
 ```bash
