@@ -46,10 +46,8 @@
     "candidate_action": "fp16_bitsandbytes",
     "workload_name": "decode_heavy",
     "backend_feasible": true,
-    "accepted_before_pareto": false,
-    "rejection_reasons": [
-      "quality_gate_failed"
-    ],
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
     "predicted_quality_risk": 0.01324062,
     "latency_delta_pct_vs_bf16": -42.350318,
     "output_tokens_per_sec_delta_pct_vs_bf16": 73.459595,
@@ -204,7 +202,6 @@
     "backend_feasible": true,
     "accepted_before_pareto": false,
     "rejection_reasons": [
-      "quality_gate_failed",
       "no_deployment_metric_improves"
     ],
     "predicted_quality_risk": 0.01324062,
@@ -357,10 +354,8 @@
     "candidate_action": "fp16_bitsandbytes",
     "workload_name": "prefill_heavy",
     "backend_feasible": true,
-    "accepted_before_pareto": false,
-    "rejection_reasons": [
-      "quality_gate_failed"
-    ],
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
     "predicted_quality_risk": 0.01324062,
     "latency_delta_pct_vs_bf16": -83.828599,
     "output_tokens_per_sec_delta_pct_vs_bf16": -61.351322,
@@ -759,6 +754,244 @@
     "latency_delta_pct_vs_bf16": -1.958357,
     "output_tokens_per_sec_delta_pct_vs_bf16": 1.99509,
     "memory_delta_gib_vs_bf16": 0.798828,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "bf16_default",
+    "workload_name": "decode_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "baseline_reference",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.0,
+    "latency_delta_pct_vs_bf16": 0.0,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.0,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "fp16_default",
+    "workload_name": "decode_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
+    "predicted_quality_risk": 9.738e-05,
+    "latency_delta_pct_vs_bf16": -0.308156,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.309048,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "llama31_8b_instruct_awq_marlin_artifact",
+    "workload_name": "decode_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
+    "predicted_quality_risk": 0.02851377,
+    "latency_delta_pct_vs_bf16": -62.146015,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 164.177864,
+    "memory_delta_gib_vs_bf16": 0.054688,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "bf16_default",
+    "workload_name": "mixed",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "baseline_reference",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.0,
+    "latency_delta_pct_vs_bf16": 0.0,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.0,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "fp16_default",
+    "workload_name": "mixed",
+    "backend_feasible": true,
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
+    "predicted_quality_risk": 9.738e-05,
+    "latency_delta_pct_vs_bf16": -0.864452,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.871928,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "llama31_8b_instruct_awq_marlin_artifact",
+    "workload_name": "mixed",
+    "backend_feasible": true,
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
+    "predicted_quality_risk": 0.02851377,
+    "latency_delta_pct_vs_bf16": -62.65783,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 167.796355,
+    "memory_delta_gib_vs_bf16": 0.052734,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "bf16_default",
+    "workload_name": "prefill_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "baseline_reference",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.0,
+    "latency_delta_pct_vs_bf16": 0.0,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.0,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "fp16_default",
+    "workload_name": "prefill_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 9.738e-05,
+    "latency_delta_pct_vs_bf16": 0.066955,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -0.065848,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "llama31_8b_instruct_awq_marlin_artifact",
+    "workload_name": "prefill_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
+    "predicted_quality_risk": 0.02851377,
+    "latency_delta_pct_vs_bf16": -58.653331,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 142.746265,
+    "memory_delta_gib_vs_bf16": 0.054688,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "bf16_default",
+    "workload_name": "decode_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "baseline_reference",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.0,
+    "latency_delta_pct_vs_bf16": 0.0,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.0,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "fp16_default",
+    "workload_name": "decode_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
+    "predicted_quality_risk": 9.738e-05,
+    "latency_delta_pct_vs_bf16": -0.284191,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.285152,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "llama31_8b_instruct_gptq_marlin_artifact",
+    "workload_name": "decode_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
+    "predicted_quality_risk": 0.00773771,
+    "latency_delta_pct_vs_bf16": -62.721734,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 168.254866,
+    "memory_delta_gib_vs_bf16": 0.037109,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "bf16_default",
+    "workload_name": "mixed",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "baseline_reference",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.0,
+    "latency_delta_pct_vs_bf16": 0.0,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.0,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "fp16_default",
+    "workload_name": "mixed",
+    "backend_feasible": true,
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
+    "predicted_quality_risk": 9.738e-05,
+    "latency_delta_pct_vs_bf16": -0.52059,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.523239,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "llama31_8b_instruct_gptq_marlin_artifact",
+    "workload_name": "mixed",
+    "backend_feasible": true,
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
+    "predicted_quality_risk": 0.00773771,
+    "latency_delta_pct_vs_bf16": -62.445208,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 166.27885,
+    "memory_delta_gib_vs_bf16": 0.035156,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "bf16_default",
+    "workload_name": "prefill_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "baseline_reference",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.0,
+    "latency_delta_pct_vs_bf16": 0.0,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.0,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "fp16_default",
+    "workload_name": "prefill_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 9.738e-05,
+    "latency_delta_pct_vs_bf16": 0.098008,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -0.101775,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "llama31_8b_instruct_gptq_marlin_artifact",
+    "workload_name": "prefill_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
+    "predicted_quality_risk": 0.00773771,
+    "latency_delta_pct_vs_bf16": -60.494807,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 153.139001,
+    "memory_delta_gib_vs_bf16": 0.037109,
     "failure_reason": ""
   }
 ]

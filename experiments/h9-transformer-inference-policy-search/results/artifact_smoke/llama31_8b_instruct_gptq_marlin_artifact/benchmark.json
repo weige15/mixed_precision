@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T14:15:27.876139+00:00",
+  "generated_at_utc": "2026-05-27T14:28:44.322760+00:00",
   "status": "completed",
   "policy_name": "llama31_8b_instruct_gptq_marlin_artifact",
   "policy": {
@@ -44,9 +44,9 @@
       "prompt_tokens": 6,
       "generated_tokens": 4,
       "total_tokens": 10,
-      "latency_sec": 0.05712574813514948,
-      "output_tokens_per_sec": 70.0209648114665,
-      "total_tokens_per_sec": 175.05241202866625,
+      "latency_sec": 0.05611315509304404,
+      "output_tokens_per_sec": 71.28453200265426,
+      "total_tokens_per_sec": 178.21133000663565,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -85,7 +85,7 @@
     "total_gib": 23.56854248046875,
     "used_gib_from_mem_get_info": 0.2550048828125
   },
-  "load_time_sec": 44.54104858683422,
+  "load_time_sec": 45.09877920988947,
   "post_load_cuda": {
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T14:25:07.232486+00:00",
+  "generated_at_utc": "2026-05-27T14:37:54.024783+00:00",
   "status": "completed",
   "policy_name": "llama31_8b_instruct_gptq_marlin_artifact",
   "policy": {
@@ -35,8 +35,8 @@
   "quality_batch_size": 1,
   "gpu_memory_utilization_override": 0.78,
   "cuda_visible_devices": "6",
-  "load_time_sec": 42.717141568195075,
-  "quality_time_sec": 4.81592957302928,
+  "load_time_sec": 43.38081793906167,
+  "quality_time_sec": 4.774451395031065,
   "prompt_results": [
     {
       "prompt_indices": [
@@ -45,7 +45,7 @@
       "prompt_chars": [
         104
       ],
-      "quality_time_sec": 4.409518331754953,
+      "quality_time_sec": 4.346295810304582,
       "mean_prompt_nll": 6.497009553015232,
       "tokens_scored": 16,
       "tokens_missing_logprob": 0
@@ -57,7 +57,7 @@
       "prompt_chars": [
         122
       ],
-      "quality_time_sec": 0.01927321497350931,
+      "quality_time_sec": 0.019655357114970684,
       "mean_prompt_nll": 4.50471620703035,
       "tokens_scored": 23,
       "tokens_missing_logprob": 0
@@ -69,7 +69,7 @@
       "prompt_chars": [
         111
       ],
-      "quality_time_sec": 0.01902024494484067,
+      "quality_time_sec": 0.01949955988675356,
       "mean_prompt_nll": 6.759454740113334,
       "tokens_scored": 19,
       "tokens_missing_logprob": 0
@@ -81,7 +81,7 @@
       "prompt_chars": [
         6336
       ],
-      "quality_time_sec": 0.3400150607340038,
+      "quality_time_sec": 0.3573248269967735,
       "mean_prompt_nll": 0.28248686749547086,
       "tokens_scored": 1120,
       "tokens_missing_logprob": 0
@@ -93,7 +93,7 @@
       "prompt_chars": [
         72
       ],
-      "quality_time_sec": 0.015397355891764164,
+      "quality_time_sec": 0.01816509896889329,
       "mean_prompt_nll": 6.411238381495843,
       "tokens_scored": 13,
       "tokens_missing_logprob": 0
@@ -105,7 +105,7 @@
       "prompt_chars": [
         29
       ],
-      "quality_time_sec": 0.01268045511096716,
+      "quality_time_sec": 0.013464575167745352,
       "mean_prompt_nll": 7.523327404260636,
       "tokens_scored": 5,
       "tokens_missing_logprob": 0

@@ -15,22 +15,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 2.6672448397924504,
-        "stdev": 0.012045835093999953,
-        "min": 2.658328596968204,
-        "max": 2.680948371067643
+        "mean": 2.6341634158355496,
+        "stdev": 0.0041460874657508456,
+        "min": 2.6293908189982176,
+        "max": 2.6368764876388013
       },
       "output_tokens_per_sec": {
-        "mean": 47.99024620871706,
-        "stdev": 0.2162442873586813,
-        "min": 47.74429876433097,
-        "max": 48.15055600951014
+        "mean": 48.59235794572589,
+        "stdev": 0.07655041899625124,
+        "min": 48.54228121796405,
+        "max": 48.68047727068859
       },
       "total_tokens_per_sec": {
-        "mean": 53.61410318630109,
-        "stdev": 0.24158541478352624,
-        "min": 53.339333775776005,
-        "max": 53.79319929187461
+        "mean": 54.28677489249064,
+        "stdev": 0.08552117122237649,
+        "min": 54.230829798194215,
+        "max": 54.38522070084741
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -69,22 +69,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 2.633768923735867,
-        "stdev": 0.001891163422890888,
-        "min": 2.6316474401392043,
-        "max": 2.635277973022312
+        "mean": 2.626677370009323,
+        "stdev": 0.005723708764431891,
+        "min": 2.6220909589901567,
+        "max": 2.633091797120869
       },
       "output_tokens_per_sec": {
-        "mean": 48.59957259615564,
-        "stdev": 0.034907560923271665,
-        "min": 48.57172613680715,
-        "max": 48.63873406736781
+        "mean": 48.730920011353845,
+        "stdev": 0.10608865257546551,
+        "min": 48.61205376127048,
+        "max": 48.816002954106715
       },
       "total_tokens_per_sec": {
-        "mean": 54.294835009767624,
-        "stdev": 0.03899829071896937,
-        "min": 54.26372529346424,
-        "max": 54.338585715887476
+        "mean": 54.441574700184376,
+        "stdev": 0.11852091654915424,
+        "min": 54.308778811419366,
+        "max": 54.5366283002911
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -100,8 +100,8 @@
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_gptq_marlin_benchmarks/fp16_default/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": -1.2550747331912928,
-        "output_tokens_per_sec_percent": -1.269687979487588,
+        "latency_percent": -0.28419063833410346,
+        "output_tokens_per_sec_percent": -0.2851519693337833,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
         "prompt_nll_percent": 0.009738261474567193
@@ -123,22 +123,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 0.9823533340046803,
-        "stdev": 0.0027608415887545187,
-        "min": 0.9797132778912783,
-        "max": 0.9852208839729428
+        "mean": 0.9819704326801002,
+        "stdev": 0.0036639055740351847,
+        "min": 0.9790694219991565,
+        "max": 0.986087828874588
       },
       "output_tokens_per_sec": {
-        "mean": 130.30003497907913,
-        "stdev": 0.3660750448645233,
-        "min": 129.9201042956325,
-        "max": 130.65046977367246
+        "mean": 130.35136474183923,
+        "stdev": 0.48556264465588894,
+        "min": 129.80588163843893,
+        "max": 130.73638817014375
       },
       "total_tokens_per_sec": {
-        "mean": 144.5516013049159,
-        "stdev": 0.40611450289656953,
-        "min": 144.13011570296732,
-        "max": 144.94036490516785
+        "mean": 144.6085452604779,
+        "stdev": 0.5386710589151206,
+        "min": 144.0033999426432,
+        "max": 145.03568062625322
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -147,17 +147,17 @@
         "max": 0.0
       },
       "used_gib_from_mem_get_info": {
-        "mean": 21.93402099609375,
+        "mean": 21.91644287109375,
         "stdev": 0.0,
-        "min": 21.93402099609375,
-        "max": 21.93402099609375
+        "min": 21.91644287109375,
+        "max": 21.91644287109375
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_gptq_marlin_benchmarks/llama31_8b_instruct_gptq_marlin_artifact/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": -63.16973532579329,
-        "output_tokens_per_sec_percent": -171.51357884763496,
+        "latency_percent": -62.72173446883052,
+        "output_tokens_per_sec_percent": -168.25486609938167,
         "peak_reserved_gib_percent": null,
-        "used_gib_from_mem_get_info_percent": 0.24995048413958174,
+        "used_gib_from_mem_get_info_percent": 0.16960925709471616,
         "prompt_nll_percent": 0.7737706777756485
       },
       "quality": {
@@ -177,22 +177,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 1.4019757251565654,
-        "stdev": 0.004478258763062301,
-        "min": 1.3989989021793008,
-        "max": 1.407125925179571
+        "mean": 1.3798181942353647,
+        "stdev": 0.002368409273050052,
+        "min": 1.378207872621715,
+        "max": 1.3825376462191343
       },
       "output_tokens_per_sec": {
-        "mean": 136.95051936992047,
-        "stdev": 0.43667788281395725,
-        "min": 136.44834237241264,
-        "max": 137.24099404289066
+        "mean": 139.1490397564103,
+        "stdev": 0.23861983911648718,
+        "min": 138.87506103364922,
+        "max": 139.31135049661654
       },
       "total_tokens_per_sec": {
-        "mean": 350.22242193036953,
-        "stdev": 1.116712710737757,
-        "min": 348.9382088794511,
-        "max": 350.96525039093393
+        "mean": 355.84467979373676,
+        "stdev": 0.6102205260739375,
+        "min": 355.14403628917586,
+        "max": 356.2597556970767
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -231,22 +231,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 1.379196846857667,
-        "stdev": 0.00151288305746039,
-        "min": 1.3776205531321466,
-        "max": 1.3806371353566647
+        "mean": 1.3726350024032097,
+        "stdev": 0.001852121534628112,
+        "min": 1.3704984881915152,
+        "max": 1.3737859302200377
       },
       "output_tokens_per_sec": {
-        "mean": 139.21156684563266,
-        "stdev": 0.15272790620458784,
-        "min": 139.0662289772468,
-        "max": 139.37074295492354
+        "mean": 139.8771216591873,
+        "stdev": 0.18888459222260504,
+        "min": 139.75976589689458,
+        "max": 140.09501043183178
       },
       "total_tokens_per_sec": {
-        "mean": 356.00457979794606,
-        "stdev": 0.39056980180443673,
-        "min": 355.63290847827176,
-        "max": 356.411639535768
+        "mean": 357.70659757635923,
+        "stdev": 0.4830329936526257,
+        "min": 357.40648466341264,
+        "max": 358.26380271890315
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -262,8 +262,8 @@
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_gptq_marlin_benchmarks/fp16_default/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": -1.6247698080760018,
-        "output_tokens_per_sec_percent": -1.6509959115998805,
+        "latency_percent": -0.52058973147079,
+        "output_tokens_per_sec_percent": -0.52323889841537,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
         "prompt_nll_percent": 0.009738261474567193
@@ -285,22 +285,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 0.5176649855760237,
-        "stdev": 0.004992178650550862,
-        "min": 0.514220573939383,
-        "max": 0.5233901739120483
+        "mean": 0.51818784714366,
+        "stdev": 0.0016343628621493024,
+        "min": 0.516505790874362,
+        "max": 0.5197699265554547
       },
       "output_tokens_per_sec": {
-        "mean": 370.91912373679776,
-        "stdev": 3.55842461949192,
-        "min": 366.83913754992295,
-        "max": 373.3806263897819
+        "mean": 370.52446278560797,
+        "stdev": 1.1689757113637016,
+        "min": 369.39420730321024,
+        "max": 371.7286493051212
       },
       "total_tokens_per_sec": {
-        "mean": 942.7527728310276,
-        "stdev": 9.044329241208628,
-        "min": 932.3828079393875,
-        "max": 949.009092074029
+        "mean": 941.7496762467537,
+        "stdev": 2.9711465997161035,
+        "min": 938.876943562326,
+        "max": 944.8103169838498
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -309,17 +309,17 @@
         "max": 0.0
       },
       "used_gib_from_mem_get_info": {
-        "mean": 21.93402099609375,
+        "mean": 21.91644287109375,
         "stdev": 0.0,
-        "min": 21.93402099609375,
-        "max": 21.93402099609375
+        "min": 21.91644287109375,
+        "max": 21.91644287109375
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_gptq_marlin_benchmarks/llama31_8b_instruct_gptq_marlin_artifact/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": -63.07603788801596,
-        "output_tokens_per_sec_percent": -170.84170651072805,
+        "latency_percent": -62.44520841161852,
+        "output_tokens_per_sec_percent": -166.27884995414686,
         "peak_reserved_gib_percent": null,
-        "used_gib_from_mem_get_info_percent": 0.24100216734587995,
+        "used_gib_from_mem_get_info_percent": 0.16066811156391997,
         "prompt_nll_percent": 0.7737706777756485
       },
       "quality": {
@@ -339,22 +339,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 0.34456443041563034,
-        "stdev": 0.006561159661754775,
-        "min": 0.3386931982822716,
-        "max": 0.3516467669978738
+        "mean": 0.33875187020748854,
+        "stdev": 0.0028369183976036244,
+        "min": 0.33695068396627903,
+        "max": 0.34202204179018736
       },
       "output_tokens_per_sec": {
-        "mean": 46.4466089598139,
-        "stdev": 0.8800758752977801,
-        "min": 45.50020503983972,
-        "max": 47.24039361034164
+        "mean": 47.234409598195235,
+        "stdev": 0.3936964512836988,
+        "min": 46.780610735653006,
+        "max": 47.484693640215994
       },
       "total_tokens_per_sec": {
-        "mean": 3303.515062266764,
-        "stdev": 62.5953966305548,
-        "min": 3236.2020834586,
-        "max": 3359.9729955355497
+        "mean": 3359.547382671636,
+        "stdev": 28.0016600975532,
+        "min": 3327.27093857332,
+        "max": 3377.348835160363
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -382,7 +382,7 @@
         "tokens_scored": 1202,
         "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_gptq_marlin_quality/bf16_default/quality.json"
       },
-      "pareto_non_dominated": false
+      "pareto_non_dominated": true
     },
     {
       "policy_name": "fp16_default",
@@ -393,22 +393,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 0.3417150502403577,
-        "stdev": 0.002026763870904398,
-        "min": 0.3401489038951695,
-        "max": 0.3440041649155319
+        "mean": 0.33908387397726375,
+        "stdev": 0.0011655779827325502,
+        "min": 0.3380827149376273,
+        "max": 0.3403634480200708
       },
       "output_tokens_per_sec": {
-        "mean": 46.82373281649649,
-        "stdev": 0.2769532739591815,
-        "min": 46.5110647829764,
-        "max": 47.03822301579734
+        "mean": 47.186336832152215,
+        "stdev": 0.16201233313995203,
+        "min": 47.008573021203205,
+        "max": 47.32569662117104
       },
       "total_tokens_per_sec": {
-        "mean": 3330.3379965733125,
-        "stdev": 19.69830161034663,
-        "min": 3308.0994826891965,
-        "max": 3345.593611998586
+        "mean": 3356.1282071868263,
+        "stdev": 11.52312719457886,
+        "min": 3343.484756133078,
+        "max": 3366.04017218079
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -424,8 +424,8 @@
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_gptq_marlin_benchmarks/fp16_default/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": -0.8269513402284681,
-        "output_tokens_per_sec_percent": -0.8119513246034361,
+        "latency_percent": 0.09800795182971474,
+        "output_tokens_per_sec_percent": 0.10177488498735732,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
         "prompt_nll_percent": 0.009738261474567193
@@ -436,7 +436,7 @@
         "tokens_scored": 1202,
         "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_gptq_marlin_quality/fp16_default/quality.json"
       },
-      "pareto_non_dominated": true
+      "pareto_non_dominated": false
     },
     {
       "policy_name": "llama31_8b_instruct_gptq_marlin_artifact",
@@ -447,22 +447,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 0.13375850363324085,
-        "stdev": 0.0010200095223121665,
-        "min": 0.13311720313504338,
-        "max": 0.13493470614776015
+        "mean": 0.13382457941770554,
+        "stdev": 0.0014387704718093531,
+        "min": 0.13240111665800214,
+        "max": 0.13527818396687508
       },
       "output_tokens_per_sec": {
-        "mean": 119.6231805308439,
-        "stdev": 0.9082676994133363,
-        "min": 118.57586870555906,
-        "max": 120.19483299816991
+        "mean": 119.56871249019164,
+        "stdev": 1.2851433562205539,
+        "min": 118.27479886866196,
+        "max": 120.84490224752936
       },
       "total_tokens_per_sec": {
-        "mean": 8500.722266473094,
-        "stdev": 64.54377338956056,
-        "min": 8426.29766988879,
-        "max": 8541.34531993245
+        "mean": 8496.851631334244,
+        "stdev": 91.32549975142274,
+        "min": 8404.90289460429,
+        "max": 8587.540865965055
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -471,17 +471,17 @@
         "max": 0.0
       },
       "used_gib_from_mem_get_info": {
-        "mean": 21.93402099609375,
+        "mean": 21.91644287109375,
         "stdev": 0.0,
-        "min": 21.93402099609375,
-        "max": 21.93402099609375
+        "min": 21.91644287109375,
+        "max": 21.91644287109375
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_gptq_marlin_benchmarks/llama31_8b_instruct_gptq_marlin_artifact/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": -61.1804087055954,
-        "output_tokens_per_sec_percent": -157.54986899978672,
+        "latency_percent": -60.49480720630803,
+        "output_tokens_per_sec_percent": -153.13900079902808,
         "peak_reserved_gib_percent": null,
-        "used_gib_from_mem_get_info_percent": 0.24995048413958174,
+        "used_gib_from_mem_get_info_percent": 0.16960925709471616,
         "prompt_nll_percent": 0.7737706777756485
       },
       "quality": {

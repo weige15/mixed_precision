@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T14:21:46.596006+00:00",
+  "generated_at_utc": "2026-05-27T14:34:38.621890+00:00",
   "status": "completed",
   "policy_name": "llama31_8b_instruct_gptq_marlin_artifact",
   "policy": {
@@ -44,9 +44,9 @@
       "prompt_tokens": 1121,
       "generated_tokens": 16,
       "total_tokens": 1137,
-      "latency_sec": 0.13322360161691904,
-      "output_tokens_per_sec": 120.09883988880273,
-      "total_tokens_per_sec": 8534.523809598044,
+      "latency_sec": 0.13240111665800214,
+      "output_tokens_per_sec": 120.84490224752936,
+      "total_tokens_per_sec": 8587.540865965055,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -54,9 +54,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -65,9 +65,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "sample_outputs": [
         " Summarize the following technical context for a systems researcher. Transformer inference has separate"
@@ -81,9 +81,9 @@
       "prompt_tokens": 1121,
       "generated_tokens": 16,
       "total_tokens": 1137,
-      "latency_sec": 0.13311720313504338,
-      "output_tokens_per_sec": 120.19483299816991,
-      "total_tokens_per_sec": 8541.34531993245,
+      "latency_sec": 0.13527818396687508,
+      "output_tokens_per_sec": 118.27479886866196,
+      "total_tokens_per_sec": 8404.90289460429,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -91,9 +91,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -102,9 +102,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "sample_outputs": [
         " Summarize the following technical context for a systems researcher. Transformer inference has separate"
@@ -118,9 +118,9 @@
       "prompt_tokens": 1121,
       "generated_tokens": 16,
       "total_tokens": 1137,
-      "latency_sec": 0.13493470614776015,
-      "output_tokens_per_sec": 118.57586870555906,
-      "total_tokens_per_sec": 8426.29766988879,
+      "latency_sec": 0.1337944376282394,
+      "output_tokens_per_sec": 119.58643635438362,
+      "total_tokens_per_sec": 8498.111133433387,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -128,9 +128,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -139,9 +139,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "sample_outputs": [
         " Summarize the following technical context for a systems researcher. Transformer inference has separate"
@@ -155,9 +155,9 @@
       "prompt_tokens": 14,
       "generated_tokens": 128,
       "total_tokens": 142,
-      "latency_sec": 0.9821258401498199,
-      "output_tokens_per_sec": 130.32953086793242,
-      "total_tokens_per_sec": 144.58432330661253,
+      "latency_sec": 0.986087828874588,
+      "output_tokens_per_sec": 129.80588163843893,
+      "total_tokens_per_sec": 144.0033999426432,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -165,9 +165,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -176,9 +176,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "sample_outputs": [
         "](#hardware-aware-mixed-precision-for-llm-serving)\nHardware-aware mixed precision for LLM serving involves using a combination of different precision levels for model weights and activations to optimize performance and energy efficiency on specific hardware platforms. This approach aims to balance the trade-off between model accuracy and computational resources, allowing for faster inference times"
@@ -192,9 +192,9 @@
       "prompt_tokens": 14,
       "generated_tokens": 128,
       "total_tokens": 142,
-      "latency_sec": 0.9852208839729428,
-      "output_tokens_per_sec": 129.9201042956325,
-      "total_tokens_per_sec": 144.13011570296732,
+      "latency_sec": 0.9807540471665561,
+      "output_tokens_per_sec": 130.51182441693504,
+      "total_tokens_per_sec": 144.7865552125373,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -202,9 +202,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -213,9 +213,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "sample_outputs": [
         "](#hardware-aware-mixed-precision-for-llm-serving)\nHardware-aware mixed precision for LLM serving involves using a combination of different precision levels for model weights and activations to optimize performance and energy efficiency on specific hardware platforms. This approach aims to balance the trade-off between model accuracy and computational resources, allowing for faster inference times"
@@ -229,9 +229,9 @@
       "prompt_tokens": 14,
       "generated_tokens": 128,
       "total_tokens": 142,
-      "latency_sec": 0.9797132778912783,
-      "output_tokens_per_sec": 130.65046977367246,
-      "total_tokens_per_sec": 144.94036490516785,
+      "latency_sec": 0.9790694219991565,
+      "output_tokens_per_sec": 130.73638817014375,
+      "total_tokens_per_sec": 145.03568062625322,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -239,9 +239,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -250,9 +250,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "sample_outputs": [
         "](#hardware-aware-mixed-precision-for-llm-serving)\nHardware-aware mixed precision for LLM serving involves using a combination of different precision levels for model weights and activations to optimize performance and energy efficiency on specific hardware platforms. This approach aims to balance the trade-off between model accuracy and computational resources, allowing for faster inference times"
@@ -266,9 +266,9 @@
       "prompt_tokens": 296,
       "generated_tokens": 192,
       "total_tokens": 488,
-      "latency_sec": 0.5233901739120483,
-      "output_tokens_per_sec": 366.83913754992295,
-      "total_tokens_per_sec": 932.3828079393875,
+      "latency_sec": 0.5182878240011632,
+      "output_tokens_per_sec": 370.4505317484925,
+      "total_tokens_per_sec": 941.5617681940851,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -276,9 +276,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -287,9 +287,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "sample_outputs": [
         " */\n    if (cache_quantization != 0) {\n        /* Quantize the cache. */\n        quantize_cache(cache_quantization);\n    }\n\n    /* KVM: Set up the KVM device. */\n    if (kvm_device != NULL) {\n        /* Set up the KVM device. */\n       ",
@@ -305,9 +305,9 @@
       "prompt_tokens": 296,
       "generated_tokens": 192,
       "total_tokens": 488,
-      "latency_sec": 0.5153842088766396,
-      "output_tokens_per_sec": 372.5376072706884,
-      "total_tokens_per_sec": 946.8664184796663,
+      "latency_sec": 0.5197699265554547,
+      "output_tokens_per_sec": 369.39420730321024,
+      "total_tokens_per_sec": 938.876943562326,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -315,9 +315,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -326,9 +326,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "sample_outputs": [
         " */\n    if (cache_quantization != 0) {\n        /* Quantize the cache. */\n        quantize_cache(cache_quantization);\n    }\n\n    /* KVM: Set up the KVM device. */\n    if (kvm_device != NULL) {\n        /* Set up the KVM device. */\n       ",
@@ -344,9 +344,9 @@
       "prompt_tokens": 296,
       "generated_tokens": 192,
       "total_tokens": 488,
-      "latency_sec": 0.514220573939383,
-      "output_tokens_per_sec": 373.3806263897819,
-      "total_tokens_per_sec": 949.009092074029,
+      "latency_sec": 0.516505790874362,
+      "output_tokens_per_sec": 371.7286493051212,
+      "total_tokens_per_sec": 944.8103169838498,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -354,9 +354,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "cuda_after": {
         "cuda_available": true,
@@ -365,9 +365,9 @@
         "reserved_gib": 0.0,
         "max_allocated_gib": 0.0,
         "max_reserved_gib": 0.0,
-        "free_gib": 1.634521484375,
+        "free_gib": 1.652099609375,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 21.93402099609375
+        "used_gib_from_mem_get_info": 21.91644287109375
       },
       "sample_outputs": [
         " */\n    if (cache_quantization != 0) {\n        /* Quantize the cache. */\n        quantize_cache(cache_quantization);\n    }\n\n    /* KVM: Set up the KVM device. */\n    if (kvm_device != NULL) {\n        /* Set up the KVM device. */\n       ",
@@ -387,7 +387,7 @@
     "total_gib": 23.56854248046875,
     "used_gib_from_mem_get_info": 0.2550048828125
   },
-  "load_time_sec": 49.68227941123769,
+  "load_time_sec": 44.90586307505146,
   "post_load_cuda": {
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",
@@ -395,9 +395,9 @@
     "reserved_gib": 0.0,
     "max_allocated_gib": 0.0,
     "max_reserved_gib": 0.0,
-    "free_gib": 1.634521484375,
+    "free_gib": 1.652099609375,
     "total_gib": 23.56854248046875,
-    "used_gib_from_mem_get_info": 21.93402099609375
+    "used_gib_from_mem_get_info": 21.91644287109375
   },
   "post_run_cuda": {
     "cuda_available": true,
@@ -406,8 +406,8 @@
     "reserved_gib": 0.0,
     "max_allocated_gib": 0.0,
     "max_reserved_gib": 0.0,
-    "free_gib": 1.634521484375,
+    "free_gib": 1.652099609375,
     "total_gib": 23.56854248046875,
-    "used_gib_from_mem_get_info": 21.93402099609375
+    "used_gib_from_mem_get_info": 21.91644287109375
   }
 }
