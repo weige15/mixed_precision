@@ -113,6 +113,21 @@
     "failure_reason": ""
   },
   {
+    "candidate_action": "llama31_8b_instruct_awq_artifact",
+    "workload_name": "decode_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "quality_gate_failed",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.07626011,
+    "latency_delta_pct_vs_bf16": 192.983646,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -65.86866,
+    "memory_delta_gib_vs_bf16": 0.320312,
+    "failure_reason": ""
+  },
+  {
     "candidate_action": "bf16_default",
     "workload_name": "mixed",
     "backend_feasible": true,
@@ -225,6 +240,21 @@
     "failure_reason": ""
   },
   {
+    "candidate_action": "llama31_8b_instruct_awq_artifact",
+    "workload_name": "mixed",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "quality_gate_failed",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.07626011,
+    "latency_delta_pct_vs_bf16": 187.69528,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -65.241016,
+    "memory_delta_gib_vs_bf16": 0.320312,
+    "failure_reason": ""
+  },
+  {
     "candidate_action": "bf16_default",
     "workload_name": "prefill_heavy",
     "backend_feasible": true,
@@ -331,6 +361,21 @@
     "latency_delta_pct_vs_bf16": -61.687278,
     "output_tokens_per_sec_delta_pct_vs_bf16": 161.017562,
     "memory_delta_gib_vs_bf16": 0.310547,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "llama31_8b_instruct_awq_artifact",
+    "workload_name": "prefill_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "quality_gate_failed",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.07626011,
+    "latency_delta_pct_vs_bf16": 181.390214,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -64.462303,
+    "memory_delta_gib_vs_bf16": 0.320312,
     "failure_reason": ""
   },
   {
