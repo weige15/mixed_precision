@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-27T20:06:34.564447+00:00",
+  "status": "failed",
+  "policy_name": "h10_lg_late_gate_up_int4wo_g128",
+  "policy": {
+    "policy_name": "h10_lg_late_gate_up_int4wo_g128",
+    "description": "TorchAO FqnToConfig policy that applies int4 weight-only group-128 quantization to late-layer MLP gate/up projections.",
+    "expected_role": "layer_group_mixed_precision_candidate",
+    "llm_kwargs": {
+      "torch_dtype": "float16",
+      "trust_remote_code": true
+    },
+    "layer_group_policy": {
+      "backend": "torchao_fqn_to_config",
+      "default_precision": "float16",
+      "selection_source": "starter_backend_policy_from_h6_h7_gate_up_low_risk_pattern",
+      "groups": [
+        {
+          "group_name": "late_mlp_gate_up_layers_24_31",
+          "module_regex": "model\\.layers\\.(2[4-9]|3[0-1])\\.mlp\\.(gate_proj|up_proj)",
+          "config": {
+            "type": "int4_weight_only",
+            "group_size": 128
+          }
+        }
+      ]
+    },
+    "search_tags": {
+      "dtype": "float16",
+      "quantization": "int4_weight_only",
+      "runtime_mode": "transformers",
+      "layer_group_backend": "torchao_fqn_to_config"
+    }
+  },
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "baseline_model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "runtime": "transformers_torchao_layer_group",
+  "hardware_label": "rtx3090-lab",
+  "seed": 42,
+  "cuda_visible_devices": "7",
+  "package_snapshot": {
+    "torch": {
+      "imported": true,
+      "version": "2.9.0",
+      "error": null
+    },
+    "transformers": {
+      "imported": true,
+      "version": "4.57.6",
+      "error": null
+    },
+    "accelerate": {
+      "imported": true,
+      "version": "1.13.0",
+      "error": null
+    },
+    "torchao": {
+      "imported": true,
+      "version": "0.17.0",
+      "error": null
+    }
+  },
+  "num_prompts": 6,
+  "quality_batch_size": 1,
+  "error": "ImportError: Requires mslk >= 1.0.0"
+}

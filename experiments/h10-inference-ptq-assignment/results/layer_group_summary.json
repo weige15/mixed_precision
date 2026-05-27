@@ -1,10 +1,10 @@
 {
   "results_dir": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks",
   "baseline_policy": "bf16_transformers",
-  "n_artifacts": 3,
-  "n_completed_policy_workloads": 9,
-  "n_failed_policies": 0,
-  "n_quality_artifacts": 3,
+  "n_artifacts": 5,
+  "n_completed_policy_workloads": 12,
+  "n_failed_policies": 1,
+  "n_quality_artifacts": 5,
   "completed": [
     {
       "policy_name": "bf16_transformers",
@@ -165,6 +165,60 @@
         "mean_prompt_nll": 0.859692705980957,
         "tokens_scored": 782,
         "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/h10_lg_late_gate_up_int8wo/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "h10_lg_late_mlp_int8wo",
+      "workload_name": "decode_heavy",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "runtime": "transformers_torchao_layer_group",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 4.3857207079418,
+        "stdev": 0.10847333133039053,
+        "min": 4.311203490011394,
+        "max": 4.510167915839702
+      },
+      "output_tokens_per_sec": {
+        "mean": 29.19737454002549,
+        "stdev": 0.7125816998159908,
+        "min": 28.38031806985816,
+        "max": 29.690085447500348
+      },
+      "total_tokens_per_sec": {
+        "mean": 32.618941868934726,
+        "stdev": 0.7960873677631768,
+        "min": 31.70613659366966,
+        "max": 33.169392335879294
+      },
+      "peak_reserved_gib": {
+        "mean": 15.32421875,
+        "stdev": 0.0,
+        "min": 15.32421875,
+        "max": 15.32421875
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 15.6358642578125,
+        "stdev": 0.0,
+        "min": 15.6358642578125,
+        "max": 15.6358642578125
+      },
+      "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_mlp_int8wo/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 19.548194360770058,
+        "output_tokens_per_sec_percent": 16.32939202490233,
+        "peak_reserved_gib_percent": 0.6930184804928131,
+        "used_gib_from_mem_get_info_percent": 0.6791118097858125,
+        "prompt_nll_percent": NaN
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": NaN,
+        "tokens_scored": 782,
+        "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/h10_lg_late_mlp_int8wo/quality.json"
       },
       "pareto_non_dominated": false
     },
@@ -331,6 +385,60 @@
       "pareto_non_dominated": false
     },
     {
+      "policy_name": "h10_lg_late_mlp_int8wo",
+      "workload_name": "mixed",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "runtime": "transformers_torchao_layer_group",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 2.6704348786734045,
+        "stdev": 0.021400914424871974,
+        "min": 2.6539402422495186,
+        "max": 2.6946178288199008
+      },
+      "output_tokens_per_sec": {
+        "mean": 71.90146888552218,
+        "stdev": 0.5740668049150256,
+        "min": 71.25314690138667,
+        "max": 72.34526118691278
+      },
+      "total_tokens_per_sec": {
+        "mean": 145.6753718566048,
+        "stdev": 1.1630832662080341,
+        "min": 144.3618445033303,
+        "max": 146.57451355056807
+      },
+      "peak_reserved_gib": {
+        "mean": 15.32421875,
+        "stdev": 0.0,
+        "min": 15.32421875,
+        "max": 15.32421875
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 15.6378173828125,
+        "stdev": 0.0,
+        "min": 15.6378173828125,
+        "max": 15.6378173828125
+      },
+      "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_mlp_int8wo/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 8.835034212103846,
+        "output_tokens_per_sec_percent": 8.119091363725719,
+        "peak_reserved_gib_percent": 0.6930184804928131,
+        "used_gib_from_mem_get_info_percent": 0.6916879544114757,
+        "prompt_nll_percent": NaN
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": NaN,
+        "tokens_scored": 782,
+        "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/h10_lg_late_mlp_int8wo/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
       "policy_name": "bf16_transformers",
       "workload_name": "prefill_heavy",
       "status": "completed",
@@ -491,8 +599,71 @@
         "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/h10_lg_late_gate_up_int8wo/quality.json"
       },
       "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "h10_lg_late_mlp_int8wo",
+      "workload_name": "prefill_heavy",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "runtime": "transformers_torchao_layer_group",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.6908536915046474,
+        "stdev": 0.0015109095333612971,
+        "min": 0.6891968720592558,
+        "max": 0.6921554505825043
+      },
+      "output_tokens_per_sec": {
+        "mean": 23.15982566690394,
+        "stdev": 0.05068795714751318,
+        "min": 23.11619447124879,
+        "max": 23.21542747603235
+      },
+      "total_tokens_per_sec": {
+        "mean": 1045.0871332190404,
+        "stdev": 2.2872940662815426,
+        "min": 1043.1182755151017,
+        "max": 1047.5961648559598
+      },
+      "peak_reserved_gib": {
+        "mean": 15.3046875,
+        "stdev": 0.0,
+        "min": 15.3046875,
+        "max": 15.3046875
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 15.6163330078125,
+        "stdev": 0.0,
+        "min": 15.6163330078125,
+        "max": 15.6163330078125
+      },
+      "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_mlp_int8wo/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 13.830991661792698,
+        "output_tokens_per_sec_percent": 12.185970347442453,
+        "peak_reserved_gib_percent": 0.6939090208172706,
+        "used_gib_from_mem_get_info_percent": 0.6799669460512336,
+        "prompt_nll_percent": NaN
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": NaN,
+        "tokens_scored": 782,
+        "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/h10_lg_late_mlp_int8wo/quality.json"
+      },
+      "pareto_non_dominated": false
     }
   ],
-  "failures": [],
+  "failures": [
+    {
+      "policy_name": "h10_lg_late_gate_up_int4wo_g128",
+      "hardware_label": "rtx3090-lab",
+      "error": "ImportError: Requires mslk >= 1.0.0",
+      "known_failure": null,
+      "failure_interpretation": null,
+      "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_gate_up_int4wo_g128/benchmark.json"
+    }
+  ],
   "note": "Quality metrics are included when quality artifacts exist. Pareto marking uses latency, output throughput, and memory; memory falls back to cuda mem_get_info used GiB when PyTorch allocator stats do not capture vLLM worker allocations."
 }

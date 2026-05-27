@@ -5,7 +5,7 @@
     "requires_backend_feasible": true,
     "requires_one_deployment_metric_improves": true
   },
-  "n_input_rows": 9,
+  "n_input_rows": 13,
   "n_quality_passed_feasible_rows": 9,
   "n_accepted_before_pareto": 1,
   "n_selected_pareto_rows": 1,
