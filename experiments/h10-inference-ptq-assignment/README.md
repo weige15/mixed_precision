@@ -33,6 +33,25 @@ python experiments/h10-inference-ptq-assignment/code/build_inference_action_tabl
 python experiments/h10-inference-ptq-assignment/code/solve_inference_assignment.py
 ```
 
+To add new backend-real PTQ evidence, first run the configured H9 TorchAO
+candidates on a CUDA host:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_benchmark.py \
+  --policy-name fp16_torchao_int8wo \
+  --policy-name fp16_torchao_int8dyn_int8w \
+  --policy-name fp16_torchao_int4wo_g128 \
+  --smoke \
+  --repeats 1 \
+  --warmup-runs 0 \
+  --hardware-label rtx3090-lab
+```
+
+Only after smoke success, run full benchmark and quality passes for the
+surviving TorchAO policies, regenerate H9 summaries, then rerun the H10 build
+and solve commands above.
+
 The H10 table and solver outputs are:
 
 ```text

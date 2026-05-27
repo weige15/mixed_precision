@@ -111,6 +111,10 @@ def classify_policy(policy: dict[str, Any], packages: dict[str, dict[str, Any]],
     kwargs = policy.get("llm_kwargs", {})
     quantization = kwargs.get("quantization")
     kv_cache_dtype = kwargs.get("kv_cache_dtype", "auto")
+    hf_overrides = kwargs.get("hf_overrides") or {}
+    has_torchao_config = bool(
+        hf_overrides.get("quantization_config_dict_json") or hf_overrides.get("quantization_config_file")
+    )
     status = "supported_unverified"
     reasons = []
     if not cuda.get("cuda_available"):
@@ -123,9 +127,11 @@ def classify_policy(policy: dict[str, Any], packages: dict[str, dict[str, Any]],
         if not packages["torchao"]["imported"]:
             status = "unsupported_backend"
             reasons.append("torchao is not importable.")
-        else:
+        elif not has_torchao_config:
             status = "missing_config"
             reasons.append("vLLM torchao quantization requires an explicit torchao_config; quantization='torchao' alone is not a runnable policy.")
+        else:
+            reasons.append("TorchAO is importable and a quantization config is supplied through hf_overrides; run vLLM smoke benchmark to confirm.")
     if quantization in {"awq", "gptq", "gptq_marlin", "awq_marlin", "bitblas"}:
         status = "missing_artifact"
         reasons.append("This policy requires a compatible quantized model artifact; H9.1 does not assume one.")

@@ -86,3 +86,16 @@ The active next research step is not another global KV-cache toggle. The code
 path is now ready to ingest richer backend-real PTQ candidates such as concrete
 TorchAO configs or AWQ/GPTQ/Marlin artifacts, then re-run the same table and
 solver pipeline.
+
+## 2026-05-27 TorchAO H9 Candidate Hook
+
+The first richer backend-real PTQ candidates have been added upstream in H9:
+
+- `fp16_torchao_int8wo`
+- `fp16_torchao_int8dyn_int8w`
+- `fp16_torchao_int4wo_g128`
+
+They are not H10 evidence yet because this shell cannot initialize CUDA/NVML and
+no benchmark or quality artifacts exist for them. Once a CUDA-host smoke run
+and full H9 benchmark/quality passes complete, the existing H10 table builder
+will ingest those new artifacts through the regenerated H9 summaries.

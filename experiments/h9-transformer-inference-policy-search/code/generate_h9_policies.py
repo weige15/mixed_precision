@@ -73,6 +73,78 @@ def policy(
     }
 
 
+TORCHAO_INT8_WEIGHT_ONLY = {
+    "_type": "Int8WeightOnlyConfig",
+    "_version": 1,
+    "_data": {
+        "group_size": None,
+        "granularity": {"_type": "PerRow", "_version": 1, "_data": {"dim": -1}},
+        "set_inductor_config": True,
+    },
+}
+
+TORCHAO_INT8_DYNAMIC_INT8_WEIGHT = {
+    "_type": "Int8DynamicActivationInt8WeightConfig",
+    "_version": 1,
+    "_data": {
+        "layout": {"_type": "PlainLayout", "_version": 1, "_data": {}},
+        "act_mapping_type": {"_type": "MappingType", "_data": "SYMMETRIC"},
+        "weight_only_decode": False,
+        "granularity": {"_type": "PerRow", "_version": 1, "_data": {"dim": -1}},
+        "set_inductor_config": True,
+    },
+}
+
+TORCHAO_INT4_WEIGHT_ONLY_GROUP128 = {
+    "_type": "Int4WeightOnlyConfig",
+    "_version": 2,
+    "_data": {
+        "group_size": 128,
+        "set_inductor_config": True,
+        "int4_packing_format": {"_type": "Int4PackingFormat", "_data": "PLAIN"},
+        "int4_choose_qparams_algorithm": {"_type": "Int4ChooseQParamsAlgorithm", "_data": "TINYGEMM"},
+    },
+}
+
+
+def torchao_policy(
+    name: str,
+    description: str,
+    *,
+    torchao_config: dict[str, Any],
+    dtype: str,
+    gpu_memory_utilization: float,
+    max_model_len: int,
+    block_size: int,
+    expected_role: str = "weight_quantization_candidate",
+) -> dict[str, Any]:
+    return policy(
+        name,
+        description,
+        dtype=dtype,
+        quantization="torchao",
+        gpu_memory_utilization=gpu_memory_utilization,
+        max_model_len=max_model_len,
+        block_size=block_size,
+        expected_role=expected_role,
+    ) | {
+        "llm_kwargs": clean_kwargs(
+            {
+                "dtype": dtype,
+                "quantization": "torchao",
+                "enforce_eager": False,
+                "gpu_memory_utilization": gpu_memory_utilization,
+                "max_model_len": max_model_len,
+                "block_size": block_size,
+                "trust_remote_code": True,
+                "hf_overrides": {
+                    "quantization_config_dict_json": json.dumps(torchao_config),
+                },
+            }
+        )
+    }
+
+
 def workloads() -> list[dict[str, Any]]:
     long_prompt = (
         "Summarize the following technical context for a systems researcher. "
@@ -223,6 +295,27 @@ def candidate_policies(args: argparse.Namespace) -> list[dict[str, Any]]:
             expected_role="requires_backend_config",
             **common,
         ),
+        torchao_policy(
+            "fp16_torchao_int8wo",
+            "vLLM TorchAO int8 weight-only online quantization with fp16 activation dtype.",
+            dtype="float16",
+            torchao_config=TORCHAO_INT8_WEIGHT_ONLY,
+            **common,
+        ),
+        torchao_policy(
+            "fp16_torchao_int8dyn_int8w",
+            "vLLM TorchAO int8 dynamic-activation/int8-weight online quantization with fp16 dtype.",
+            dtype="float16",
+            torchao_config=TORCHAO_INT8_DYNAMIC_INT8_WEIGHT,
+            **common,
+        ),
+        torchao_policy(
+            "fp16_torchao_int4wo_g128",
+            "vLLM TorchAO int4 weight-only online quantization with group size 128 and fp16 activation dtype.",
+            dtype="float16",
+            torchao_config=TORCHAO_INT4_WEIGHT_ONLY_GROUP128,
+            **common,
+        ),
         policy(
             "bf16_eager",
             "bf16 eager-mode control for separating compile/runtime effects.",
@@ -248,6 +341,9 @@ def candidate_policies(args: argparse.Namespace) -> list[dict[str, Any]]:
             "fp16_kv_fp8_e4m3",
             "bf16_kv_fp8",
             "fp16_kv_fp8",
+            "fp16_torchao_int8wo",
+            "fp16_torchao_int8dyn_int8w",
+            "fp16_torchao_int4wo_g128",
         }
         return [candidate for candidate in all_policies if candidate["policy_name"] in keep]
     return all_policies

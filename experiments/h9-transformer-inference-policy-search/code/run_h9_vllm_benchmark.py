@@ -230,9 +230,14 @@ def run_policy(
         payload["status"] = "dry_run"
         payload["workloads"] = workloads
         return payload
-    if policy.get("llm_kwargs", {}).get("quantization") == "torchao" and "torchao_config" not in policy.get("llm_kwargs", {}):
+    llm_kwargs_for_validation = policy.get("llm_kwargs", {})
+    hf_overrides = llm_kwargs_for_validation.get("hf_overrides") or {}
+    has_torchao_config = bool(
+        hf_overrides.get("quantization_config_dict_json") or hf_overrides.get("quantization_config_file")
+    )
+    if llm_kwargs_for_validation.get("quantization") == "torchao" and not has_torchao_config:
         payload["status"] = "failed"
-        payload["error"] = "Invalid H9 policy: vLLM torchao quantization requires an explicit torchao_config; skip fp16_torchao until a concrete torchao_config is added."
+        payload["error"] = "Invalid H9 policy: vLLM torchao quantization requires hf_overrides.quantization_config_dict_json or hf_overrides.quantization_config_file."
         payload["package_snapshot"] = package_snapshot()
         return payload
 

@@ -13,10 +13,15 @@ Main files:
 - `code/run_h9_vllm_quality.py`: runs prompt-logprob quality checks when supported.
 - `code/summarize_h9_results.py`: aggregates benchmark outputs and marks Pareto candidates.
 
-Generate the initial policy grid:
+Generate the policy grids:
 
 ```bash
-python experiments/h9-transformer-inference-policy-search/code/generate_h9_policies.py
+python experiments/h9-transformer-inference-policy-search/code/generate_h9_policies.py \
+  --output experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates.json
+
+python experiments/h9-transformer-inference-policy-search/code/generate_h9_policies.py \
+  --profile h9_2_long_context \
+  --output experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_policy_candidates.json
 ```
 
 Inspect local backend support without loading the full model:
@@ -64,8 +69,26 @@ Use one process per policy for final measurements. vLLM allocates and caches GPU
 memory aggressively, so separate invocations are cleaner than benchmarking every
 policy in one Python process.
 
-`fp16_torchao` is a placeholder until a concrete vLLM `torchao_config` is
-added. Do not treat its config-missing failure as a backend performance result.
+`fp16_torchao` is retained as the old placeholder and should remain a
+config-missing infeasible row. Use the configured TorchAO candidates instead:
+
+- `fp16_torchao_int8wo`
+- `fp16_torchao_int8dyn_int8w`
+- `fp16_torchao_int4wo_g128`
+
+Smoke-test them on a CUDA host before full benchmarking:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_benchmark.py \
+  --policy-name fp16_torchao_int8wo \
+  --policy-name fp16_torchao_int8dyn_int8w \
+  --policy-name fp16_torchao_int4wo_g128 \
+  --smoke \
+  --repeats 1 \
+  --warmup-runs 0 \
+  --hardware-label rtx3090-lab
+```
 
 ## H9.2 Long-Context KV Stress
 

@@ -294,7 +294,7 @@ experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
   baseline_value: 2.0906627424955366
   best_value: 2.086417777657509
-  total_runs: 34
+  total_runs: 35
   trajectory:
     - experiment_id: "h1_baseline_bf16_seed42"
       hypothesis: "H1"
@@ -836,11 +836,21 @@ experiments:
       wall_time_sec: null
       change_summary: "Implemented the first H10 inference-side action table and Pareto solver. The table aggregates corrected H9.1 and H9.2 vLLM benchmark/quality artifacts into 40 rows, including one infeasible TorchAO row. The solver enforces backend feasibility, a 1% prompt-NLL quality gate, and at least one deployment-metric improvement, selecting eight workload-level Pareto rows. fp16_default remains the cleanest low-risk candidate; FP8 KV-cache rows buy some long-context latency at about +0.8 GiB measured memory; fp16_bitsandbytes is rejected by the quality gate."
       artifact: "experiments/h10-inference-ptq-assignment/results/selected_policy.json"
+    - experiment_id: "h9_torchao_configured_candidates_2026_05_27"
+      hypothesis: "H9"
+      type: "policy_grid_expansion"
+      metric_value: 3
+      metric_name: "configured_torchao_candidates"
+      baseline: null
+      delta: null
+      wall_time_sec: null
+      change_summary: "Added three concrete vLLM TorchAO online-quantization candidates to the H9 policy grids: fp16_torchao_int8wo, fp16_torchao_int8dyn_int8w, and fp16_torchao_int4wo_g128. The benchmark and quality runners now accept TorchAO configs through hf_overrides.quantization_config_dict_json. Backend inventory marks these candidates as not_tested in the current shell because CUDA/NVML cannot initialize; the old fp16_torchao placeholder remains a deliberate missing-config infeasible row."
+      artifact: "experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates.json"
 
 outer_loop:
-  cycle: 28
-  last_direction: "implement H10 inference PTQ action table and solver"
-  last_reflection: "H10 now has an executable inference-side PTQ assignment path. Existing H9 vLLM artifacts can be regenerated into summaries, converted into an H10 action table, and filtered by a backend-feasible Pareto solver. Current evidence still favors fp16_default as the cleanest policy, while FP8 KV-cache latency wins come with measured memory cost and bitsandbytes fails the quality gate. The next useful progress is to add richer backend-real PTQ candidates such as concrete TorchAO configs or AWQ/GPTQ/Marlin artifacts."
+  cycle: 29
+  last_direction: "add configured TorchAO PTQ candidates for H9-to-H10 ingestion"
+  last_reflection: "H9 now has concrete TorchAO online-quantization candidate policies with serialized config JSON, and the H9 benchmark/quality runners can pass those configs to vLLM through hf_overrides. The current shell cannot validate them as runnable because CUDA/NVML cannot initialize, so the next empirical command should be a CUDA-host smoke benchmark. If any configured TorchAO policy instantiates, run full H9 benchmark and quality passes, regenerate summaries, and rerun the H10 action table and solver."
 
 workspace:
   findings: "findings.md"

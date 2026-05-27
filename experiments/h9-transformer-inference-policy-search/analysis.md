@@ -181,3 +181,21 @@ toward a HAQ-style Transformer module assignment is not another global KV dtype
 toggle; it is a richer search space over backend-supported module or group
 policies, such as AWQ/GPTQ/Marlin artifacts, TorchAO configs, or selective
 high-precision rescue from a quantized weight baseline.
+
+## 2026-05-27 TorchAO Candidate Expansion
+
+Added concrete TorchAO online-quantization candidates to the H9 policy grids:
+
+- `fp16_torchao_int8wo`
+- `fp16_torchao_int8dyn_int8w`
+- `fp16_torchao_int4wo_g128`
+
+These policies supply vLLM-compatible TorchAO config JSON through
+`hf_overrides.quantization_config_dict_json`. The old `fp16_torchao` placeholder
+is retained as a deliberate config-missing infeasible row.
+
+The current shell cannot initialize CUDA/NVML, so backend inventory marks the
+configured TorchAO policies as `not_tested` rather than runnable evidence. The
+next empirical step is a CUDA-host smoke benchmark for the three configured
+TorchAO policies, followed only by full H9 benchmark/quality runs for any policy
+that instantiates successfully.
