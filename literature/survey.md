@@ -49,6 +49,7 @@ This survey focuses on mixed precision and low-precision execution for LLMs and 
 | BITNET | [BitNet b1.58](bitnet_b158_2024.md) | Native ternary LLMs | Boundary context: low-bit success may require architecture-native design rather than post-hoc dtype assignment. |
 | LORA2021 | [LoRA](lora_2021.md) | Adapter fine-tuning | Defines the parameter-efficient fine-tuning setting for the local experiments. |
 | RMSNORM2019 | [RMSNorm](rmsnorm_2019.md) | Normalization | Explains the operation targeted by fp32-norm precision islands. |
+| TORCHAO-BLOG2024 | [PyTorch Native Architecture Optimization: torchao](pytorch_native_architecture_optimization_torchao_2024.md) | PyTorch-native quantization and sparsity blog | Supports H10 candidate-space design: weight-only int4/int8, dynamic int8, float8, KV-cache quantization, and workload-aware per-layer policy selection. |
 
 ## Synthesis
 
@@ -100,3 +101,20 @@ Practical projects split by hardware target:
 - **Kernel research path:** BitBLAS/Ladder and QServe, where the core lesson is that hardware benefit depends on kernels and layout, not only bitwidth choices.
 
 This refresh changes the future-work framing: H7 should evolve from `risk(module)` to `risk(module, format, backend)` plus a measured cost model. The optimizer should choose a small Pareto frontier of policies, then validate only a few candidates with matched hardware training runs.
+
+## 2026-05-27 TorchAO Blog Check For H10
+
+The PyTorch TorchAO launch post is useful to H10 as ecosystem and candidate-space
+support. It names inference actions that fit the H10 table vocabulary:
+weight-only int4/int8, dynamic int8 activation-plus-weight quantization, float8
+on newer GPUs, and separate KV-cache quantization. It also reinforces the H10
+solver premise because `autoquant` exists to avoid quantizing layers where the
+overhead makes them slower.
+
+This does not overturn the current local conclusion about vLLM online TorchAO:
+ordinary Hugging Face safetensors still hit the serialized TorchAO loader path
+in the local H9 smoke test. The practical next H10 step remains artifact-backed
+AWQ/GPTQ/Marlin or a TorchAO checkpoint saved in a serving-compatible form. A
+secondary route is to evaluate TorchAO through a supported integration such as
+Transformers or SGLang and record that backend separately in the H10 action
+table.
