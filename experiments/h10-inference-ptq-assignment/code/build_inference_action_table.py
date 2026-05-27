@@ -219,7 +219,15 @@ def build_failure_row(
     default_model_name: str,
 ) -> dict[str, str]:
     policy_name = str(failure.get("policy_name", "unknown"))
-    reason = str(failure.get("error") or inventory_reasons.get(policy_name) or "backend attempt did not complete")
+    known_failure = failure.get("known_failure")
+    interpretation = failure.get("failure_interpretation")
+    error = failure.get("error") or inventory_reasons.get(policy_name) or "backend attempt did not complete"
+    reason_parts = [str(error)]
+    if known_failure:
+        reason_parts.append(f"known_failure={known_failure}")
+    if interpretation:
+        reason_parts.append(str(interpretation))
+    reason = " | ".join(reason_parts)
     model_name = ""
     if policy:
         model_name = str(policy.get("model_name") or "")

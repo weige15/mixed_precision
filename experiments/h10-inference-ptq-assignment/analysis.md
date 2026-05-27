@@ -99,3 +99,11 @@ They are not H10 evidence yet because this shell cannot initialize CUDA/NVML and
 no benchmark or quality artifacts exist for them. Once a CUDA-host smoke run
 and full H9 benchmark/quality passes complete, the existing H10 table builder
 will ingest those new artifacts through the regenerated H9 summaries.
+
+The CUDA-host smoke result exposed a known incompatibility instead: vLLM routed
+online TorchAO candidates through TorchAO's serialized safetensors loader, which
+cannot read the ordinary Llama safetensors checkpoint and raises
+`ValueError: No tensors found`. The H9 runners now classify this as
+`torchao_online_quant_uses_serialized_safetensors_loader`, and H10 will retain
+such rows as backend-infeasible systems evidence once the H9 summaries are
+regenerated.

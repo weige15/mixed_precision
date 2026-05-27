@@ -90,6 +90,20 @@ python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_bench
   --hardware-label rtx3090-lab
 ```
 
+If a configured TorchAO policy fails with:
+
+```text
+ValueError: No tensors found
+```
+
+do not retry the same command as-is. In this vLLM/TorchAO stack,
+`quantization="torchao"` is being routed through TorchAO's serialized
+safetensors loader, while the Llama checkpoint is ordinary Hugging Face
+safetensors. The runner records this as
+`torchao_online_quant_uses_serialized_safetensors_loader`; treat it as a
+backend-infeasible row unless using a TorchAO-serialized checkpoint or a vLLM
+version that supports online TorchAO loading from ordinary safetensors.
+
 ## H9.2 Long-Context KV Stress
 
 Generate the focused H9.2 policy/workload file:

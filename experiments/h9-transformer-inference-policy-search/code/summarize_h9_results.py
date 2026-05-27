@@ -213,6 +213,8 @@ def main() -> None:
                     "policy_name": artifact.get("policy_name"),
                     "hardware_label": artifact.get("hardware_label"),
                     "error": artifact.get("error"),
+                    "known_failure": artifact.get("known_failure"),
+                    "failure_interpretation": artifact.get("failure_interpretation"),
                     "artifact_path": artifact.get("_path"),
                 }
             )

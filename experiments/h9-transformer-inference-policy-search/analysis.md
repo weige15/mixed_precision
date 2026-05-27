@@ -199,3 +199,32 @@ configured TorchAO policies as `not_tested` rather than runnable evidence. The
 next empirical step is a CUDA-host smoke benchmark for the three configured
 TorchAO policies, followed only by full H9 benchmark/quality runs for any policy
 that instantiates successfully.
+
+## 2026-05-27 TorchAO Smoke Failure Mode
+
+The first CUDA-host TorchAO smoke attempt failed while loading normal Llama
+safetensors:
+
+```text
+ValueError: No tensors found
+```
+
+This is now classified in the runner as:
+
+```text
+torchao_online_quant_uses_serialized_safetensors_loader
+```
+
+Interpretation: this vLLM/TorchAO stack routes `quantization="torchao"` through
+TorchAO's serialized safetensors loader before online quantization. The base
+Llama checkpoint is ordinary Hugging Face safetensors and lacks TorchAO
+`tensor_names` metadata, so it cannot be read by that loader. Treat the
+configured TorchAO policies as backend-infeasible on this stack unless either:
+
+- the model is first saved as a TorchAO-serialized checkpoint, or
+- vLLM is changed/upgraded so online TorchAO quantization can load ordinary
+  safetensors before quantizing.
+
+For the current H10 path, the pragmatic next candidate family should be
+artifact-backed AWQ/GPTQ/Marlin or another vLLM-supported quantized checkpoint,
+not more online TorchAO retries with the same base safetensors.

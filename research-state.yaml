@@ -294,7 +294,7 @@ experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
   baseline_value: 2.0906627424955366
   best_value: 2.086417777657509
-  total_runs: 35
+  total_runs: 36
   trajectory:
     - experiment_id: "h1_baseline_bf16_seed42"
       hypothesis: "H1"
@@ -846,11 +846,21 @@ experiments:
       wall_time_sec: null
       change_summary: "Added three concrete vLLM TorchAO online-quantization candidates to the H9 policy grids: fp16_torchao_int8wo, fp16_torchao_int8dyn_int8w, and fp16_torchao_int4wo_g128. The benchmark and quality runners now accept TorchAO configs through hf_overrides.quantization_config_dict_json. Backend inventory marks these candidates as not_tested in the current shell because CUDA/NVML cannot initialize; the old fp16_torchao placeholder remains a deliberate missing-config infeasible row."
       artifact: "experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates.json"
+    - experiment_id: "h9_torchao_online_quant_loader_failure_2026_05_27"
+      hypothesis: "H9"
+      type: "backend_feasibility_failure"
+      metric_value: 1
+      metric_name: "known_failure_classified"
+      baseline: null
+      delta: null
+      wall_time_sec: null
+      change_summary: "Classified the CUDA-host TorchAO smoke failure where vLLM routes quantization='torchao' through TorchAO's serialized safetensors loader before online quantization. Ordinary Llama Hugging Face safetensors lack TorchAO tensor_names metadata, causing ValueError: No tensors found. The H9 benchmark and quality runners now label this as torchao_online_quant_uses_serialized_safetensors_loader, and H10 failure rows preserve the known-failure interpretation."
+      artifact: "experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_benchmark.py"
 
 outer_loop:
-  cycle: 29
-  last_direction: "add configured TorchAO PTQ candidates for H9-to-H10 ingestion"
-  last_reflection: "H9 now has concrete TorchAO online-quantization candidate policies with serialized config JSON, and the H9 benchmark/quality runners can pass those configs to vLLM through hf_overrides. The current shell cannot validate them as runnable because CUDA/NVML cannot initialize, so the next empirical command should be a CUDA-host smoke benchmark. If any configured TorchAO policy instantiates, run full H9 benchmark and quality passes, regenerate summaries, and rerun the H10 action table and solver."
+  cycle: 30
+  last_direction: "classify TorchAO online-quantization loader failure"
+  last_reflection: "The CUDA-host TorchAO smoke failure is a backend feasibility result, not a transient training or memory issue. This vLLM/TorchAO stack tries to read ordinary Llama safetensors with TorchAO's serialized-checkpoint loader and fails because tensor_names metadata is absent. The current H10 path should record configured TorchAO online quantization as infeasible on this stack and pivot to artifact-backed AWQ/GPTQ/Marlin or TorchAO-serialized checkpoints."
 
 workspace:
   findings: "findings.md"

@@ -202,6 +202,26 @@ def write_result(output_dir: Path, policy_name: str, payload: dict[str, Any]) ->
     return path
 
 
+def classify_failure(policy: dict[str, Any], error: str) -> dict[str, Any]:
+    if (
+        policy.get("llm_kwargs", {}).get("quantization") == "torchao"
+        and "No tensors found" in error
+    ):
+        return {
+            "known_failure": "torchao_online_quant_uses_serialized_safetensors_loader",
+            "failure_interpretation": (
+                "This vLLM/TorchAO stack routes quantization='torchao' through "
+                "TorchAO's serialized safetensors loader before online quantization. "
+                "The base checkpoint is a normal Hugging Face safetensors model and "
+                "does not contain TorchAO tensor_names metadata, so the loader raises "
+                "`ValueError: No tensors found`. Treat this policy as backend-infeasible "
+                "unless using a TorchAO-serialized checkpoint or a vLLM version that "
+                "supports online TorchAO loading from ordinary safetensors."
+            ),
+        }
+    return {}
+
+
 def run_policy(
     *,
     grid: dict[str, Any],
@@ -270,6 +290,7 @@ def run_policy(
     except Exception as exc:  # noqa: BLE001 - failed policies are research artifacts.
         payload["status"] = "failed"
         payload["error"] = f"{exc.__class__.__name__}: {exc}"
+        payload.update(classify_failure(policy, payload["error"]))
         payload["failure_cuda"] = cuda_snapshot()
         cleanup_cuda()
     return payload
