@@ -54,6 +54,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--h9-summary", type=Path, default=DEFAULT_H9_SUMMARY)
     parser.add_argument("--h9-long-summary", type=Path, default=DEFAULT_H9_LONG_SUMMARY)
     parser.add_argument(
+        "--skip-default-summaries",
+        action="store_true",
+        help="Only ingest summaries passed through --extra-h9-summary.",
+    )
+    parser.add_argument(
         "--extra-h9-summary",
         action="append",
         default=[],
@@ -328,8 +333,6 @@ def build_rows(
 
 def main() -> None:
     args = parse_args()
-    h9_summary = load_json(args.h9_summary)
-    h9_long_summary = load_json(args.h9_long_summary)
     policy_candidate_payloads = [load_json(args.policy_candidates)]
     policy_candidate_payloads.extend(load_json(path) for path in args.extra_policy_candidates)
     backend_inventory = load_json(args.backend_inventory)
@@ -337,10 +340,14 @@ def main() -> None:
     inventory_reasons = load_inventory_reasons(backend_inventory)
     policy_candidates = policy_candidate_payloads[0]
     default_model_name = str(policy_candidates.get("model_name") or backend_inventory.get("model_name") or "")
-    summaries = [
-        ("h9_1_default", h9_summary),
-        ("h9_2_long_context", h9_long_summary),
-    ]
+    summaries = []
+    if not args.skip_default_summaries:
+        summaries.extend(
+            [
+                ("h9_1_default", load_json(args.h9_summary)),
+                ("h9_2_long_context", load_json(args.h9_long_summary)),
+            ]
+        )
     for label, path in [parse_extra_summary(value) for value in args.extra_h9_summary]:
         summaries.append((label, load_json(path)))
     rows = build_rows(

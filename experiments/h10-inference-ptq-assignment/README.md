@@ -33,6 +33,22 @@ python experiments/h10-inference-ptq-assignment/code/build_inference_action_tabl
 python experiments/h10-inference-ptq-assignment/code/solve_inference_assignment.py
 ```
 
+Final matched Instruct Marlin artifacts:
+
+```text
+results/action_table_final_instruct_marlin.csv
+results/selected_policy_final_instruct_marlin_strict.json
+results/solver_trace_final_instruct_marlin_strict.json
+results/selected_policy_final_instruct_marlin_relaxed_3pct.json
+results/solver_trace_final_instruct_marlin_relaxed_3pct.json
+```
+
+The strict final result selects
+`llama31_8b_instruct_gptq_marlin_artifact` under the 1% prompt-NLL gate. The
+matched GPTQ-Marlin rows improve latency by about 60-63% and output throughput
+by about 153-168%, with a +0.773771% prompt-NLL delta versus matched
+`bf16_default`.
+
 To add new backend-real PTQ evidence, first run the configured H9 TorchAO
 candidates on a CUDA host:
 
@@ -76,6 +92,30 @@ The H10 table and solver outputs are:
 results/action_table.csv
 results/selected_policy.json
 results/solver_trace.json
+```
+
+For final Instruct artifact claims, use the matched Marlin table instead:
+
+```bash
+python experiments/h10-inference-ptq-assignment/code/build_inference_action_table.py \
+  --skip-default-summaries \
+  --extra-h9-summary h9_instruct_awq_marlin=experiments/h9-transformer-inference-policy-search/results/h9_instruct_awq_marlin_summary.json \
+  --extra-policy-candidates experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates_instruct_awq_marlin.json \
+  --extra-h9-summary h9_instruct_gptq_marlin=experiments/h9-transformer-inference-policy-search/results/h9_instruct_gptq_marlin_summary.json \
+  --extra-policy-candidates experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates_instruct_gptq_marlin.json \
+  --output experiments/h10-inference-ptq-assignment/results/action_table_final_instruct_marlin.csv
+
+python experiments/h10-inference-ptq-assignment/code/solve_inference_assignment.py \
+  --action-table experiments/h10-inference-ptq-assignment/results/action_table_final_instruct_marlin.csv \
+  --output experiments/h10-inference-ptq-assignment/results/selected_policy_final_instruct_marlin_strict.json \
+  --trace-output experiments/h10-inference-ptq-assignment/results/solver_trace_final_instruct_marlin_strict.json \
+  --quality-epsilon 0.01
+
+python experiments/h10-inference-ptq-assignment/code/solve_inference_assignment.py \
+  --action-table experiments/h10-inference-ptq-assignment/results/action_table_final_instruct_marlin.csv \
+  --output experiments/h10-inference-ptq-assignment/results/selected_policy_final_instruct_marlin_relaxed_3pct.json \
+  --trace-output experiments/h10-inference-ptq-assignment/results/solver_trace_final_instruct_marlin_relaxed_3pct.json \
+  --quality-epsilon 0.03
 ```
 
 ## One-Command Artifact PTQ Path
