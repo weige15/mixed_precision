@@ -17,7 +17,7 @@ from typing import Any
 
 DEFAULT_POLICIES = Path("experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates.json")
 DEFAULT_OUTPUT_DIR = Path("experiments/h9-transformer-inference-policy-search/results/benchmarks")
-DEFAULT_RUNTIME_CACHE_DIR = Path("tmp/h9_vllm_runtime_cache")
+DEFAULT_RUNTIME_CACHE_DIR = Path("tmp/h9c")
 
 
 def parse_args() -> argparse.Namespace:
@@ -44,6 +44,9 @@ def parse_args() -> argparse.Namespace:
 def configure_runtime_cache(runtime_cache_dir: Path | None) -> None:
     if runtime_cache_dir is None:
         return
+    hf_home = os.environ.get("HF_HOME")
+    if hf_home is None:
+        hf_home = str(Path.home() / ".cache" / "huggingface")
     runtime_cache = runtime_cache_dir.expanduser().resolve()
     runtime_cache.mkdir(parents=True, exist_ok=True)
     for child in ["tmp", "torchinductor", "triton", "cuda", "xdg", "vllm"]:
@@ -56,6 +59,7 @@ def configure_runtime_cache(runtime_cache_dir: Path | None) -> None:
     os.environ["CUDA_CACHE_PATH"] = str(runtime_cache / "cuda")
     os.environ["XDG_CACHE_HOME"] = str(runtime_cache / "xdg")
     os.environ["VLLM_CACHE_ROOT"] = str(runtime_cache / "vllm")
+    os.environ.setdefault("HF_HOME", hf_home)
 
 
 def load_policy_grid(path: Path) -> dict[str, Any]:
