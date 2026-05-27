@@ -199,6 +199,33 @@ def torchao_config(spec: dict[str, Any]) -> Any:
     raise SystemExit(f"Unsupported TorchAO layer/group config type: {config_type}")
 
 
+def layer_group_uses_config(policy: dict[str, Any], config_type: str) -> bool:
+    layer_group_policy = policy.get("layer_group_policy") or {}
+    return any(
+        (group.get("config") or {}).get("type") == config_type
+        for group in layer_group_policy.get("groups", [])
+    )
+
+
+def validate_layer_group_backend(policy: dict[str, Any], device: str) -> None:
+    layer_group_policy = policy.get("layer_group_policy")
+    if not layer_group_policy or layer_group_policy.get("backend") != "torchao_fqn_to_config":
+        return
+    if not layer_group_uses_config(policy, "int4_weight_only") or device != "cuda":
+        return
+
+    import torch
+
+    major, minor = torch.cuda.get_device_capability(0)
+    device_name = torch.cuda.get_device_name(0)
+    if major < 9:
+        raise RuntimeError(
+            "backend_infeasible: TorchAO int4_weight_only uses the MSLK/FlashInfer "
+            f"SM90 TMA kernel path, but {device_name} has capability sm{major}{minor}. "
+            "Run this policy on Hopper-class hardware or exclude it on RTX 3090."
+        )
+
+
 def regex_matches(pattern: str, module_name: str) -> bool:
     return re.fullmatch(pattern, module_name) is not None
 
@@ -258,6 +285,7 @@ def load_model_and_tokenizer(grid: dict[str, Any], policy: dict[str, Any], args:
     torch_dtype = dtype_from_name(str(llm_kwargs.get("torch_dtype", "float16")))
     if args.device == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA device was requested but torch.cuda.is_available() is false.")
+    validate_layer_group_backend(policy, args.device)
 
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=bool(llm_kwargs.get("trust_remote_code", True)))
     if tokenizer.pad_token_id is None:
