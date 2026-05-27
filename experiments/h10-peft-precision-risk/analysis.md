@@ -1,9 +1,28 @@
 # H10 Analysis
 
+## 2026-05-27 Scope Correction
+
+This branch is now archived as PEFT-side exploratory evidence. It should not be
+treated as the main H10 direction.
+
+The project plan's "post-training quantization" target means PTQ for an already
+trained model before inference deployment, and original HAQ is also an
+inference-oriented hardware-aware bitwidth search. Therefore the active H10
+direction moves to:
+
+```text
+experiments/h10-inference-ptq-assignment/
+```
+
+The selector work below remains useful as evidence that calibration and
+perturbation probes can rank precision-sensitive modules, but final H10 claims
+should be made on inference workloads and backend-real PTQ policies.
+
 ## 2026-05-26 Bootstrap
 
-H10 becomes the main post-training branch after H8 and H9. The research story is
-now:
+This was the original PEFT-side bootstrap before the 2026-05-27 scope
+correction. It should now be read as historical context, not as the active H10
+plan. The research story at that time was:
 
 - H6: short calibration and perturbation probes expose module precision
   sensitivity.
@@ -19,10 +38,10 @@ decision-ready module-rescue evaluation: aggregate labels across seeds, compare
 rescue selectors at equal budget, then run only the best non-oracle policies on
 GPU.
 
-H10 should be reported as HAQ-inspired PEFT precision assignment, not "HAQ for
-Transformers." The transferable principle is constrained hardware-aware
-precision assignment; the action space, labels, and objective are different from
-CNN inference quantization.
+At that time, the intended framing was HAQ-inspired PEFT precision assignment,
+not "HAQ for Transformers." After the 2026-05-27 scope correction, this framing
+is archived because the active H10 direction follows the original HAQ inference
+setting more closely.
 
 ## 2026-05-26 Seed-Aggregated Selector Screen
 
@@ -60,9 +79,9 @@ which selects:
 - `layers.2.mlp.down_proj`
 - `layers.30.mlp.gate_proj`
 
-This sharpens the H10 direction. A learned cross-model predictor is not yet a
+This sharpened the older PEFT-side direction. A learned cross-model predictor is not yet a
 strong enough main claim. The safer method claim is **short target calibration
 plus targeted perturbation labels for conservative rescue selection**, with
 learned prediction treated as an auxiliary baseline until more labeled models
 exist. In other words, H10 should emphasize measured pre-training precision
-checks over black-box learned transfer.
+checks over black-box learned transfer if this PEFT branch is revisited.

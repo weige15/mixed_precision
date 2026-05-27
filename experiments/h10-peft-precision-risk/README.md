@@ -1,4 +1,16 @@
-# H10: PEFT Precision-Risk Prediction
+# Archived H10 Branch: PEFT Precision-Risk Prediction
+
+This directory is retained as a PEFT-side exploratory branch. It is no longer
+the active H10 direction.
+
+The active H10 direction is inference-side mixed-precision PTQ:
+
+```text
+experiments/h10-inference-ptq-assignment/
+```
+
+Use this directory only as supporting evidence for calibration and perturbation
+signals, or for reproducing the older QLoRA/NF4 selective-rescue experiments.
 
 H10 studies backend-aware precision assignment for LoRA/QLoRA fine-tuning. It
 uses existing H6/H7 perturbation artifacts to select high-risk projection modules

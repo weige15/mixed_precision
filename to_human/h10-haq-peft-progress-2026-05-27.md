@@ -1,6 +1,20 @@
-# H10 Progress: HAQ Principle Adapted to PEFT
+# Superseded H10 Progress: HAQ Principle Adapted to PEFT
 
 Date: 2026-05-27
+
+## Scope Status
+
+This memo describes the older PEFT/QLoRA selective-rescue formulation of H10.
+It is now superseded as the main H10 direction. The active direction is
+HAQ-style mixed-precision post-training quantization for LLM inference:
+
+```text
+experiments/h10-inference-ptq-assignment/protocol.md
+```
+
+The PEFT results below remain supporting evidence, but H10 should now be framed
+around inference deployment, backend-real PTQ actions, and vLLM-style latency,
+memory, KV-cache, and quality metrics.
 
 ## Bottom Line
 

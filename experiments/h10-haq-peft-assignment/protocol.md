@@ -1,4 +1,18 @@
-# H10 Protocol: HAQ-Style Backend-Aware Precision Assignment for PEFT
+# Archived Protocol: HAQ-Style Backend-Aware Precision Assignment for PEFT
+
+## Status
+
+This protocol is retained as a PEFT-side exploratory branch. It is no longer the
+main H10 direction. The project plan and the original HAQ setting both point to
+post-training quantization for inference deployment, so the active H10 protocol
+is now:
+
+```text
+experiments/h10-inference-ptq-assignment/protocol.md
+```
+
+The results below may still be cited as sensitivity and backend-feasibility
+evidence, but they should not be presented as the main HAQ-aligned H10 claim.
 
 ## Research Question
 

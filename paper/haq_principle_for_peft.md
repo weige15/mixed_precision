@@ -1,6 +1,22 @@
-# Adapting the HAQ Principle to PEFT
+# Archived Note: Adapting the HAQ Principle to PEFT
 
 Draft date: 2026-05-26
+
+## Scope Status
+
+This note is retained as a historical PEFT-side formulation. It is no longer the
+active H10 direction. The active project-plan-aligned H10 scope is
+inference-side mixed-precision post-training quantization:
+
+```text
+experiments/h10-inference-ptq-assignment/protocol.md
+```
+
+The PEFT framing below may still be useful as supporting evidence for
+calibration and perturbation sensitivity, but it should not be presented as the
+main HAQ-aligned contribution. Original HAQ is inference-oriented, and the
+project plan's "post-training quantization" target should be interpreted as PTQ
+for inference deployment.
 
 ## Core Reframing
 

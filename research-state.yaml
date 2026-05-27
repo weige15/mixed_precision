@@ -274,20 +274,20 @@ hypotheses:
       - H8
     priority: high
   - id: H10
-    statement: "The HAQ principle can be adapted to PEFT by estimating Transformer module/action/backend precision risk from cheap probes, then solving a backend-aware assignment problem over feasible PEFT precision actions."
-    status: protocol_and_solver_scaffolded
-    plain_language_question: "Can we turn the calibration probes and backend measurements into a small optimizer that chooses an implementable PEFT precision policy?"
-    motivation: "H6/H7 show that cheap probes can estimate module precision sensitivity, while H8 shows that a selected high-precision rescue policy can be expressed through a real QLoRA/NF4 backend. H10 joins those pieces into the HAQ-style table-and-solver abstraction."
-    why_it_matters: "This is the clean PEFT adaptation of HAQ: not reinforcement learning over CNN layer bitwidths, but constrained assignment over Transformer module actions whose quality risk and backend cost are measured or estimated."
-    expected_result: "A grouped assignment solver using H7/H8 risk estimates and backend costs should select a QLoRA/NF4 plus bf16 projection-rescue policy that remains inside the 1% quality gate, improves quality versus blanket QLoRA, and retains at least 20% memory saving versus bf16."
-    required_experiment: "Build an action table with one row per module/group/backend action, reject infeasible rows, solve a grouped constrained assignment, freeze the selected policy, and validate against matched bf16 plus blanket low-bit baselines if any new run is needed."
-    metric: "Primary: selected policy feasibility, predicted/evaluated quality risk, eval-loss improvement versus blanket QLoRA, peak-memory delta versus bf16, and instability events. Secondary: throughput delta and solver trace."
-    estimated_compute_cost: "First artifact is CPU-only table construction and solving. A fresh validation run would reuse the H8 Llama-3.1-8B RTX 3090 500-step setup if needed."
-    risk: "Current action table is small and partly reconstructed from H8 aggregate metrics; interactions between multiple rescues may be non-additive, so the first solver should be treated as an executable formulation rather than a complete optimizer."
+    statement: "The HAQ principle can be adapted to LLM inference by using post-training calibration and perturbation probes to solve a backend-aware mixed-precision PTQ assignment problem."
+    status: rescoped_to_inference_ptq_protocol
+    plain_language_question: "Can we choose an implementable mixed-precision inference policy for a trained LLM using cheap sensitivity probes and real backend measurements?"
+    motivation: "The project plan's mixed-precision post-training quantization target and the original HAQ setting both point to inference deployment. H10 should therefore connect H7-style sensitivity probes with H9-style vLLM backend measurements, rather than treating PEFT/QLoRA selective rescue as the main contribution."
+    why_it_matters: "This aligns the mixed-precision branch with the pruning branch's inference focus: pruning decides which computation to skip, while H10 decides what precision to use for the computation that remains."
+    expected_result: "A grouped inference PTQ assignment solver should select a backend-feasible policy that passes a 1% quality-degradation gate and improves at least one deployment metric, such as peak memory, prefill latency, decode throughput, or KV-cache memory, versus matched bf16/fp16 serving baselines."
+    required_experiment: "Build an inference action table from H7 calibration/perturbation signals and H9 backend results, retain unsupported policies as infeasible rows, solve for non-dominated backend-real policies, freeze the selected policy, and validate quality plus latency/memory on matched vLLM workloads."
+    metric: "Primary: backend feasibility, prompt NLL/perplexity or task quality delta versus bf16, prefill latency, decode tokens/sec, total tokens/sec, peak CUDA memory, and KV-cache memory. Secondary: failure reason, load-time memory, post-run memory, and solver trace."
+    estimated_compute_cost: "First artifact is CPU-only table construction from existing H9 results. A fresh validation run would reuse the H9 Llama-3.1-8B RTX 3090 vLLM benchmark and quality scripts."
+    risk: "Available vLLM policy knobs may be too coarse for layer-wise mixed precision, some quantized artifacts may be unavailable, and FP8 or weight-only backends may improve latency only at a memory or quality cost."
     parent: null
     dependencies:
       - H7
-      - H8
+      - H9
     priority: high
 
 experiments:
@@ -768,33 +768,33 @@ experiments:
       artifact: "experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_summary.json"
     - experiment_id: "h10_haq_peft_assignment_scaffold"
       hypothesis: "H10"
-      type: "method_scaffold"
+      type: "archived_peft_method_scaffold"
       metric_value: 0.00682
       metric_name: "selected_policy_predicted_quality_risk"
       baseline: 0.00798
       delta: -0.00116
       wall_time_sec: null
-      change_summary: "Created the H10 HAQ-for-PEFT protocol and a small grouped assignment solver. The example action table reconstructs the H8 Llama-3.1-8B result as module/action/backend rows; under a 1% quality-risk gate and a required memory saving, the solver selects QLoRA/NF4 plus bf16 projection rescue over blanket QLoRA. This is a method-assembly artifact, not a new empirical training run."
+      change_summary: "Created the earlier HAQ-for-PEFT protocol and a small grouped assignment solver. This branch is now archived as PEFT-side exploratory evidence because active H10 has been re-scoped to inference-side mixed-precision PTQ."
       artifact: "experiments/h10-haq-peft-assignment/results/selected_policy.example.json"
     - experiment_id: "h10_generated_h8_action_table"
       hypothesis: "H10"
-      type: "method_scaffold"
+      type: "archived_peft_method_scaffold"
       metric_value: 0.00681742
       metric_name: "generated_table_selected_policy_quality_risk"
       baseline: 0.00798336
       delta: -0.00116594
       wall_time_sec: null
-      change_summary: "Added a generated H10 action table builder that reads H8 matched RTX 3090 500-step comparisons and aggregates QLoRA versus bf16-rescue rows across seeds 42-44. The generated table reports blanket QLoRA quality risk 0.00798336, selective-rescue quality risk 0.00681742, memory deltas of -5.391 GiB and -5.105 GiB versus bf16, and zero instability risk. The solver selects selective rescue under the 1% quality-risk gate and required memory saving."
+      change_summary: "Added a generated PEFT-side action table builder that reads H8 matched RTX 3090 500-step comparisons and aggregates QLoRA versus bf16-rescue rows across seeds 42-44. This remains supporting evidence, but active H10 now targets inference PTQ rather than PEFT selective rescue."
       artifact: "experiments/h10-haq-peft-assignment/results/selected_policy.json"
     - experiment_id: "h10_selector_aware_assignment_table"
       hypothesis: "H10"
-      type: "method_scaffold"
+      type: "archived_peft_planning_scaffold"
       metric_value: 0.00681742
       metric_name: "perturbation_selector_predicted_quality_risk"
       baseline: 0.00759471
       delta: -0.00077729
       wall_time_sec: null
-      change_summary: "Added a selector-aware H10 planning table that converts Llama precision-risk selector candidates into separate QLoRA/NF4 bf16-rescue actions. With the target perturbation upper-bound selector included, the solver selects the perturbation-selected rescue set with predicted quality risk 0.00681742. Without the perturbation row, cheap selectors recover only one of three unsafe Llama projection candidates at k=4 and tie at predicted quality risk 0.00759471, making target perturbation checks the current defensible selection method."
+      change_summary: "Added a selector-aware PEFT planning table that converts Llama precision-risk selector candidates into separate QLoRA/NF4 bf16-rescue actions. This is now archived as supporting evidence for sensitivity ranking, not the main H10 contribution."
       artifact: "experiments/h10-haq-peft-assignment/results/selected_policy_selector.json"
     - experiment_id: "h10_progress_report_2026_05_27"
       hypothesis: "H10"
@@ -804,7 +804,7 @@ experiments:
       baseline: null
       delta: null
       wall_time_sec: null
-      change_summary: "Created a human-facing H10 progress memo that summarizes the HAQ-for-PEFT method, H8 memory-quality evidence, generated action table, selector-aware planning result, claim boundary, and next step."
+      change_summary: "Created a human-facing progress memo for the older HAQ-for-PEFT direction. This memo is now superseded by the inference-side PTQ H10 scope."
       artifact: "to_human/h10-haq-peft-progress-2026-05-27.md"
     - experiment_id: "h10_paper_draft_integration_2026_05_27"
       hypothesis: "H10"
@@ -814,13 +814,23 @@ experiments:
       baseline: null
       delta: null
       wall_time_sec: null
-      change_summary: "Integrated H10 into the main paper draft by adding backend-aware assignment as a method stage, adding H8/H10 selective rescue results, and clarifying that target perturbation-guided rescue is the current defensible HAQ-for-PEFT method while pure learned predictors remain extensions."
+      change_summary: "Integrated the older PEFT-side H10 into the main paper draft. This framing is now superseded for the project-plan-aligned H10 direction, which should be rewritten as inference-side mixed-precision PTQ."
       artifact: "paper/calibration_guided_precision_assignment_draft.md"
+    - experiment_id: "h10_inference_ptq_rescope_2026_05_27"
+      hypothesis: "H10"
+      type: "protocol_rescope"
+      metric_value: 1
+      metric_name: "inference_ptq_protocol_written"
+      baseline: null
+      delta: null
+      wall_time_sec: null
+      change_summary: "Re-scoped H10 from PEFT/QLoRA selective rescue to HAQ-style mixed-precision post-training quantization for LLM inference. The active protocol now connects H7 sensitivity probes with H9 vLLM backend measurements and treats the PEFT branch as supporting evidence."
+      artifact: "experiments/h10-inference-ptq-assignment/protocol.md"
 
 outer_loop:
   cycle: 27
-  last_direction: "formalize H10 HAQ-for-PEFT assignment"
-  last_reflection: "H10 now connects backend cost to selector-specific rescue candidates, has a human-facing progress memo, and is integrated into the main paper draft as a method/results component. The current defensible method is target perturbation-guided selective rescue from QLoRA/NF4. Cheap selectors and cross-model predictors should be reported as baselines/extensions because they recover only one of three unsafe Llama projection candidates at k=4. The next useful step is real GPU validation of the perturbation-selected rescue set if compute is available; otherwise continue paper refinement and citation verification."
+  last_direction: "re-scope H10 to inference-side mixed-precision PTQ"
+  last_reflection: "H10 should align with the project plan and original HAQ by targeting post-training quantization for inference deployment. The older PEFT/QLoRA selective-rescue branch remains supporting evidence for calibration and perturbation sensitivity, but the active H10 artifact should connect H7 probes with H9 vLLM backend measurements in an inference action table and solver."
 
 workspace:
   findings: "findings.md"

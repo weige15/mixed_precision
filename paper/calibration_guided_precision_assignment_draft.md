@@ -2,6 +2,11 @@
 
 Draft date: 2026-05-20
 
+> Scope note, 2026-05-27: the H10 HAQ-aligned direction has been re-scoped to
+> inference-side mixed-precision post-training quantization. The LoRA/QLoRA
+> selective-rescue material in this draft should be treated as supporting PEFT
+> evidence, not as the main project-plan-aligned H10 contribution.
+
 ## Abstract
 
 Low-precision training recipes for large language model adaptation are often selected by broad backend defaults, such as bf16 autocast or QLoRA, rather than by measuring which model operations are actually sensitive to reduced precision. This work studies whether a short pre-training precision check can identify precision-sensitive and precision-tolerant Transformer modules before LoRA fine-tuning. On Qwen2.5 and Llama-3.1 LoRA fine-tuning with Alpaca-style data, we evaluate calibration signals, one-module perturbation probes, frozen mixed-precision policies, and a hardware-aware assignment table. We find that activation-outlier scores predict projection-output perturbation sensitivity, especially for MLP projections, and that rank/perturbation-selected fake-int8 policies preserve bf16 validation quality during actual LoRA updates at both 0.5B and 7B scale. Hardware-backed QLoRA/NF4 gives real memory savings but a quality-throughput trade-off. On Llama-3.1-8B, selective bf16 projection rescue from QLoRA/NF4 improves final eval loss versus blanket QLoRA on every matched RTX 3090 seed while preserving about 25% peak-memory saving versus bf16. We formulate this as a PEFT adaptation of the HAQ principle: estimate Transformer module/action/backend precision risk from cheap probes, attach measured backend cost, and solve a constrained assignment problem over implementable precision actions.

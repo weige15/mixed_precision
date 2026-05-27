@@ -1,5 +1,15 @@
 # H10 Analysis
 
+## 2026-05-27 Scope Status
+
+This analysis belongs to the older PEFT/QLoRA selective-rescue branch. It is now
+archived as supporting evidence. The active H10 direction is inference-side
+mixed-precision PTQ under:
+
+```text
+experiments/h10-inference-ptq-assignment/
+```
+
 ## 2026-05-26 Generated H8 Action Table
 
 H10 now has the first generated HAQ-for-PEFT action table. The generator:
@@ -77,7 +87,8 @@ Interpretation:
 
 - The HAQ-for-PEFT table can now represent different rescue selector policies,
   not only a single aggregate projection-storage action.
-- The current evidence argues against presenting pure cross-model prediction as
-  the main H10 method.
-- The defensible method is target calibration plus targeted perturbation labels,
-  followed by backend-aware rescue assignment.
+- The current PEFT-side evidence argues against presenting pure cross-model
+  prediction as a main method.
+- Within this archived PEFT branch, the defensible method is target calibration
+  plus targeted perturbation labels, followed by backend-aware rescue
+  assignment.
