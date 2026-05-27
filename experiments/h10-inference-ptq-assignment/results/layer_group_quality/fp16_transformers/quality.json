@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T19:32:15.345899+00:00",
+  "generated_at_utc": "2026-05-27T20:57:13.066114+00:00",
   "status": "completed",
   "policy_name": "fp16_transformers",
   "policy": {
@@ -27,7 +27,7 @@
   "package_snapshot": {
     "torch": {
       "imported": true,
-      "version": "2.9.0",
+      "version": "2.10.0+cu128",
       "error": null
     },
     "transformers": {
@@ -48,20 +48,20 @@
   },
   "num_prompts": 6,
   "quality_batch_size": 1,
-  "load_time_sec": 11.622557057999074,
+  "load_time_sec": 8.849788548890501,
   "layer_group_report": {
     "backend": "none",
     "matched_modules": [],
     "num_matched_modules": 0
   },
-  "quality_time_sec": 0.3596192109398544,
+  "quality_time_sec": 0.34834116883575916,
   "prompt_results": [
     {
       "prompt_chars": [
         104
       ],
-      "quality_time_sec": 0.03131186729297042,
-      "mean_prompt_nll": 5.023184299468994,
+      "quality_time_sec": 0.030395624227821827,
+      "mean_prompt_nll": 5.02048921585083,
       "tokens_scored": 17,
       "tokens_missing_logprob": 0
     },
@@ -69,8 +69,8 @@
       "prompt_chars": [
         85
       ],
-      "quality_time_sec": 0.03288955520838499,
-      "mean_prompt_nll": 4.97741174697876,
+      "quality_time_sec": 0.02845283690840006,
+      "mean_prompt_nll": 4.977573871612549,
       "tokens_scored": 18,
       "tokens_missing_logprob": 0
     },
@@ -78,8 +78,8 @@
       "prompt_chars": [
         111
       ],
-      "quality_time_sec": 0.02990908222272992,
-      "mean_prompt_nll": 6.1895599365234375,
+      "quality_time_sec": 0.027974701952189207,
+      "mean_prompt_nll": 6.190780162811279,
       "tokens_scored": 20,
       "tokens_missing_logprob": 0
     },
@@ -87,8 +87,8 @@
       "prompt_chars": [
         4176
       ],
-      "quality_time_sec": 0.2036926308646798,
-      "mean_prompt_nll": 0.3420015573501587,
+      "quality_time_sec": 0.2024484477005899,
+      "mean_prompt_nll": 0.34201115369796753,
       "tokens_scored": 705,
       "tokens_missing_logprob": 0
     },
@@ -96,8 +96,8 @@
       "prompt_chars": [
         72
       ],
-      "quality_time_sec": 0.029587814584374428,
-      "mean_prompt_nll": 6.218753337860107,
+      "quality_time_sec": 0.028647246304899454,
+      "mean_prompt_nll": 6.217137336730957,
       "tokens_scored": 14,
       "tokens_missing_logprob": 0
     },
@@ -105,13 +105,13 @@
       "prompt_chars": [
         45
       ],
-      "quality_time_sec": 0.03220517700538039,
-      "mean_prompt_nll": 5.692798614501953,
+      "quality_time_sec": 0.030402424279600382,
+      "mean_prompt_nll": 5.691625595092773,
       "tokens_scored": 8,
       "tokens_missing_logprob": 0
     }
   ],
-  "mean_prompt_nll": 0.8599677453260592,
+  "mean_prompt_nll": 0.8599118164280797,
   "tokens_scored": 782,
   "tokens_missing_logprob": 0
 }

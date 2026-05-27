@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T20:03:03.484666+00:00",
+  "generated_at_utc": "2026-05-27T20:58:26.165561+00:00",
   "status": "completed",
   "policy_name": "h10_lg_late_mlp_int8wo",
   "policy": {
@@ -42,7 +42,7 @@
   "package_snapshot": {
     "torch": {
       "imported": true,
-      "version": "2.9.0",
+      "version": "2.10.0+cu128",
       "error": null
     },
     "transformers": {
@@ -73,30 +73,30 @@
       "prompt_tokens": 706,
       "generated_tokens": 16,
       "total_tokens": 722,
-      "latency_sec": 0.6912087518721819,
-      "output_tokens_per_sec": 23.147855053430682,
-      "total_tokens_per_sec": 1044.5469592860595,
+      "latency_sec": 0.8330908478237689,
+      "output_tokens_per_sec": 19.20558849229445,
+      "total_tokens_per_sec": 866.6521807147869,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653706073760986,
-        "reserved_gib": 15.3046875,
+        "reserved_gib": 15.30859375,
         "max_allocated_gib": 13.653706073760986,
-        "max_reserved_gib": 15.3046875,
-        "free_gib": 7.95220947265625,
+        "max_reserved_gib": 15.30859375,
+        "free_gib": 7.94049072265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6163330078125
+        "used_gib_from_mem_get_info": 15.6280517578125
       },
       "cuda_after": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653711795806885,
-        "reserved_gib": 15.3046875,
-        "max_allocated_gib": 13.908868312835693,
-        "max_reserved_gib": 15.3046875,
-        "free_gib": 7.95220947265625,
+        "reserved_gib": 15.30859375,
+        "max_allocated_gib": 13.909692287445068,
+        "max_reserved_gib": 15.30859375,
+        "free_gib": 7.94049072265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6163330078125
+        "used_gib_from_mem_get_info": 15.6280517578125
       },
       "sample_outputs": [
         "Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode r"
@@ -110,30 +110,30 @@
       "prompt_tokens": 706,
       "generated_tokens": 16,
       "total_tokens": 722,
-      "latency_sec": 0.6921554505825043,
-      "output_tokens_per_sec": 23.11619447124879,
-      "total_tokens_per_sec": 1043.1182755151017,
+      "latency_sec": 0.7784604830667377,
+      "output_tokens_per_sec": 20.553387548932673,
+      "total_tokens_per_sec": 927.4716131455868,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653706073760986,
-        "reserved_gib": 15.3046875,
+        "reserved_gib": 15.30859375,
         "max_allocated_gib": 13.653706073760986,
-        "max_reserved_gib": 15.3046875,
-        "free_gib": 7.95220947265625,
+        "max_reserved_gib": 15.30859375,
+        "free_gib": 7.94049072265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6163330078125
+        "used_gib_from_mem_get_info": 15.6280517578125
       },
       "cuda_after": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653711795806885,
-        "reserved_gib": 15.3046875,
-        "max_allocated_gib": 13.908868312835693,
-        "max_reserved_gib": 15.3046875,
-        "free_gib": 7.95220947265625,
+        "reserved_gib": 15.30859375,
+        "max_allocated_gib": 13.909692287445068,
+        "max_reserved_gib": 15.30859375,
+        "free_gib": 7.94049072265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6163330078125
+        "used_gib_from_mem_get_info": 15.6280517578125
       },
       "sample_outputs": [
         "Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode r"
@@ -147,30 +147,30 @@
       "prompt_tokens": 706,
       "generated_tokens": 16,
       "total_tokens": 722,
-      "latency_sec": 0.6891968720592558,
-      "output_tokens_per_sec": 23.21542747603235,
-      "total_tokens_per_sec": 1047.5961648559598,
+      "latency_sec": 0.7790551446378231,
+      "output_tokens_per_sec": 20.53769891660016,
+      "total_tokens_per_sec": 926.7636636115822,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653706073760986,
-        "reserved_gib": 15.3046875,
+        "reserved_gib": 15.30859375,
         "max_allocated_gib": 13.653706073760986,
-        "max_reserved_gib": 15.3046875,
-        "free_gib": 7.95220947265625,
+        "max_reserved_gib": 15.30859375,
+        "free_gib": 7.94049072265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6163330078125
+        "used_gib_from_mem_get_info": 15.6280517578125
       },
       "cuda_after": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653711795806885,
-        "reserved_gib": 15.3046875,
-        "max_allocated_gib": 13.908868312835693,
-        "max_reserved_gib": 15.3046875,
-        "free_gib": 7.95220947265625,
+        "reserved_gib": 15.30859375,
+        "max_allocated_gib": 13.909692287445068,
+        "max_reserved_gib": 15.30859375,
+        "free_gib": 7.94049072265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6163330078125
+        "used_gib_from_mem_get_info": 15.6280517578125
       },
       "sample_outputs": [
         "Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode r"
@@ -184,30 +184,30 @@
       "prompt_tokens": 15,
       "generated_tokens": 128,
       "total_tokens": 143,
-      "latency_sec": 4.510167915839702,
-      "output_tokens_per_sec": 28.38031806985816,
-      "total_tokens_per_sec": 31.70613659366966,
+      "latency_sec": 4.180099622812122,
+      "output_tokens_per_sec": 30.62127976602845,
+      "total_tokens_per_sec": 34.20971098860991,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653695583343506,
-        "reserved_gib": 15.32421875,
+        "reserved_gib": 15.328125,
         "max_allocated_gib": 13.653695583343506,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93267822265625,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6358642578125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "cuda_after": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.65369701385498,
-        "reserved_gib": 15.32421875,
+        "reserved_gib": 15.328125,
         "max_allocated_gib": 13.780974388122559,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93267822265625,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6358642578125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "sample_outputs": [
         "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of model weights and activations to take advantage of the hardware's capabilities, such as the presence of special"
@@ -221,30 +221,30 @@
       "prompt_tokens": 15,
       "generated_tokens": 128,
       "total_tokens": 143,
-      "latency_sec": 4.311203490011394,
-      "output_tokens_per_sec": 29.690085447500348,
-      "total_tokens_per_sec": 33.169392335879294,
+      "latency_sec": 4.17668654769659,
+      "output_tokens_per_sec": 30.646302646434165,
+      "total_tokens_per_sec": 34.23766623781317,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653695583343506,
-        "reserved_gib": 15.32421875,
+        "reserved_gib": 15.328125,
         "max_allocated_gib": 13.653695583343506,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93267822265625,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6358642578125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "cuda_after": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.65369701385498,
-        "reserved_gib": 15.32421875,
+        "reserved_gib": 15.328125,
         "max_allocated_gib": 13.780974388122559,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93267822265625,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6358642578125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "sample_outputs": [
         "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of model weights and activations to take advantage of the hardware's capabilities, such as the presence of special"
@@ -258,30 +258,30 @@
       "prompt_tokens": 15,
       "generated_tokens": 128,
       "total_tokens": 143,
-      "latency_sec": 4.335790717974305,
-      "output_tokens_per_sec": 29.521720102717964,
-      "total_tokens_per_sec": 32.98129667725522,
+      "latency_sec": 4.178616609890014,
+      "output_tokens_per_sec": 30.632147418609218,
+      "total_tokens_per_sec": 34.22185219422749,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653695583343506,
-        "reserved_gib": 15.32421875,
+        "reserved_gib": 15.328125,
         "max_allocated_gib": 13.653695583343506,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93267822265625,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6358642578125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "cuda_after": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.65369701385498,
-        "reserved_gib": 15.32421875,
+        "reserved_gib": 15.328125,
         "max_allocated_gib": 13.780974388122559,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93267822265625,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6358642578125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "sample_outputs": [
         "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of model weights and activations to take advantage of the hardware's capabilities, such as the presence of special"
@@ -295,30 +295,30 @@
       "prompt_tokens": 197,
       "generated_tokens": 192,
       "total_tokens": 389,
-      "latency_sec": 2.6539402422495186,
-      "output_tokens_per_sec": 72.34526118691278,
-      "total_tokens_per_sec": 146.57451355056807,
+      "latency_sec": 2.74465925199911,
+      "output_tokens_per_sec": 69.95403887027294,
+      "total_tokens_per_sec": 141.72979750279256,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653703212738037,
-        "reserved_gib": 15.32421875,
+        "reserved_gib": 15.328125,
         "max_allocated_gib": 13.653703212738037,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93072509765625,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6378173828125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "cuda_after": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653708934783936,
-        "reserved_gib": 15.32421875,
-        "max_allocated_gib": 13.890741348266602,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93072509765625,
+        "reserved_gib": 15.328125,
+        "max_allocated_gib": 13.890840530395508,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6378173828125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "sample_outputs": [
         "Define layer-wise post-training quantization. More...\n#include <IEPostTrainingQuantization.hpp>\n## Detailed Description\n## Constructor & Destructor\n\n## Member Function Documentation\n## \u00a7 getAlgorithmPtr()\n## \u00a7 getAlgorithmType()\n## \u00a7 getLayerWisePostTrainingQuantizationSettings()\n## \u00a7 getLayerWisePostTrainingQuantizationSettingsPtr()\n## \u00a7",
@@ -334,30 +334,30 @@
       "prompt_tokens": 197,
       "generated_tokens": 192,
       "total_tokens": 389,
-      "latency_sec": 2.662746564950794,
-      "output_tokens_per_sec": 72.10599856826707,
-      "total_tokens_per_sec": 146.0897575159161,
+      "latency_sec": 2.6926726950332522,
+      "output_tokens_per_sec": 71.30461877306962,
+      "total_tokens_per_sec": 144.46612866002127,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653703212738037,
-        "reserved_gib": 15.32421875,
+        "reserved_gib": 15.328125,
         "max_allocated_gib": 13.653703212738037,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93072509765625,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6378173828125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "cuda_after": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653708934783936,
-        "reserved_gib": 15.32421875,
-        "max_allocated_gib": 13.890741348266602,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93072509765625,
+        "reserved_gib": 15.328125,
+        "max_allocated_gib": 13.890840530395508,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6378173828125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "sample_outputs": [
         "Define layer-wise post-training quantization. More...\n#include <IEPostTrainingQuantization.hpp>\n## Detailed Description\n## Constructor & Destructor\n\n## Member Function Documentation\n## \u00a7 getAlgorithmPtr()\n## \u00a7 getAlgorithmType()\n## \u00a7 getLayerWisePostTrainingQuantizationSettings()\n## \u00a7 getLayerWisePostTrainingQuantizationSettingsPtr()\n## \u00a7",
@@ -373,30 +373,30 @@
       "prompt_tokens": 197,
       "generated_tokens": 192,
       "total_tokens": 389,
-      "latency_sec": 2.6946178288199008,
-      "output_tokens_per_sec": 71.25314690138667,
-      "total_tokens_per_sec": 144.3618445033303,
+      "latency_sec": 2.7500839978456497,
+      "output_tokens_per_sec": 69.81604930991497,
+      "total_tokens_per_sec": 141.4502249039423,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653703212738037,
-        "reserved_gib": 15.32421875,
+        "reserved_gib": 15.328125,
         "max_allocated_gib": 13.653703212738037,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93072509765625,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6378173828125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "cuda_after": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
         "allocated_gib": 13.653708934783936,
-        "reserved_gib": 15.32421875,
-        "max_allocated_gib": 13.890741348266602,
-        "max_reserved_gib": 15.32421875,
-        "free_gib": 7.93072509765625,
+        "reserved_gib": 15.328125,
+        "max_allocated_gib": 13.890840530395508,
+        "max_reserved_gib": 15.328125,
+        "free_gib": 7.92095947265625,
         "total_gib": 23.56854248046875,
-        "used_gib_from_mem_get_info": 15.6378173828125
+        "used_gib_from_mem_get_info": 15.6475830078125
       },
       "sample_outputs": [
         "Define layer-wise post-training quantization. More...\n#include <IEPostTrainingQuantization.hpp>\n## Detailed Description\n## Constructor & Destructor\n\n## Member Function Documentation\n## \u00a7 getAlgorithmPtr()\n## \u00a7 getAlgorithmType()\n## \u00a7 getLayerWisePostTrainingQuantizationSettings()\n## \u00a7 getLayerWisePostTrainingQuantizationSettingsPtr()\n## \u00a7",
@@ -408,25 +408,25 @@
   "pre_load_cuda": {
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",
-    "allocated_gib": 0.0,
-    "reserved_gib": 0.0,
-    "max_allocated_gib": 0.0,
-    "max_reserved_gib": 0.0,
-    "free_gib": 23.31353759765625,
+    "allocated_gib": 0.0079345703125,
+    "reserved_gib": 0.896484375,
+    "max_allocated_gib": 14.933464050292969,
+    "max_reserved_gib": 16.189453125,
+    "free_gib": 22.35260009765625,
     "total_gib": 23.56854248046875,
-    "used_gib_from_mem_get_info": 0.2550048828125
+    "used_gib_from_mem_get_info": 1.2159423828125
   },
-  "load_time_sec": 12.353826323058456,
+  "load_time_sec": 9.183940686285496,
   "post_load_cuda": {
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",
-    "allocated_gib": 13.64576005935669,
-    "reserved_gib": 15.302734375,
-    "max_allocated_gib": 15.176317691802979,
-    "max_reserved_gib": 15.302734375,
-    "free_gib": 7.96978759765625,
+    "allocated_gib": 13.65369462966919,
+    "reserved_gib": 15.306640625,
+    "max_allocated_gib": 15.184252262115479,
+    "max_reserved_gib": 16.189453125,
+    "free_gib": 7.94244384765625,
     "total_gib": 23.56854248046875,
-    "used_gib_from_mem_get_info": 15.5987548828125
+    "used_gib_from_mem_get_info": 15.6260986328125
   },
   "layer_group_report": {
     "backend": "torchao_fqn_to_config",
@@ -586,11 +586,11 @@
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",
     "allocated_gib": 13.65369462966919,
-    "reserved_gib": 15.32421875,
-    "max_allocated_gib": 13.890741348266602,
-    "max_reserved_gib": 15.32421875,
-    "free_gib": 7.93072509765625,
+    "reserved_gib": 15.328125,
+    "max_allocated_gib": 13.890840530395508,
+    "max_reserved_gib": 15.328125,
+    "free_gib": 7.92095947265625,
     "total_gib": 23.56854248046875,
-    "used_gib_from_mem_get_info": 15.6378173828125
+    "used_gib_from_mem_get_info": 15.6475830078125
   }
 }

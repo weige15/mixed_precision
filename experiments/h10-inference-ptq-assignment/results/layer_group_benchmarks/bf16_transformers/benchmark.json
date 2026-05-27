@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T19:31:27.758699+00:00",
+  "generated_at_utc": "2026-05-27T20:56:29.902411+00:00",
   "status": "completed",
   "policy_name": "bf16_transformers",
   "policy": {
@@ -27,7 +27,7 @@
   "package_snapshot": {
     "torch": {
       "imported": true,
-      "version": "2.9.0",
+      "version": "2.10.0+cu128",
       "error": null
     },
     "transformers": {
@@ -58,9 +58,9 @@
       "prompt_tokens": 706,
       "generated_tokens": 16,
       "total_tokens": 722,
-      "latency_sec": 0.5912687298841774,
-      "output_tokens_per_sec": 27.06045354898814,
-      "total_tokens_per_sec": 1221.1029663980898,
+      "latency_sec": 0.5745180691592395,
+      "output_tokens_per_sec": 27.84942869319097,
+      "total_tokens_per_sec": 1256.7054697802425,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -95,9 +95,9 @@
       "prompt_tokens": 706,
       "generated_tokens": 16,
       "total_tokens": 722,
-      "latency_sec": 0.6083521880209446,
-      "output_tokens_per_sec": 26.30055470343627,
-      "total_tokens_per_sec": 1186.8125309925617,
+      "latency_sec": 0.5829354519955814,
+      "output_tokens_per_sec": 27.44729274094875,
+      "total_tokens_per_sec": 1238.5590849353123,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -132,9 +132,9 @@
       "prompt_tokens": 706,
       "generated_tokens": 16,
       "total_tokens": 722,
-      "latency_sec": 0.6211144058033824,
-      "output_tokens_per_sec": 25.760149580341402,
-      "total_tokens_per_sec": 1162.4267498129057,
+      "latency_sec": 0.5753296432085335,
+      "output_tokens_per_sec": 27.810143608749623,
+      "total_tokens_per_sec": 1254.9327303448267,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -169,9 +169,9 @@
       "prompt_tokens": 15,
       "generated_tokens": 128,
       "total_tokens": 143,
-      "latency_sec": 3.6698802788741887,
-      "output_tokens_per_sec": 34.87852198798884,
-      "total_tokens_per_sec": 38.96584878345628,
+      "latency_sec": 3.2778802872635424,
+      "output_tokens_per_sec": 39.04962621647713,
+      "total_tokens_per_sec": 43.62575428872054,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -195,7 +195,7 @@
         "used_gib_from_mem_get_info": 15.5303955078125
       },
       "sample_outputs": [
-        "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of model weights and activations to take advantage of the hardware's capabilities, such as the presence of special"
+        "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of the model's weights and activations to take advantage of the hardware's capabilities, such as the presence of s"
       ]
     },
     {
@@ -206,9 +206,9 @@
       "prompt_tokens": 15,
       "generated_tokens": 128,
       "total_tokens": 143,
-      "latency_sec": 3.720205639023334,
-      "output_tokens_per_sec": 34.406700171984006,
-      "total_tokens_per_sec": 38.43873534838838,
+      "latency_sec": 3.397444995585829,
+      "output_tokens_per_sec": 37.675370805503995,
+      "total_tokens_per_sec": 42.090453321774,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -232,7 +232,7 @@
         "used_gib_from_mem_get_info": 15.5303955078125
       },
       "sample_outputs": [
-        "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of model weights and activations to take advantage of the hardware's capabilities, such as the presence of special"
+        "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of the model's weights and activations to take advantage of the hardware's capabilities, such as the presence of s"
       ]
     },
     {
@@ -243,9 +243,9 @@
       "prompt_tokens": 15,
       "generated_tokens": 128,
       "total_tokens": 143,
-      "latency_sec": 3.615652976091951,
-      "output_tokens_per_sec": 35.401627547329305,
-      "total_tokens_per_sec": 39.55025577553196,
+      "latency_sec": 3.3221199358813465,
+      "output_tokens_per_sec": 38.52961436386013,
+      "total_tokens_per_sec": 43.044803547124985,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -269,7 +269,7 @@
         "used_gib_from_mem_get_info": 15.5303955078125
       },
       "sample_outputs": [
-        "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of model weights and activations to take advantage of the hardware's capabilities, such as the presence of special"
+        "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of the model's weights and activations to take advantage of the hardware's capabilities, such as the presence of s"
       ]
     },
     {
@@ -280,9 +280,9 @@
       "prompt_tokens": 197,
       "generated_tokens": 192,
       "total_tokens": 389,
-      "latency_sec": 2.4280043528415263,
-      "output_tokens_per_sec": 79.07728821626691,
-      "total_tokens_per_sec": 160.2138808131658,
+      "latency_sec": 2.2207545661367476,
+      "output_tokens_per_sec": 86.45710018014535,
+      "total_tokens_per_sec": 175.16568734414864,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -319,9 +319,9 @@
       "prompt_tokens": 197,
       "generated_tokens": 192,
       "total_tokens": 389,
-      "latency_sec": 2.4702453520148993,
-      "output_tokens_per_sec": 77.72507287318315,
-      "total_tokens_per_sec": 157.4742361857721,
+      "latency_sec": 2.209898001048714,
+      "output_tokens_per_sec": 86.88183794405253,
+      "total_tokens_per_sec": 176.02622375123144,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -358,9 +358,9 @@
       "prompt_tokens": 197,
       "generated_tokens": 192,
       "total_tokens": 389,
-      "latency_sec": 2.4627114911563694,
-      "output_tokens_per_sec": 77.96284732883841,
-      "total_tokens_per_sec": 157.95597714019863,
+      "latency_sec": 2.2191495271399617,
+      "output_tokens_per_sec": 86.51963180121957,
+      "total_tokens_per_sec": 175.29237901392924,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -401,7 +401,7 @@
     "total_gib": 23.56854248046875,
     "used_gib_from_mem_get_info": 0.2550048828125
   },
-  "load_time_sec": 12.059115359093994,
+  "load_time_sec": 10.652037300169468,
   "post_load_cuda": {
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",

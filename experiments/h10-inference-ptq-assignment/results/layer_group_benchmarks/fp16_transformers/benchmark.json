@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T19:32:15.340270+00:00",
+  "generated_at_utc": "2026-05-27T20:57:13.060506+00:00",
   "status": "completed",
   "policy_name": "fp16_transformers",
   "policy": {
@@ -27,7 +27,7 @@
   "package_snapshot": {
     "torch": {
       "imported": true,
-      "version": "2.9.0",
+      "version": "2.10.0+cu128",
       "error": null
     },
     "transformers": {
@@ -58,9 +58,9 @@
       "prompt_tokens": 706,
       "generated_tokens": 16,
       "total_tokens": 722,
-      "latency_sec": 0.6591508551500738,
-      "output_tokens_per_sec": 24.273654315986832,
-      "total_tokens_per_sec": 1095.3486510089058,
+      "latency_sec": 0.5885040760040283,
+      "output_tokens_per_sec": 27.187577201913008,
+      "total_tokens_per_sec": 1226.8394212363244,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -95,9 +95,9 @@
       "prompt_tokens": 706,
       "generated_tokens": 16,
       "total_tokens": 722,
-      "latency_sec": 0.635860406793654,
-      "output_tokens_per_sec": 25.16275558133978,
-      "total_tokens_per_sec": 1135.4693456079576,
+      "latency_sec": 0.5800445107743144,
+      "output_tokens_per_sec": 27.58409001861123,
+      "total_tokens_per_sec": 1244.7320620898317,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -132,9 +132,9 @@
       "prompt_tokens": 706,
       "generated_tokens": 16,
       "total_tokens": 722,
-      "latency_sec": 0.5917685441672802,
-      "output_tokens_per_sec": 27.037597989455055,
-      "total_tokens_per_sec": 1220.0716092741593,
+      "latency_sec": 0.5815590592101216,
+      "output_tokens_per_sec": 27.51225304912511,
+      "total_tokens_per_sec": 1241.4904188417706,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -169,9 +169,9 @@
       "prompt_tokens": 15,
       "generated_tokens": 128,
       "total_tokens": 143,
-      "latency_sec": 3.5413469010964036,
-      "output_tokens_per_sec": 36.14443983456439,
-      "total_tokens_per_sec": 40.3801163776774,
+      "latency_sec": 3.3404182540252805,
+      "output_tokens_per_sec": 38.31855482341383,
+      "total_tokens_per_sec": 42.80901046678263,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -206,9 +206,9 @@
       "prompt_tokens": 15,
       "generated_tokens": 128,
       "total_tokens": 143,
-      "latency_sec": 3.546759353019297,
-      "output_tokens_per_sec": 36.08928242933531,
-      "total_tokens_per_sec": 40.318495214023045,
+      "latency_sec": 3.3153472831472754,
+      "output_tokens_per_sec": 38.608323372533384,
+      "total_tokens_per_sec": 43.132736267752136,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -243,9 +243,9 @@
       "prompt_tokens": 15,
       "generated_tokens": 128,
       "total_tokens": 143,
-      "latency_sec": 3.550634344574064,
-      "output_tokens_per_sec": 36.049896322217585,
-      "total_tokens_per_sec": 40.27449354747746,
+      "latency_sec": 3.345664713997394,
+      "output_tokens_per_sec": 38.25846608731628,
+      "total_tokens_per_sec": 42.741880081923654,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -280,9 +280,9 @@
       "prompt_tokens": 197,
       "generated_tokens": 192,
       "total_tokens": 389,
-      "latency_sec": 2.678605706896633,
-      "output_tokens_per_sec": 71.6790827054746,
-      "total_tokens_per_sec": 145.2248081897376,
+      "latency_sec": 2.2653627628460526,
+      "output_tokens_per_sec": 84.75463760108065,
+      "total_tokens_per_sec": 171.71642722302278,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -319,9 +319,9 @@
       "prompt_tokens": 197,
       "generated_tokens": 192,
       "total_tokens": 389,
-      "latency_sec": 2.5350275030359626,
-      "output_tokens_per_sec": 75.7388232553926,
-      "total_tokens_per_sec": 153.45001169972772,
+      "latency_sec": 2.2892073513939977,
+      "output_tokens_per_sec": 83.8718257142949,
+      "total_tokens_per_sec": 169.9278135565662,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -358,9 +358,9 @@
       "prompt_tokens": 197,
       "generated_tokens": 192,
       "total_tokens": 389,
-      "latency_sec": 2.4349061981774867,
-      "output_tokens_per_sec": 78.85314027444298,
-      "total_tokens_per_sec": 159.7597477435329,
+      "latency_sec": 2.245760025922209,
+      "output_tokens_per_sec": 85.49444187437447,
+      "total_tokens_per_sec": 173.2153015058941,
       "cuda_before": {
         "cuda_available": true,
         "device_name": "NVIDIA GeForce RTX 3090",
@@ -401,7 +401,7 @@
     "total_gib": 23.56854248046875,
     "used_gib_from_mem_get_info": 0.3311767578125
   },
-  "load_time_sec": 11.622557057999074,
+  "load_time_sec": 8.849788548890501,
   "post_load_cuda": {
     "cuda_available": true,
     "device_name": "NVIDIA GeForce RTX 3090",

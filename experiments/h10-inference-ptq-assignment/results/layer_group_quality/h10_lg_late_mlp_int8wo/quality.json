@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T20:03:10.164031+00:00",
+  "generated_at_utc": "2026-05-27T20:58:26.170040+00:00",
   "status": "completed",
   "policy_name": "h10_lg_late_mlp_int8wo",
   "policy": {
@@ -42,7 +42,7 @@
   "package_snapshot": {
     "torch": {
       "imported": true,
-      "version": "2.9.0",
+      "version": "2.10.0+cu128",
       "error": null
     },
     "transformers": {
@@ -63,7 +63,7 @@
   },
   "num_prompts": 6,
   "quality_batch_size": 1,
-  "load_time_sec": 12.353826323058456,
+  "load_time_sec": 9.183940686285496,
   "layer_group_report": {
     "backend": "torchao_fqn_to_config",
     "selection_source": "starter_backend_policy_from_h6_h7_late_mlp_low_risk_pattern",
@@ -218,13 +218,13 @@
       "re:model\\.layers\\.(2[4-9]|3[0-1])\\.mlp\\.(gate_proj|up_proj|down_proj)"
     ]
   },
-  "quality_time_sec": 0.4001362780109048,
+  "quality_time_sec": 0.39563297713175416,
   "prompt_results": [
     {
       "prompt_chars": [
         104
       ],
-      "quality_time_sec": 0.05219009891152382,
+      "quality_time_sec": 0.03624734282493591,
       "mean_prompt_nll": NaN,
       "tokens_scored": 17,
       "tokens_missing_logprob": 0
@@ -233,7 +233,7 @@
       "prompt_chars": [
         85
       ],
-      "quality_time_sec": 0.03459117794409394,
+      "quality_time_sec": 0.04004832124337554,
       "mean_prompt_nll": NaN,
       "tokens_scored": 18,
       "tokens_missing_logprob": 0
@@ -242,7 +242,7 @@
       "prompt_chars": [
         111
       ],
-      "quality_time_sec": 0.03417025273665786,
+      "quality_time_sec": 0.0358572150580585,
       "mean_prompt_nll": NaN,
       "tokens_scored": 20,
       "tokens_missing_logprob": 0
@@ -251,7 +251,7 @@
       "prompt_chars": [
         4176
       ],
-      "quality_time_sec": 0.2110013198107481,
+      "quality_time_sec": 0.21437669778242707,
       "mean_prompt_nll": NaN,
       "tokens_scored": 705,
       "tokens_missing_logprob": 0
@@ -260,7 +260,7 @@
       "prompt_chars": [
         72
       ],
-      "quality_time_sec": 0.0340522020123899,
+      "quality_time_sec": 0.03558957390487194,
       "mean_prompt_nll": NaN,
       "tokens_scored": 14,
       "tokens_missing_logprob": 0
@@ -269,7 +269,7 @@
       "prompt_chars": [
         45
       ],
-      "quality_time_sec": 0.03411046089604497,
+      "quality_time_sec": 0.03349472023546696,
       "mean_prompt_nll": NaN,
       "tokens_scored": 8,
       "tokens_missing_logprob": 0
