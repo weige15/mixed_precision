@@ -15,22 +15,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 2.628652401578923,
-        "stdev": 0.0004673990510431463,
-        "min": 2.62828070204705,
-        "max": 2.6291771340183914
+        "mean": 2.6258530422734716,
+        "stdev": 0.0033422066461037455,
+        "min": 2.622401423752308,
+        "max": 2.629073874093592
       },
       "output_tokens_per_sec": {
-        "mean": 48.69415317933213,
-        "stdev": 0.008657602207938543,
-        "min": 48.684433750710014,
-        "max": 48.70103862966636
+        "mean": 48.74611648143151,
+        "stdev": 0.062052635299703535,
+        "min": 48.68634588829486,
+        "max": 48.81022365250588
       },
       "total_tokens_per_sec": {
-        "mean": 54.400499255035115,
-        "stdev": 0.009672164966681662,
-        "min": 54.38964083087134,
-        "max": 54.408191594080385
+        "mean": 54.458552006599255,
+        "stdev": 0.06932442849888512,
+        "min": 54.391777047079415,
+        "max": 54.53017173678391
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -69,22 +69,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 2.62396376968051,
-        "stdev": 0.008316456181587066,
-        "min": 2.6147218430414796,
-        "max": 2.6308438340201974
+        "mean": 2.623468409758061,
+        "stdev": 0.004362050716373912,
+        "min": 2.61926606297493,
+        "max": 2.62797430716455
       },
       "output_tokens_per_sec": {
-        "mean": 48.78148842857865,
-        "stdev": 0.15480183526420727,
-        "min": 48.653591043601764,
-        "max": 48.953581942432805
+        "mean": 48.79046204442487,
+        "stdev": 0.08111018264809185,
+        "min": 48.706716671863305,
+        "max": 48.868651340680984
       },
       "total_tokens_per_sec": {
-        "mean": 54.498069103802706,
-        "stdev": 0.17294267533422994,
-        "min": 54.35518374402385,
-        "max": 54.69032982631165
+        "mean": 54.50809431525591,
+        "stdev": 0.09061528217716376,
+        "min": 54.41453503184729,
+        "max": 54.595446419667034
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -100,8 +100,8 @@
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_benchmarks/fp16_default/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": -0.17836637113363218,
-        "output_tokens_per_sec_percent": -0.17935469362178633,
+        "latency_percent": -0.09081363187582699,
+        "output_tokens_per_sec_percent": -0.09097250446659891,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
         "prompt_nll_percent": 0.009738261474567193
@@ -154,8 +154,8 @@
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_benchmarks/llama31_8b_instruct_awq_artifact/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": 194.62045976509975,
-        "output_tokens_per_sec_percent": 66.0577486804875,
+        "latency_percent": 194.9345476109701,
+        "output_tokens_per_sec_percent": 66.09393107995967,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 2.4191636143509516,
         "prompt_nll_percent": 2.9353213710214137
@@ -177,22 +177,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 1.3825053543162842,
-        "stdev": 0.004269278198270132,
-        "min": 1.3790869656950235,
-        "max": 1.387290698941797
+        "mean": 1.3824393850130339,
+        "stdev": 0.004550074762358734,
+        "min": 1.3794514718465507,
+        "max": 1.38767599593848
       },
       "output_tokens_per_sec": {
-        "mean": 138.87918655850032,
-        "stdev": 0.42829994441773517,
-        "min": 138.39925557524066,
-        "max": 139.22254707355387
+        "mean": 138.8859331925817,
+        "stdev": 0.4562792698788629,
+        "min": 138.36082814861342,
+        "max": 139.18575891835212
       },
       "total_tokens_per_sec": {
-        "mean": 355.15458645949826,
-        "stdev": 1.0952878786932831,
-        "min": 353.92726295543315,
-        "max": 356.03265944330707
+        "mean": 355.1718395706126,
+        "stdev": 1.1668391745339677,
+        "min": 353.8289928175479,
+        "max": 355.93858140057756
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -231,22 +231,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 1.370707009298106,
-        "stdev": 0.0022570042907184926,
-        "min": 1.368561013136059,
-        "max": 1.3730606688186526
+        "mean": 1.3682971629314125,
+        "stdev": 0.0017144603512750931,
+        "min": 1.3667339188978076,
+        "max": 1.3701307238079607
       },
       "output_tokens_per_sec": {
-        "mean": 140.07395137331594,
-        "stdev": 0.2305939131420872,
-        "min": 139.8335881000743,
-        "max": 140.29334326865836
+        "mean": 140.32054300858894,
+        "stdev": 0.17576932434029494,
+        "min": 140.1326141102657,
+        "max": 140.48089196091436
       },
       "total_tokens_per_sec": {
-        "mean": 358.2099485640527,
-        "stdev": 0.5896958924623514,
-        "min": 357.59526956841916,
-        "max": 358.77099762974615
+        "mean": 358.8405552980061,
+        "stdev": 0.4494934283910743,
+        "min": 358.3599662923982,
+        "max": 359.2506143375466
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -262,8 +262,8 @@
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_benchmarks/fp16_default/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": -0.8534032060955798,
-        "output_tokens_per_sec_percent": -0.8602907638088307,
+        "latency_percent": -1.022990391834654,
+        "output_tokens_per_sec_percent": -1.0329410495575513,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
         "prompt_nll_percent": 0.009738261474567193
@@ -316,8 +316,8 @@
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_benchmarks/llama31_8b_instruct_awq_artifact/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": 190.2746284655532,
-        "output_tokens_per_sec_percent": 65.55008348064943,
+        "latency_percent": 190.28848022296023,
+        "output_tokens_per_sec_percent": 65.5517569473249,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 2.418947679656795,
         "prompt_nll_percent": 2.9353213710214137
@@ -339,22 +339,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 0.3386157628459235,
-        "stdev": 0.0019593124233492324,
-        "min": 0.3366464381106198,
-        "max": 0.34056490706279874
+        "mean": 0.3387809923539559,
+        "stdev": 0.002254443919533694,
+        "min": 0.33722454495728016,
+        "max": 0.3413663189858198
       },
       "output_tokens_per_sec": {
-        "mean": 47.25225144762505,
-        "stdev": 0.27344193193680855,
-        "min": 46.980765393569065,
-        "max": 47.52760816302624
+        "mean": 47.22954071914054,
+        "stdev": 0.313163922678252,
+        "min": 46.87047054769522,
+        "max": 47.446131188424886
       },
       "total_tokens_per_sec": {
-        "mean": 3360.8163842123317,
-        "stdev": 19.448557409005666,
-        "min": 3341.5069386175996,
-        "max": 3380.4011305952413
+        "mean": 3359.2010836488707,
+        "stdev": 22.27378400049067,
+        "min": 3333.6622177048225,
+        "max": 3374.60608077672
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -393,22 +393,22 @@
       "runtime": "vllm",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 0.33830572571605444,
-        "stdev": 0.0015524893484321653,
-        "min": 0.3366521638818085,
-        "max": 0.33973210910335183
+        "mean": 0.33839940186589956,
+        "stdev": 0.0010180609057164193,
+        "min": 0.3373097791336477,
+        "max": 0.33932629926130176
       },
       "output_tokens_per_sec": {
-        "mean": 47.295164224749854,
-        "stdev": 0.21725423704190214,
-        "min": 47.09593109179018,
-        "max": 47.52679981471102
+        "mean": 47.28169294236978,
+        "stdev": 0.14234564879497197,
+        "min": 47.152254437193015,
+        "max": 47.434142114393126
       },
       "total_tokens_per_sec": {
-        "mean": 3363.8685554853337,
-        "stdev": 15.452207609605159,
-        "min": 3349.6980989035765,
-        "max": 3380.343636821321
+        "mean": 3362.910410526051,
+        "stdev": 10.124334270542326,
+        "min": 3353.704096845353,
+        "max": 3373.753357886211
       },
       "peak_reserved_gib": {
         "mean": 0.0,
@@ -424,8 +424,8 @@
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_benchmarks/fp16_default/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": -0.09156015870711781,
-        "output_tokens_per_sec_percent": -0.09081636495642925,
+        "latency_percent": -0.11263633340375759,
+        "output_tokens_per_sec_percent": -0.11042288880041361,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 0.0,
         "prompt_nll_percent": 0.009738261474567193
@@ -478,8 +478,8 @@
       },
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_benchmarks/llama31_8b_instruct_awq_artifact/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": 186.00988976451623,
-        "output_tokens_per_sec_percent": 65.036879607032,
+        "latency_percent": 185.8703976606357,
+        "output_tokens_per_sec_percent": 65.02006729164368,
         "peak_reserved_gib_percent": null,
         "used_gib_from_mem_get_info_percent": 2.4191636143509516,
         "prompt_nll_percent": 2.9353213710214137

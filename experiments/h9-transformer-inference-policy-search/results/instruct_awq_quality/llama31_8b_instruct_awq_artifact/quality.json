@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T12:54:16.839339+00:00",
+  "generated_at_utc": "2026-05-27T13:02:45.770820+00:00",
   "status": "completed",
   "policy_name": "llama31_8b_instruct_awq_artifact",
   "policy": {
@@ -35,8 +35,8 @@
   "quality_batch_size": 1,
   "gpu_memory_utilization_override": 0.78,
   "cuda_visible_devices": "6",
-  "load_time_sec": 51.544804144185036,
-  "quality_time_sec": 5.524898814968765,
+  "load_time_sec": 47.97940918197855,
+  "quality_time_sec": 5.956454181112349,
   "prompt_results": [
     {
       "prompt_indices": [
@@ -45,7 +45,7 @@
       "prompt_chars": [
         104
       ],
-      "quality_time_sec": 4.897848248016089,
+      "quality_time_sec": 5.338584358803928,
       "mean_prompt_nll": 5.040145102669211,
       "tokens_scored": 17,
       "tokens_missing_logprob": 0
@@ -57,7 +57,7 @@
       "prompt_chars": [
         122
       ],
-      "quality_time_sec": 0.07038066489621997,
+      "quality_time_sec": 0.06811329815536737,
       "mean_prompt_nll": 4.480855418019928,
       "tokens_scored": 24,
       "tokens_missing_logprob": 0
@@ -69,7 +69,7 @@
       "prompt_chars": [
         111
       ],
-      "quality_time_sec": 0.07040485180914402,
+      "quality_time_sec": 0.0677694040350616,
       "mean_prompt_nll": 6.221933104470372,
       "tokens_scored": 20,
       "tokens_missing_logprob": 0
@@ -81,7 +81,7 @@
       "prompt_chars": [
         6336
       ],
-      "quality_time_sec": 0.35607102885842323,
+      "quality_time_sec": 0.349279822781682,
       "mean_prompt_nll": 0.3059443973288268,
       "tokens_scored": 1121,
       "tokens_missing_logprob": 0
@@ -93,7 +93,7 @@
       "prompt_chars": [
         72
       ],
-      "quality_time_sec": 0.06489123497158289,
+      "quality_time_sec": 0.06551776081323624,
       "mean_prompt_nll": 6.111643240920135,
       "tokens_scored": 14,
       "tokens_missing_logprob": 0
@@ -105,7 +105,7 @@
       "prompt_chars": [
         29
       ],
-      "quality_time_sec": 0.06527347024530172,
+      "quality_time_sec": 0.0671565611846745,
       "mean_prompt_nll": 7.950091230372588,
       "tokens_scored": 6,
       "tokens_missing_logprob": 0
