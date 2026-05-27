@@ -1,0 +1,432 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-27T19:32:15.340270+00:00",
+  "status": "completed",
+  "policy_name": "fp16_transformers",
+  "policy": {
+    "policy_name": "fp16_transformers",
+    "description": "Transformers float16 baseline for matched layer/group backend comparisons.",
+    "expected_role": "baseline",
+    "llm_kwargs": {
+      "torch_dtype": "float16",
+      "trust_remote_code": true
+    },
+    "search_tags": {
+      "dtype": "float16",
+      "quantization": "none",
+      "runtime_mode": "transformers",
+      "layer_group_backend": "none"
+    }
+  },
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "baseline_model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "runtime": "transformers_torchao_layer_group",
+  "hardware_label": "rtx3090-lab",
+  "seed": 42,
+  "cuda_visible_devices": "7",
+  "package_snapshot": {
+    "torch": {
+      "imported": true,
+      "version": "2.9.0",
+      "error": null
+    },
+    "transformers": {
+      "imported": true,
+      "version": "4.57.6",
+      "error": null
+    },
+    "accelerate": {
+      "imported": true,
+      "version": "1.13.0",
+      "error": null
+    },
+    "torchao": {
+      "imported": true,
+      "version": "0.17.0",
+      "error": null
+    }
+  },
+  "smoke": false,
+  "repeats": 3,
+  "warmup_runs": 1,
+  "runs": [
+    {
+      "workload_name": "prefill_heavy",
+      "repeat": 0,
+      "num_prompts": 1,
+      "max_tokens": 16,
+      "prompt_tokens": 706,
+      "generated_tokens": 16,
+      "total_tokens": 722,
+      "latency_sec": 0.6591508551500738,
+      "output_tokens_per_sec": 24.273654315986832,
+      "total_tokens_per_sec": 1095.3486510089058,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965473651885986,
+        "reserved_gib": 15.19921875,
+        "max_allocated_gib": 14.965473651885986,
+        "max_reserved_gib": 15.19921875,
+        "free_gib": 8.04986572265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5186767578125
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965479373931885,
+        "reserved_gib": 15.19921875,
+        "max_allocated_gib": 15.13309621810913,
+        "max_reserved_gib": 15.19921875,
+        "free_gib": 8.04986572265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5186767578125
+      },
+      "sample_outputs": [
+        "Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode r"
+      ]
+    },
+    {
+      "workload_name": "prefill_heavy",
+      "repeat": 1,
+      "num_prompts": 1,
+      "max_tokens": 16,
+      "prompt_tokens": 706,
+      "generated_tokens": 16,
+      "total_tokens": 722,
+      "latency_sec": 0.635860406793654,
+      "output_tokens_per_sec": 25.16275558133978,
+      "total_tokens_per_sec": 1135.4693456079576,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965473651885986,
+        "reserved_gib": 15.19921875,
+        "max_allocated_gib": 14.965473651885986,
+        "max_reserved_gib": 15.19921875,
+        "free_gib": 8.04986572265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5186767578125
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965479373931885,
+        "reserved_gib": 15.19921875,
+        "max_allocated_gib": 15.13309621810913,
+        "max_reserved_gib": 15.19921875,
+        "free_gib": 8.04986572265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5186767578125
+      },
+      "sample_outputs": [
+        "Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode r"
+      ]
+    },
+    {
+      "workload_name": "prefill_heavy",
+      "repeat": 2,
+      "num_prompts": 1,
+      "max_tokens": 16,
+      "prompt_tokens": 706,
+      "generated_tokens": 16,
+      "total_tokens": 722,
+      "latency_sec": 0.5917685441672802,
+      "output_tokens_per_sec": 27.037597989455055,
+      "total_tokens_per_sec": 1220.0716092741593,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965473651885986,
+        "reserved_gib": 15.19921875,
+        "max_allocated_gib": 14.965473651885986,
+        "max_reserved_gib": 15.19921875,
+        "free_gib": 8.04986572265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5186767578125
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965479373931885,
+        "reserved_gib": 15.19921875,
+        "max_allocated_gib": 15.13309621810913,
+        "max_reserved_gib": 15.19921875,
+        "free_gib": 8.04986572265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5186767578125
+      },
+      "sample_outputs": [
+        "Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode r"
+      ]
+    },
+    {
+      "workload_name": "decode_heavy",
+      "repeat": 0,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 15,
+      "generated_tokens": 128,
+      "total_tokens": 143,
+      "latency_sec": 3.5413469010964036,
+      "output_tokens_per_sec": 36.14443983456439,
+      "total_tokens_per_sec": 40.3801163776774,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965463161468506,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 14.965463161468506,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.96546459197998,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 14.98400068283081,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "sample_outputs": [
+        "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of model weights and activations to take advantage of the hardware's capabilities, such as the presence of special"
+      ]
+    },
+    {
+      "workload_name": "decode_heavy",
+      "repeat": 1,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 15,
+      "generated_tokens": 128,
+      "total_tokens": 143,
+      "latency_sec": 3.546759353019297,
+      "output_tokens_per_sec": 36.08928242933531,
+      "total_tokens_per_sec": 40.318495214023045,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965463161468506,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 14.965463161468506,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.96546459197998,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 14.98400068283081,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "sample_outputs": [
+        "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of model weights and activations to take advantage of the hardware's capabilities, such as the presence of special"
+      ]
+    },
+    {
+      "workload_name": "decode_heavy",
+      "repeat": 2,
+      "num_prompts": 1,
+      "max_tokens": 128,
+      "prompt_tokens": 15,
+      "generated_tokens": 128,
+      "total_tokens": 143,
+      "latency_sec": 3.550634344574064,
+      "output_tokens_per_sec": 36.049896322217585,
+      "total_tokens_per_sec": 40.27449354747746,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965463161468506,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 14.965463161468506,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.96546459197998,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 14.98400068283081,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "sample_outputs": [
+        "Explain hardware-aware mixed precision for LLM serving in one paragraph. Hardware-aware mixed precision is a technique used in large language model (LLM) serving to optimize the performance of deep learning models on specific hardware architectures. It involves adjusting the precision of model weights and activations to take advantage of the hardware's capabilities, such as the presence of special"
+      ]
+    },
+    {
+      "workload_name": "mixed",
+      "repeat": 0,
+      "num_prompts": 3,
+      "max_tokens": 64,
+      "prompt_tokens": 197,
+      "generated_tokens": 192,
+      "total_tokens": 389,
+      "latency_sec": 2.678605706896633,
+      "output_tokens_per_sec": 71.6790827054746,
+      "total_tokens_per_sec": 145.2248081897376,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965470790863037,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 14.965470790863037,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965476512908936,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 15.106821060180664,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "sample_outputs": [
+        "Define layer-wise post-training quantization. More...\n#include <IEPostTrainingQuantization.hpp>\n## Detailed Description\n## Constructor & Destructor\n\n## Member Function Documentation\n## \u00a7 getAlgorithmFP32ToI8() Returns the algorithm for converting the model from FP32 to I8.\n## \u00a7 getAlgorithmFP32ToI16() Returns the algorithm for converting",
+        "Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode r",
+        "List two risks of quantizing MLP projections. What are the risks of quantizing MLP projections?\nQuantizing MLP projections can lead to a loss of information and accuracy in the model's predictions. This is because quantization involves reducing the number of possible values that the model's weights and activations can take, which can result in a loss of precision and detail in the model"
+      ]
+    },
+    {
+      "workload_name": "mixed",
+      "repeat": 1,
+      "num_prompts": 3,
+      "max_tokens": 64,
+      "prompt_tokens": 197,
+      "generated_tokens": 192,
+      "total_tokens": 389,
+      "latency_sec": 2.5350275030359626,
+      "output_tokens_per_sec": 75.7388232553926,
+      "total_tokens_per_sec": 153.45001169972772,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965470790863037,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 14.965470790863037,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965476512908936,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 15.106821060180664,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "sample_outputs": [
+        "Define layer-wise post-training quantization. More...\n#include <IEPostTrainingQuantization.hpp>\n## Detailed Description\n## Constructor & Destructor\n\n## Member Function Documentation\n## \u00a7 getAlgorithmFP32ToI8() Returns the algorithm for converting the model from FP32 to I8.\n## \u00a7 getAlgorithmFP32ToI16() Returns the algorithm for converting",
+        "Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode r",
+        "List two risks of quantizing MLP projections. What are the risks of quantizing MLP projections?\nQuantizing MLP projections can lead to a loss of information and accuracy in the model's predictions. This is because quantization involves reducing the number of possible values that the model's weights and activations can take, which can result in a loss of precision and detail in the model"
+      ]
+    },
+    {
+      "workload_name": "mixed",
+      "repeat": 2,
+      "num_prompts": 3,
+      "max_tokens": 64,
+      "prompt_tokens": 197,
+      "generated_tokens": 192,
+      "total_tokens": 389,
+      "latency_sec": 2.4349061981774867,
+      "output_tokens_per_sec": 78.85314027444298,
+      "total_tokens_per_sec": 159.7597477435329,
+      "cuda_before": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965470790863037,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 14.965470790863037,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "cuda_after": {
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "allocated_gib": 14.965476512908936,
+        "reserved_gib": 15.21875,
+        "max_allocated_gib": 15.106821060180664,
+        "max_reserved_gib": 15.21875,
+        "free_gib": 8.03033447265625,
+        "total_gib": 23.56854248046875,
+        "used_gib_from_mem_get_info": 15.5382080078125
+      },
+      "sample_outputs": [
+        "Define layer-wise post-training quantization. More...\n#include <IEPostTrainingQuantization.hpp>\n## Detailed Description\n## Constructor & Destructor\n\n## Member Function Documentation\n## \u00a7 getAlgorithmFP32ToI8() Returns the algorithm for converting the model from FP32 to I8.\n## \u00a7 getAlgorithmFP32ToI16() Returns the algorithm for converting",
+        "Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode r",
+        "List two risks of quantizing MLP projections. What are the risks of quantizing MLP projections?\nQuantizing MLP projections can lead to a loss of information and accuracy in the model's predictions. This is because quantization involves reducing the number of possible values that the model's weights and activations can take, which can result in a loss of precision and detail in the model"
+      ]
+    }
+  ],
+  "pre_load_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 0.0079345703125,
+    "reserved_gib": 0.01953125,
+    "max_allocated_gib": 15.807823181152344,
+    "max_reserved_gib": 16.064453125,
+    "free_gib": 23.23736572265625,
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 0.3311767578125
+  },
+  "load_time_sec": 11.622557057999074,
+  "post_load_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 14.96546220779419,
+    "reserved_gib": 15.103515625,
+    "max_allocated_gib": 15.807823181152344,
+    "max_reserved_gib": 16.064453125,
+    "free_gib": 8.15338134765625,
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 15.4151611328125
+  },
+  "layer_group_report": {
+    "backend": "none",
+    "matched_modules": [],
+    "num_matched_modules": 0
+  },
+  "post_run_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 14.96546220779419,
+    "reserved_gib": 15.21875,
+    "max_allocated_gib": 15.106821060180664,
+    "max_reserved_gib": 15.21875,
+    "free_gib": 8.03033447265625,
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 15.5382080078125
+  }
+}

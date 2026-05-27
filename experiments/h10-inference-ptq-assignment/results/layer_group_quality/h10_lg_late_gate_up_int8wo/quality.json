@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-27T19:32:55.063359+00:00",
+  "status": "completed",
+  "policy_name": "h10_lg_late_gate_up_int8wo",
+  "policy": {
+    "policy_name": "h10_lg_late_gate_up_int8wo",
+    "description": "TorchAO FqnToConfig policy that quantizes only late-layer MLP gate/up projections, leaving down projections and attention in fp16.",
+    "expected_role": "layer_group_mixed_precision_candidate",
+    "llm_kwargs": {
+      "torch_dtype": "float16",
+      "trust_remote_code": true
+    },
+    "layer_group_policy": {
+      "backend": "torchao_fqn_to_config",
+      "default_precision": "float16",
+      "selection_source": "starter_backend_policy_from_h6_h7_gate_up_low_risk_pattern",
+      "groups": [
+        {
+          "group_name": "late_mlp_gate_up_layers_24_31",
+          "module_regex": "model\\.layers\\.(2[4-9]|3[0-1])\\.mlp\\.(gate_proj|up_proj)",
+          "config": {
+            "type": "int8_weight_only",
+            "group_size": null
+          }
+        }
+      ]
+    },
+    "search_tags": {
+      "dtype": "float16",
+      "quantization": "int8_weight_only",
+      "runtime_mode": "transformers",
+      "layer_group_backend": "torchao_fqn_to_config"
+    }
+  },
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "baseline_model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "runtime": "transformers_torchao_layer_group",
+  "hardware_label": "rtx3090-lab",
+  "seed": 42,
+  "cuda_visible_devices": "7",
+  "package_snapshot": {
+    "torch": {
+      "imported": true,
+      "version": "2.9.0",
+      "error": null
+    },
+    "transformers": {
+      "imported": true,
+      "version": "4.57.6",
+      "error": null
+    },
+    "accelerate": {
+      "imported": true,
+      "version": "1.13.0",
+      "error": null
+    },
+    "torchao": {
+      "imported": true,
+      "version": "0.17.0",
+      "error": null
+    }
+  },
+  "num_prompts": 6,
+  "quality_batch_size": 1,
+  "load_time_sec": 12.560076088178903,
+  "layer_group_report": {
+    "backend": "torchao_fqn_to_config",
+    "selection_source": "starter_backend_policy_from_h6_h7_gate_up_low_risk_pattern",
+    "matched_modules": [
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.24.mlp.gate_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.24.mlp.up_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.25.mlp.gate_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.25.mlp.up_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.26.mlp.gate_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.26.mlp.up_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.27.mlp.gate_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.27.mlp.up_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.28.mlp.gate_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.28.mlp.up_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.29.mlp.gate_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.29.mlp.up_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.30.mlp.gate_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.30.mlp.up_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.31.mlp.gate_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      },
+      {
+        "group_name": "late_mlp_gate_up_layers_24_31",
+        "module_name": "model.layers.31.mlp.up_proj",
+        "module_type": "Linear",
+        "config_type": "int8_weight_only"
+      }
+    ],
+    "num_matched_modules": 16,
+    "fqn_patterns": [
+      "re:model\\.layers\\.(2[4-9]|3[0-1])\\.mlp\\.(gate_proj|up_proj)"
+    ]
+  },
+  "quality_time_sec": 0.41985575389117,
+  "prompt_results": [
+    {
+      "prompt_chars": [
+        104
+      ],
+      "quality_time_sec": 0.04210055014118552,
+      "mean_prompt_nll": 5.018899440765381,
+      "tokens_scored": 17,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_chars": [
+        85
+      ],
+      "quality_time_sec": 0.04273527907207608,
+      "mean_prompt_nll": 4.975011348724365,
+      "tokens_scored": 18,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_chars": [
+        111
+      ],
+      "quality_time_sec": 0.04229312622919679,
+      "mean_prompt_nll": 6.184975624084473,
+      "tokens_scored": 20,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_chars": [
+        4176
+      ],
+      "quality_time_sec": 0.210703918710351,
+      "mean_prompt_nll": 0.3421994149684906,
+      "tokens_scored": 705,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_chars": [
+        72
+      ],
+      "quality_time_sec": 0.04134802520275116,
+      "mean_prompt_nll": 6.210906028747559,
+      "tokens_scored": 14,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_chars": [
+        45
+      ],
+      "quality_time_sec": 0.040651347022503614,
+      "mean_prompt_nll": 5.688177108764648,
+      "tokens_scored": 8,
+      "tokens_missing_logprob": 0
+    }
+  ],
+  "mean_prompt_nll": 0.859692705980957,
+  "tokens_scored": 782,
+  "tokens_missing_logprob": 0
+}

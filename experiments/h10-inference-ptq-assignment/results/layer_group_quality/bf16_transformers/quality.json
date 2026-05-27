@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-27T19:31:33.997885+00:00",
+  "status": "completed",
+  "policy_name": "bf16_transformers",
+  "policy": {
+    "policy_name": "bf16_transformers",
+    "description": "Transformers bfloat16 baseline for matched layer/group backend comparisons.",
+    "expected_role": "baseline",
+    "llm_kwargs": {
+      "torch_dtype": "bfloat16",
+      "trust_remote_code": true
+    },
+    "search_tags": {
+      "dtype": "bfloat16",
+      "quantization": "none",
+      "runtime_mode": "transformers",
+      "layer_group_backend": "none"
+    }
+  },
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "baseline_model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "runtime": "transformers_torchao_layer_group",
+  "hardware_label": "rtx3090-lab",
+  "seed": 42,
+  "cuda_visible_devices": "7",
+  "package_snapshot": {
+    "torch": {
+      "imported": true,
+      "version": "2.9.0",
+      "error": null
+    },
+    "transformers": {
+      "imported": true,
+      "version": "4.57.6",
+      "error": null
+    },
+    "accelerate": {
+      "imported": true,
+      "version": "1.13.0",
+      "error": null
+    },
+    "torchao": {
+      "imported": true,
+      "version": "0.17.0",
+      "error": null
+    }
+  },
+  "num_prompts": 6,
+  "quality_batch_size": 1,
+  "load_time_sec": 12.059115359093994,
+  "layer_group_report": {
+    "backend": "none",
+    "matched_modules": [],
+    "num_matched_modules": 0
+  },
+  "quality_time_sec": 0.43781569274142385,
+  "prompt_results": [
+    {
+      "prompt_chars": [
+        104
+      ],
+      "quality_time_sec": 0.10501429717987776,
+      "mean_prompt_nll": 5.021725177764893,
+      "tokens_scored": 17,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_chars": [
+        85
+      ],
+      "quality_time_sec": 0.03160112118348479,
+      "mean_prompt_nll": 4.983857154846191,
+      "tokens_scored": 18,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_chars": [
+        111
+      ],
+      "quality_time_sec": 0.03122215997427702,
+      "mean_prompt_nll": 6.207195281982422,
+      "tokens_scored": 20,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_chars": [
+        4176
+      ],
+      "quality_time_sec": 0.20896823005750775,
+      "mean_prompt_nll": 0.3441910147666931,
+      "tokens_scored": 705,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_chars": [
+        72
+      ],
+      "quality_time_sec": 0.030433258041739464,
+      "mean_prompt_nll": 6.227768421173096,
+      "tokens_scored": 14,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_chars": [
+        45
+      ],
+      "quality_time_sec": 0.030549429822713137,
+      "mean_prompt_nll": 5.671746730804443,
+      "tokens_scored": 8,
+      "tokens_missing_logprob": 0
+    }
+  ],
+  "mean_prompt_nll": 0.8624553191844765,
+  "tokens_scored": 782,
+  "tokens_missing_logprob": 0
+}

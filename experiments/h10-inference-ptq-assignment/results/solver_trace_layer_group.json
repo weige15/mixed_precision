@@ -1,0 +1,129 @@
+[
+  {
+    "candidate_action": "bf16_transformers",
+    "workload_name": "decode_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "baseline_reference",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.0,
+    "latency_delta_pct_vs_bf16": 0.0,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.0,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "fp16_transformers",
+    "workload_name": "decode_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": true,
+    "rejection_reasons": [],
+    "predicted_quality_risk": -0.00288429,
+    "latency_delta_pct_vs_bf16": -3.334608,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 3.435741,
+    "memory_delta_gib_vs_bf16": 0.007812,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "h10_lg_late_gate_up_int8wo",
+    "workload_name": "decode_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": -0.0032032,
+    "latency_delta_pct_vs_bf16": 22.268294,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -17.226075,
+    "memory_delta_gib_vs_bf16": 0.132812,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "bf16_transformers",
+    "workload_name": "mixed",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "baseline_reference",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.0,
+    "latency_delta_pct_vs_bf16": 0.0,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.0,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "fp16_transformers",
+    "workload_name": "mixed",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": -0.00288429,
+    "latency_delta_pct_vs_bf16": 3.906802,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -3.618152,
+    "memory_delta_gib_vs_bf16": 0.007812,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "h10_lg_late_gate_up_int8wo",
+    "workload_name": "mixed",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": -0.0032032,
+    "latency_delta_pct_vs_bf16": 11.096466,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -9.986694,
+    "memory_delta_gib_vs_bf16": 0.132812,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "bf16_transformers",
+    "workload_name": "prefill_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "baseline_reference",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": 0.0,
+    "latency_delta_pct_vs_bf16": 0.0,
+    "output_tokens_per_sec_delta_pct_vs_bf16": 0.0,
+    "memory_delta_gib_vs_bf16": 0.0,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "fp16_transformers",
+    "workload_name": "prefill_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": -0.00288429,
+    "latency_delta_pct_vs_bf16": 3.627352,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -3.345692,
+    "memory_delta_gib_vs_bf16": 0.007812,
+    "failure_reason": ""
+  },
+  {
+    "candidate_action": "h10_lg_late_gate_up_int8wo",
+    "workload_name": "prefill_heavy",
+    "backend_feasible": true,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": -0.0032032,
+    "latency_delta_pct_vs_bf16": 12.687914,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -11.289256,
+    "memory_delta_gib_vs_bf16": 0.132812,
+    "failure_reason": ""
+  }
+]
