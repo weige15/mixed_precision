@@ -195,3 +195,11 @@ be stored separately under:
 ```text
 experiments/h10-inference-ptq-assignment/results/task_quality/a100-lab/
 ```
+
+The Colab A100 path exposed two environment issues: vLLM can import but fail
+against the local Transformers/tokenizer stack, and the checked-in GPTQ-Marlin
+policy points to a lab-local `/nfs` artifact path. The task-quality runner now
+supports `--runtime-backend transformers` and `--model-override`, so Colab can
+run the same bf16/fp16/GPTQ policy screen as a functional robustness check using
+the Hugging Face GPTQ artifact id. This fallback should not be used for latency
+or memory claims.

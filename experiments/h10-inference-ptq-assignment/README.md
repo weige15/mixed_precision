@@ -155,6 +155,26 @@ selected policy. It is not a replacement for the matched RTX 3090 deployment
 frontier unless the H9 benchmark and prompt-NLL summaries are also rerun on
 A100 and stored as A100-specific artifacts.
 
+On Colab, vLLM wheels may be incompatible with the installed CUDA or
+Transformers stack. For task quality only, use the Transformers backend and
+override the lab-local GPTQ path with the Hugging Face artifact id:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h10-inference-ptq-assignment/code/run_h10_task_quality.py \
+  --runtime-backend transformers \
+  --policies experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates_instruct_gptq_marlin.json \
+  --policy-name bf16_default \
+  --policy-name fp16_default \
+  --policy-name llama31_8b_instruct_gptq_marlin_artifact \
+  --model-override llama31_8b_instruct_gptq_marlin_artifact=shuyuej/Meta-Llama-3.1-8B-Instruct-GPTQ \
+  --hardware-label a100-colab \
+  --run-label a100-colab-transformers
+```
+
+The Transformers backend is for functional task-quality robustness checks. Do
+not use it for the vLLM deployment-frontier latency or memory claim.
+
 ## One-Command Artifact PTQ Path
 
 You do not need to train a model to test artifact-backed PTQ. Use an existing

@@ -74,6 +74,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-tokens", type=int, default=8)
     parser.add_argument("--gpu-memory-utilization", type=float, default=None)
     parser.add_argument("--runtime-cache-dir", type=Path, default=DEFAULT_RUNTIME_CACHE_DIR)
+    parser.add_argument(
+        "--runtime-backend",
+        choices=["vllm", "transformers"],
+        default="vllm",
+        help="Execution backend for task quality. Use transformers on Colab if vLLM is incompatible.",
+    )
+    parser.add_argument(
+        "--model-override",
+        action="append",
+        default=[],
+        metavar="POLICY=MODEL",
+        help="Override one policy's model path, e.g. llama31_8b_instruct_gptq_marlin_artifact=repo/name.",
+    )
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args()
 
@@ -114,6 +127,24 @@ def select_policies(grid: dict[str, Any], names: list[str]) -> list[dict[str, An
     return [by_name[name] for name in names]
 
 
+def parse_model_overrides(values: list[str]) -> dict[str, str]:
+    overrides = {}
+    for value in values:
+        if "=" not in value:
+            raise SystemExit(f"--model-override must be POLICY=MODEL, got: {value}")
+        policy_name, model_name = value.split("=", 1)
+        policy_name = policy_name.strip()
+        model_name = model_name.strip()
+        if not policy_name or not model_name:
+            raise SystemExit(f"--model-override must be POLICY=MODEL, got: {value}")
+        overrides[policy_name] = model_name
+    return overrides
+
+
+def policy_model_name(grid: dict[str, Any], policy: dict[str, Any], overrides: dict[str, str]) -> str:
+    return str(overrides.get(policy["policy_name"]) or policy.get("model_name") or grid["model_name"])
+
+
 def normalize_answer(text: str) -> str:
     text = text.strip().splitlines()[0] if text.strip() else ""
     text = text.lower()
@@ -143,7 +174,7 @@ def cleanup_cuda() -> None:
 
 def package_snapshot() -> dict[str, dict[str, Any]]:
     packages = {}
-    for name in ["torch", "vllm", "bitsandbytes", "torchao", "flash_attn"]:
+    for name in ["torch", "vllm", "transformers", "accelerate", "bitsandbytes", "torchao", "flash_attn"]:
         try:
             module = importlib.import_module(name)
             imported = True
@@ -182,8 +213,12 @@ def torchao_policy_error(policy: dict[str, Any]) -> str | None:
     return None
 
 
-def run_policy(grid: dict[str, Any], policy: dict[str, Any], args: argparse.Namespace) -> dict[str, Any]:
-    model_name = str(policy.get("model_name") or grid["model_name"])
+def base_payload(
+    grid: dict[str, Any],
+    policy: dict[str, Any],
+    args: argparse.Namespace,
+    model_name: str,
+) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "schema_version": 1,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -192,7 +227,7 @@ def run_policy(grid: dict[str, Any], policy: dict[str, Any], args: argparse.Name
         "policy": policy,
         "model_name": model_name,
         "baseline_model_name": grid["model_name"],
-        "runtime": grid.get("runtime", "vllm"),
+        "runtime": args.runtime_backend,
         "hardware_label": args.hardware_label,
         "run_label": args.run_label,
         "seed": args.seed,
@@ -200,6 +235,16 @@ def run_policy(grid: dict[str, Any], policy: dict[str, Any], args: argparse.Name
         "num_tasks": len(TASKS),
         "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
     }
+    return payload
+
+
+def run_policy_vllm(
+    grid: dict[str, Any],
+    policy: dict[str, Any],
+    args: argparse.Namespace,
+    model_name: str,
+) -> dict[str, Any]:
+    payload = base_payload(grid, policy, args, model_name)
     if args.dry_run:
         payload["status"] = "dry_run"
         payload["tasks"] = TASKS
@@ -263,13 +308,116 @@ def run_policy(grid: dict[str, Any], policy: dict[str, Any], args: argparse.Name
     return payload
 
 
+def torch_dtype_from_policy(policy: dict[str, Any]) -> Any:
+    import torch
+
+    dtype = str(policy.get("llm_kwargs", {}).get("dtype", "float16")).lower()
+    if dtype in {"bfloat16", "bf16"}:
+        return torch.bfloat16
+    if dtype in {"float16", "fp16"}:
+        return torch.float16
+    if dtype in {"float32", "fp32"}:
+        return torch.float32
+    return torch.float16
+
+
+def run_policy_transformers(
+    grid: dict[str, Any],
+    policy: dict[str, Any],
+    args: argparse.Namespace,
+    model_name: str,
+) -> dict[str, Any]:
+    payload = base_payload(grid, policy, args, model_name)
+    if args.dry_run:
+        payload["status"] = "dry_run"
+        payload["tasks"] = TASKS
+        return payload
+    try:
+        import torch
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+    except Exception as exc:  # noqa: BLE001
+        payload["status"] = "failed"
+        payload["error"] = f"Transformers import failed: {exc.__class__.__name__}: {exc}"
+        payload["package_snapshot"] = package_snapshot()
+        return payload
+    try:
+        torch.manual_seed(args.seed)
+        dtype = torch_dtype_from_policy(policy)
+        load_start = time.perf_counter()
+        tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+        if tokenizer.pad_token_id is None:
+            tokenizer.pad_token = tokenizer.eos_token
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            device_map="auto",
+            torch_dtype=dtype,
+            trust_remote_code=True,
+        )
+        model.eval()
+        payload["load_time_sec"] = time.perf_counter() - load_start
+        payload["torch_dtype"] = str(dtype).replace("torch.", "")
+        task_results = []
+        correct = 0
+        start = time.perf_counter()
+        for task in TASKS:
+            inputs = tokenizer(task["prompt"], return_tensors="pt")
+            first_device = next(model.parameters()).device
+            inputs = {key: value.to(first_device) for key, value in inputs.items()}
+            with torch.inference_mode():
+                generated = model.generate(
+                    **inputs,
+                    max_new_tokens=args.max_tokens,
+                    do_sample=False,
+                    pad_token_id=tokenizer.pad_token_id,
+                    eos_token_id=tokenizer.eos_token_id,
+                )
+            new_tokens = generated[0, inputs["input_ids"].shape[1] :]
+            text = tokenizer.decode(new_tokens, skip_special_tokens=True)
+            is_correct = score_prediction(text, task["answers"])
+            correct += int(is_correct)
+            task_results.append(
+                {
+                    "task_id": task["task_id"],
+                    "answers": task["answers"],
+                    "raw_prediction": text,
+                    "normalized_prediction": normalize_answer(text),
+                    "correct": is_correct,
+                }
+            )
+        payload["task_quality_time_sec"] = time.perf_counter() - start
+        payload["task_results"] = task_results
+        payload["accuracy"] = correct / len(TASKS)
+        payload["status"] = "completed"
+        del model
+        cleanup_cuda()
+    except Exception as exc:  # noqa: BLE001
+        payload["status"] = "failed"
+        payload["error"] = f"{exc.__class__.__name__}: {exc}"
+        payload["package_snapshot"] = package_snapshot()
+        cleanup_cuda()
+    return payload
+
+
+def run_policy(
+    grid: dict[str, Any],
+    policy: dict[str, Any],
+    args: argparse.Namespace,
+    model_overrides: dict[str, str],
+) -> dict[str, Any]:
+    model_name = policy_model_name(grid, policy, model_overrides)
+    if args.runtime_backend == "transformers":
+        return run_policy_transformers(grid, policy, args, model_name)
+    return run_policy_vllm(grid, policy, args, model_name)
+
+
 def main() -> None:
     args = parse_args()
     configure_runtime_cache(args.runtime_cache_dir)
     grid = load_policy_grid(args.policies)
     policies = select_policies(grid, args.policy_name)
+    model_overrides = parse_model_overrides(args.model_override)
     for policy in policies:
-        payload = run_policy(grid, policy, args)
+        payload = run_policy(grid, policy, args, model_overrides)
         path = write_result(args.output_dir, policy["policy_name"], payload, args.run_label)
         print(f"{policy['policy_name']}: {payload['status']} -> {path}")
 
