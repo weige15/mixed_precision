@@ -78,6 +78,44 @@ results/selected_policy.json
 results/solver_trace.json
 ```
 
+## One-Command Artifact PTQ Path
+
+You do not need to train a model to test artifact-backed PTQ. Use an existing
+quantized checkpoint from Hugging Face or a local path that vLLM can load.
+
+Default smoke test, using `shuyuej/Meta-Llama-3.1-8B-GPTQ`:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h10-inference-ptq-assignment/code/run_artifact_ptq_pipeline.py \
+  --smoke-only \
+  --hardware-label rtx3090-lab
+```
+
+If the smoke test completes, run the full benchmark, quality scoring, H9
+summary, H10 action-table build, and H10 solver:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h10-inference-ptq-assignment/code/run_artifact_ptq_pipeline.py \
+  --hardware-label rtx3090-lab
+```
+
+For a different quantized artifact:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h10-inference-ptq-assignment/code/run_artifact_ptq_pipeline.py \
+  --policy-name llama31_8b_awq_artifact \
+  --model-name hugging-quants/Meta-Llama-3.1-8B-Instruct-AWQ-INT4 \
+  --quantization awq \
+  --hardware-label rtx3090-lab
+```
+
+Only compare against existing H9 base-model baselines when the artifact uses the
+same base model. If the artifact is Llama-3.1-8B-Instruct, regenerate matching
+bf16/fp16 baselines for the Instruct model before making quality claims.
+
 Older PEFT/QLoRA selective-rescue work is archived under:
 
 ```text
