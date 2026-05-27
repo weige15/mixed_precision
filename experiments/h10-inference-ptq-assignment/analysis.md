@@ -203,3 +203,29 @@ supports `--runtime-backend transformers` and `--model-override`, so Colab can
 run the same bf16/fp16/GPTQ policy screen as a functional robustness check using
 the Hugging Face GPTQ artifact id. This fallback should not be used for latency
 or memory claims.
+
+## 2026-05-28 RTX 3090 Task-Quality Result
+
+The matched vLLM task-quality screen completed on the lab RTX 3090 using GPU 7
+and `run_label=rtx3090-lab`.
+
+Recorded exact-match accuracy was `0.6` for all three policies:
+
+- `bf16_default`
+- `fp16_default`
+- `llama31_8b_instruct_gptq_marlin_artifact`
+
+The pass/fail pattern was identical. All policies passed sentiment, sequence
+continuation, and yes/no prompts. All policies failed the decimal comparison
+prompt by answering `0.11` instead of `0.9`, so this is a shared model/task
+failure rather than a quantization-specific regression.
+
+The arithmetic prompt was a scorer false negative: bf16/fp16 produced
+`45.0.0.0`, and GPTQ-Marlin produced `$45$ ...`. Post-hoc numeric rescoring
+counts arithmetic as correct for all policies, giving adjusted accuracy `0.8`
+for all three policies.
+
+Interpretation: the task-quality screen adds robustness evidence for H10. It
+does not show a functional task-quality regression for GPTQ-Marlin relative to
+matched bf16/fp16 baselines. The task screen remains small and should be treated
+as a sanity check, not a full downstream benchmark.

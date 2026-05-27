@@ -80,6 +80,8 @@ The active H10 branch is inference-side mixed-precision PTQ, aligned with the or
 
 H10 now has a supported backend-real inference result on matched Llama-3.1-8B-Instruct vLLM workloads. The final matched Marlin action table selects `llama31_8b_instruct_gptq_marlin_artifact` under the strict 1% prompt-NLL gate. GPTQ-Marlin has a `+0.773771%` prompt-NLL delta versus matched bf16, while reducing latency by `62.72%` on decode-heavy, `62.45%` on mixed, and `60.49%` on prefill-heavy workloads. Output throughput improves by `168.25%`, `166.28%`, and `153.14%`, respectively. AWQ-Marlin is backend-feasible and similarly fast, but fails the strict gate with `+2.851377%` prompt-NLL; it appears only under a relaxed 3% sensitivity gate. This supports H10 in the active inference PTQ setting: a backend-real GPTQ-Marlin policy passes the locked quality gate and improves the deployment frontier.
 
+The H10 task-quality sanity check also completed on the RTX 3090 vLLM stack. `bf16_default`, `fp16_default`, and `llama31_8b_instruct_gptq_marlin_artifact` all recorded exact-match accuracy `0.6` with the same pass/fail pattern. Post-hoc numeric rescoring treats the arithmetic answer as correct for all three policies and raises adjusted accuracy to `0.8` for all three. The only true failure is the decimal-comparison prompt, where all policies answer `0.11` instead of `0.9`. This adds a small robustness check: GPTQ-Marlin does not show a functional task-quality regression relative to matched bf16/fp16 baselines on this screen.
+
 ## Patterns and Insights
 
 - The simplified H6 contribution is: replace hand-written dtype rules with a short measured precision check before training.

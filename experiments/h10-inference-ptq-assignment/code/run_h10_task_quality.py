@@ -148,14 +148,31 @@ def policy_model_name(grid: dict[str, Any], policy: dict[str, Any], overrides: d
 def normalize_answer(text: str) -> str:
     text = text.strip().splitlines()[0] if text.strip() else ""
     text = text.lower()
+    text = text.replace("\\boxed", " ")
+    text = text.replace("\\", " ")
     text = re.sub(r"\s+", " ", text)
     return text.strip(string.whitespace + string.punctuation)
+
+
+def first_number(text: str) -> float | None:
+    match = re.search(r"[-+]?(?:\d+\.\d+|\d+)", text.replace(",", ""))
+    if match is None:
+        return None
+    try:
+        return float(match.group(0))
+    except ValueError:
+        return None
 
 
 def score_prediction(prediction: str, answers: list[str]) -> bool:
     normalized = normalize_answer(prediction)
     for answer in answers:
         target = normalize_answer(answer)
+        predicted_number = first_number(normalized)
+        target_number = first_number(target)
+        if predicted_number is not None and target_number is not None:
+            if abs(predicted_number - target_number) <= 1e-6:
+                return True
         if normalized == target or normalized.startswith(f"{target} "):
             return True
     return False
