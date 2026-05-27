@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-27T18:14:41.105420+00:00",
+  "status": "completed",
+  "policy_name": "fp16_default",
+  "policy": {
+    "policy_name": "fp16_default",
+    "description": "Default fp16 vLLM baseline with automatic KV-cache dtype.",
+    "expected_role": "baseline",
+    "llm_kwargs": {
+      "dtype": "float16",
+      "enforce_eager": false,
+      "gpu_memory_utilization": 0.88,
+      "max_model_len": 4096,
+      "block_size": 16,
+      "trust_remote_code": true
+    },
+    "search_tags": {
+      "dtype": "float16",
+      "quantization": "none",
+      "kv_cache_dtype": "auto",
+      "runtime_mode": "default"
+    }
+  },
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "baseline_model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "runtime": "vllm",
+  "hardware_label": "rtx3090-lab",
+  "run_label": "rtx3090-lab",
+  "seed": 42,
+  "max_tokens": 8,
+  "num_tasks": 5,
+  "cuda_visible_devices": "7",
+  "load_time_sec": 65.23940860293806,
+  "task_quality_time_sec": 0.22015394270420074,
+  "task_results": [
+    {
+      "task_id": "arithmetic_addition",
+      "answers": [
+        "45"
+      ],
+      "raw_prediction": " 45.0.0.0",
+      "normalized_prediction": "45.0.0.0",
+      "correct": false
+    },
+    {
+      "task_id": "numeric_comparison",
+      "answers": [
+        "0.9"
+      ],
+      "raw_prediction": " 0.11. (0.",
+      "normalized_prediction": "0.11. (0",
+      "correct": false
+    },
+    {
+      "task_id": "sentiment_positive",
+      "answers": [
+        "positive"
+      ],
+      "raw_prediction": " Positive",
+      "normalized_prediction": "positive",
+      "correct": true
+    },
+    {
+      "task_id": "letter_sequence",
+      "answers": [
+        "E"
+      ],
+      "raw_prediction": " E",
+      "normalized_prediction": "e",
+      "correct": true
+    },
+    {
+      "task_id": "inference_domain_yesno",
+      "answers": [
+        "yes"
+      ],
+      "raw_prediction": " Yes. ",
+      "normalized_prediction": "yes",
+      "correct": true
+    }
+  ],
+  "accuracy": 0.6
+}
