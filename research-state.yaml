@@ -275,7 +275,7 @@ hypotheses:
     priority: high
   - id: H10
     statement: "The HAQ principle can be adapted to LLM inference by using post-training calibration and perturbation probes to solve a backend-aware mixed-precision PTQ assignment problem."
-    status: rescoped_to_inference_ptq_protocol
+    status: inference_action_table_solver_complete
     plain_language_question: "Can we choose an implementable mixed-precision inference policy for a trained LLM using cheap sensitivity probes and real backend measurements?"
     motivation: "The project plan's mixed-precision post-training quantization target and the original HAQ setting both point to inference deployment. H10 should therefore connect H7-style sensitivity probes with H9-style vLLM backend measurements, rather than treating PEFT/QLoRA selective rescue as the main contribution."
     why_it_matters: "This aligns the mixed-precision branch with the pruning branch's inference focus: pruning decides which computation to skip, while H10 decides what precision to use for the computation that remains."
@@ -294,7 +294,7 @@ experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
   baseline_value: 2.0906627424955366
   best_value: 2.086417777657509
-  total_runs: 33
+  total_runs: 34
   trajectory:
     - experiment_id: "h1_baseline_bf16_seed42"
       hypothesis: "H1"
@@ -826,11 +826,21 @@ experiments:
       wall_time_sec: null
       change_summary: "Re-scoped H10 from PEFT/QLoRA selective rescue to HAQ-style mixed-precision post-training quantization for LLM inference. The active protocol now connects H7 sensitivity probes with H9 vLLM backend measurements and treats the PEFT branch as supporting evidence."
       artifact: "experiments/h10-inference-ptq-assignment/protocol.md"
+    - experiment_id: "h10_inference_ptq_action_table_solver_2026_05_27"
+      hypothesis: "H10"
+      type: "inference_assignment_solver"
+      metric_value: 8
+      metric_name: "selected_pareto_rows"
+      baseline: null
+      delta: null
+      wall_time_sec: null
+      change_summary: "Implemented the first H10 inference-side action table and Pareto solver. The table aggregates corrected H9.1 and H9.2 vLLM benchmark/quality artifacts into 40 rows, including one infeasible TorchAO row. The solver enforces backend feasibility, a 1% prompt-NLL quality gate, and at least one deployment-metric improvement, selecting eight workload-level Pareto rows. fp16_default remains the cleanest low-risk candidate; FP8 KV-cache rows buy some long-context latency at about +0.8 GiB measured memory; fp16_bitsandbytes is rejected by the quality gate."
+      artifact: "experiments/h10-inference-ptq-assignment/results/selected_policy.json"
 
 outer_loop:
-  cycle: 27
-  last_direction: "re-scope H10 to inference-side mixed-precision PTQ"
-  last_reflection: "H10 should align with the project plan and original HAQ by targeting post-training quantization for inference deployment. The older PEFT/QLoRA selective-rescue branch remains supporting evidence for calibration and perturbation sensitivity, but the active H10 artifact should connect H7 probes with H9 vLLM backend measurements in an inference action table and solver."
+  cycle: 28
+  last_direction: "implement H10 inference PTQ action table and solver"
+  last_reflection: "H10 now has an executable inference-side PTQ assignment path. Existing H9 vLLM artifacts can be regenerated into summaries, converted into an H10 action table, and filtered by a backend-feasible Pareto solver. Current evidence still favors fp16_default as the cleanest policy, while FP8 KV-cache latency wins come with measured memory cost and bitsandbytes fails the quality gate. The next useful progress is to add richer backend-real PTQ candidates such as concrete TorchAO configs or AWQ/GPTQ/Marlin artifacts."
 
 workspace:
   findings: "findings.md"

@@ -16,6 +16,31 @@ protocol.md
 analysis.md
 ```
 
+Current executable artifacts:
+
+```bash
+python experiments/h9-transformer-inference-policy-search/code/summarize_h9_results.py \
+  --results-dir experiments/h9-transformer-inference-policy-search/results/benchmarks \
+  --quality-dir experiments/h9-transformer-inference-policy-search/results/quality \
+  --output experiments/h9-transformer-inference-policy-search/results/h9_benchmark_summary.json
+
+python experiments/h9-transformer-inference-policy-search/code/summarize_h9_results.py \
+  --results-dir experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_benchmarks \
+  --quality-dir experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_quality \
+  --output experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_summary.json
+
+python experiments/h10-inference-ptq-assignment/code/build_inference_action_table.py
+python experiments/h10-inference-ptq-assignment/code/solve_inference_assignment.py
+```
+
+The H10 table and solver outputs are:
+
+```text
+results/action_table.csv
+results/selected_policy.json
+results/solver_trace.json
+```
+
 Older PEFT/QLoRA selective-rescue work is archived under:
 
 ```text
