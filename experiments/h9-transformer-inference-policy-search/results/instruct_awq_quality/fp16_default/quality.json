@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T12:04:54.719815+00:00",
-  "status": "failed",
+  "generated_at_utc": "2026-05-27T12:53:19.179034+00:00",
+  "status": "completed",
   "policy_name": "fp16_default",
   "policy": {
     "policy_name": "fp16_default",
@@ -31,5 +31,83 @@
   "quality_batch_size": 1,
   "gpu_memory_utilization_override": 0.78,
   "cuda_visible_devices": "6",
-  "error": "OSError: You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct.\n401 Client Error. (Request ID: Root=1-6a16dde6-19aed2cd2dbff2545c1aadc8;b95118b4-cd88-410b-bad1-54b5c1ce08e8)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/resolve/main/config.json.\nAccess to model meta-llama/Llama-3.1-8B-Instruct is restricted. You must have access to it and be authenticated to access it. Please log in."
+  "load_time_sec": 51.46609307359904,
+  "quality_time_sec": 5.104202053043991,
+  "prompt_results": [
+    {
+      "prompt_indices": [
+        0
+      ],
+      "prompt_chars": [
+        104
+      ],
+      "quality_time_sec": 4.661079634912312,
+      "mean_prompt_nll": 5.023836160407347,
+      "tokens_scored": 17,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        1
+      ],
+      "prompt_chars": [
+        122
+      ],
+      "quality_time_sec": 0.029068279080092907,
+      "mean_prompt_nll": 4.470147586699265,
+      "tokens_scored": 24,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        2
+      ],
+      "prompt_chars": [
+        111
+      ],
+      "quality_time_sec": 0.029455946292728186,
+      "mean_prompt_nll": 6.191059140488505,
+      "tokens_scored": 20,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        3
+      ],
+      "prompt_chars": [
+        6336
+      ],
+      "quality_time_sec": 0.3278814507648349,
+      "mean_prompt_nll": 0.2849270799728939,
+      "tokens_scored": 1121,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        4
+      ],
+      "prompt_chars": [
+        72
+      ],
+      "quality_time_sec": 0.02957947226241231,
+      "mean_prompt_nll": 6.220676973462105,
+      "tokens_scored": 14,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        5
+      ],
+      "prompt_chars": [
+        29
+      ],
+      "quality_time_sec": 0.027087111957371235,
+      "mean_prompt_nll": 8.053773548454046,
+      "tokens_scored": 6,
+      "tokens_missing_logprob": 0
+    }
+  ],
+  "mean_prompt_nll": 0.641701593333016,
+  "tokens_scored": 1202,
+  "tokens_missing_logprob": 0
 }

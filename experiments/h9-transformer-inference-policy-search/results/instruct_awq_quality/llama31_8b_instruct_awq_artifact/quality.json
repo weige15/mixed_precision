@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T12:04:55.174849+00:00",
-  "status": "failed",
+  "generated_at_utc": "2026-05-27T12:54:16.839339+00:00",
+  "status": "completed",
   "policy_name": "llama31_8b_instruct_awq_artifact",
   "policy": {
     "policy_name": "llama31_8b_instruct_awq_artifact",
@@ -35,5 +35,83 @@
   "quality_batch_size": 1,
   "gpu_memory_utilization_override": 0.78,
   "cuda_visible_devices": "6",
-  "error": "ZMQError: ipc path \"/nfs/home/s314511048/mixed_precision/tmp/h9_instruct_awq_runtime_cache/tmp/dd4e1c3d-f94d-43e1-b358-9253735a4372\" is longer than 107 characters (sizeof(sockaddr_un.sun_path)). zmq.IPC_PATH_MAX_LEN constant can be used to check addr length (if it is defined). (addr='ipc:///nfs/home/s314511048/mixed_precision/tmp/h9_instruct_awq_runtime_cache/tmp/dd4e1c3d-f94d-43e1-b358-9253735a4372')"
+  "load_time_sec": 51.544804144185036,
+  "quality_time_sec": 5.524898814968765,
+  "prompt_results": [
+    {
+      "prompt_indices": [
+        0
+      ],
+      "prompt_chars": [
+        104
+      ],
+      "quality_time_sec": 4.897848248016089,
+      "mean_prompt_nll": 5.040145102669211,
+      "tokens_scored": 17,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        1
+      ],
+      "prompt_chars": [
+        122
+      ],
+      "quality_time_sec": 0.07038066489621997,
+      "mean_prompt_nll": 4.480855418019928,
+      "tokens_scored": 24,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        2
+      ],
+      "prompt_chars": [
+        111
+      ],
+      "quality_time_sec": 0.07040485180914402,
+      "mean_prompt_nll": 6.221933104470372,
+      "tokens_scored": 20,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        3
+      ],
+      "prompt_chars": [
+        6336
+      ],
+      "quality_time_sec": 0.35607102885842323,
+      "mean_prompt_nll": 0.3059443973288268,
+      "tokens_scored": 1121,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        4
+      ],
+      "prompt_chars": [
+        72
+      ],
+      "quality_time_sec": 0.06489123497158289,
+      "mean_prompt_nll": 6.111643240920135,
+      "tokens_scored": 14,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        5
+      ],
+      "prompt_chars": [
+        29
+      ],
+      "quality_time_sec": 0.06527347024530172,
+      "mean_prompt_nll": 7.950091230372588,
+      "tokens_scored": 6,
+      "tokens_missing_logprob": 0
+    }
+  ],
+  "mean_prompt_nll": 0.660473278725453,
+  "tokens_scored": 1202,
+  "tokens_missing_logprob": 0
 }
