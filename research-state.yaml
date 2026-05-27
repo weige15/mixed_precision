@@ -275,7 +275,7 @@ hypotheses:
     priority: high
   - id: H10
     statement: "The HAQ principle can be adapted to LLM inference by using post-training calibration and perturbation probes to solve a backend-aware mixed-precision PTQ assignment problem."
-    status: inference_action_table_solver_complete
+    status: supported_inference_ptq_task_quality_pending
     plain_language_question: "Can we choose an implementable mixed-precision inference policy for a trained LLM using cheap sensitivity probes and real backend measurements?"
     motivation: "The project plan's mixed-precision post-training quantization target and the original HAQ setting both point to inference deployment. H10 should therefore connect H7-style sensitivity probes with H9-style vLLM backend measurements, rather than treating PEFT/QLoRA selective rescue as the main contribution."
     why_it_matters: "This aligns the mixed-precision branch with the pruning branch's inference focus: pruning decides which computation to skip, while H10 decides what precision to use for the computation that remains."

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-27T15:08:17.617819+00:00",
+  "status": "dry_run",
+  "policy_name": "fp16_default",
+  "policy": {
+    "policy_name": "fp16_default",
+    "description": "Default fp16 vLLM baseline with automatic KV-cache dtype.",
+    "expected_role": "baseline",
+    "llm_kwargs": {
+      "dtype": "float16",
+      "enforce_eager": false,
+      "gpu_memory_utilization": 0.88,
+      "max_model_len": 4096,
+      "block_size": 16,
+      "trust_remote_code": true
+    },
+    "search_tags": {
+      "dtype": "float16",
+      "quantization": "none",
+      "kv_cache_dtype": "auto",
+      "runtime_mode": "default"
+    }
+  },
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "baseline_model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "runtime": "vllm",
+  "hardware_label": "rtx3090-lab",
+  "seed": 42,
+  "max_tokens": 8,
+  "num_tasks": 5,
+  "cuda_visible_devices": null,
+  "tasks": [
+    {
+      "task_id": "arithmetic_addition",
+      "prompt": "Answer with only the final answer.\nQuestion: What is 17 + 28?\nAnswer:",
+      "answers": [
+        "45"
+      ]
+    },
+    {
+      "task_id": "numeric_comparison",
+      "prompt": "Answer with only the final answer.\nQuestion: Which number is larger, 0.9 or 0.11?\nAnswer:",
+      "answers": [
+        "0.9"
+      ]
+    },
+    {
+      "task_id": "sentiment_positive",
+      "prompt": "Classify the sentiment as positive or negative. Answer with one word.\nText: I loved the careful benchmark report.\nSentiment:",
+      "answers": [
+        "positive"
+      ]
+    },
+    {
+      "task_id": "letter_sequence",
+      "prompt": "Answer with only the next letter.\nSequence: A B C D\nNext:",
+      "answers": [
+        "E"
+      ]
+    },
+    {
+      "task_id": "inference_domain_yesno",
+      "prompt": "Answer yes or no.\nQuestion: Is a GPU normally used to accelerate large language model inference?\nAnswer:",
+      "answers": [
+        "yes"
+      ]
+    }
+  ]
+}

@@ -162,3 +162,25 @@ one-command pipeline against the base-model H9.1 summary. Those rows are useful
 for traceability, but final quality claims should cite only rows whose notes
 begin with `h9_instruct_gptq_marlin` or `h9_instruct_awq_marlin`, because those
 are matched Instruct comparisons.
+
+## 2026-05-27 Task-Quality Follow-Up Scaffold
+
+Prompt-NLL is the locked H10 quality gate, but the next robustness check should
+verify that the selected policy does not fail simple task behavior. Added:
+
+```text
+experiments/h10-inference-ptq-assignment/code/run_h10_task_quality.py
+```
+
+The script runs a small deterministic exact-match screen over arithmetic,
+numeric comparison, sentiment, sequence continuation, and yes/no prompts for
+selected H9 policy rows. A dry run was completed for `bf16_default`,
+`fp16_default`, and `llama31_8b_instruct_gptq_marlin_artifact`, writing JSON
+schemas under:
+
+```text
+experiments/h10-inference-ptq-assignment/results/task_quality/
+```
+
+This is only a scaffold until executed on a CUDA host. The intended next run is
+the matched bf16/fp16/GPTQ-Marlin task-quality check recorded in the README.

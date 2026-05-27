@@ -9,7 +9,7 @@ Draft date: 2026-05-20
 
 ## Abstract
 
-Low-precision training recipes for large language model adaptation are often selected by broad backend defaults, such as bf16 autocast or QLoRA, rather than by measuring which model operations are actually sensitive to reduced precision. This work studies whether a short pre-training precision check can identify precision-sensitive and precision-tolerant Transformer modules before LoRA fine-tuning. On Qwen2.5 and Llama-3.1 LoRA fine-tuning with Alpaca-style data, we evaluate calibration signals, one-module perturbation probes, frozen mixed-precision policies, and a hardware-aware assignment table. We find that activation-outlier scores predict projection-output perturbation sensitivity, especially for MLP projections, and that rank/perturbation-selected fake-int8 policies preserve bf16 validation quality during actual LoRA updates at both 0.5B and 7B scale. Hardware-backed QLoRA/NF4 gives real memory savings but a quality-throughput trade-off. On Llama-3.1-8B, selective bf16 projection rescue from QLoRA/NF4 improves final eval loss versus blanket QLoRA on every matched RTX 3090 seed while preserving about 25% peak-memory saving versus bf16. We formulate this as a PEFT adaptation of the HAQ principle: estimate Transformer module/action/backend precision risk from cheap probes, attach measured backend cost, and solve a constrained assignment problem over implementable precision actions.
+Low-precision training recipes for large language model adaptation are often selected by broad backend defaults, such as bf16 autocast or QLoRA, rather than by measuring which model operations are actually sensitive to reduced precision. This work studies whether a short pre-training precision check can identify precision-sensitive and precision-tolerant Transformer modules before LoRA fine-tuning. On Qwen2.5 and Llama-3.1 LoRA fine-tuning with Alpaca-style data, we evaluate calibration signals, one-module perturbation probes, frozen mixed-precision policies, and a hardware-aware assignment table. We find that activation-outlier scores predict projection-output perturbation sensitivity, especially for MLP projections, and that rank/perturbation-selected fake-int8 policies preserve bf16 validation quality during actual LoRA updates at both 0.5B and 7B scale. Hardware-backed QLoRA/NF4 gives real memory savings but a quality-throughput trade-off. On Llama-3.1-8B, selective bf16 projection rescue from QLoRA/NF4 improves final eval loss versus blanket QLoRA on every matched RTX 3090 seed while preserving about 25% peak-memory saving versus bf16. For the project-plan-aligned H10 setting, we also instantiate the same table-and-solver principle for inference-side PTQ: on matched Llama-3.1-8B-Instruct vLLM workloads, a GPTQ-Marlin artifact passes a strict 1% prompt-NLL gate and improves latency by about 60-63% with output-throughput gains of about 153-168%.
 
 ## 1. Introduction
 
@@ -255,6 +255,20 @@ We then instantiated the H10 assignment table from these matched H8 summaries. T
 
 A selector-aware planning table further compares possible top-k rescue selectors. On Llama-3.1-8B at `k=4`, target perturbation ranking captures all three unsafe projection candidates, while activation outliers, INT8 MSE, role priors, and cross-model predictors each capture only one of three. This argues for target perturbation-guided rescue as the current defensible method, with learned cross-model predictors treated as extensions rather than replacements.
 
+### 4.8 Inference-Side PTQ Assignment
+
+The active H10 contribution follows the original HAQ deployment setting: post-training quantization for inference. We therefore built an inference action table from H9 vLLM benchmark and prompt-logprob artifacts, keeping each policy-workload-backend row explicit and solving for Pareto-feasible policies under a strict quality gate.
+
+The final matched table uses Llama-3.1-8B-Instruct bf16/fp16 baselines and matched AWQ-Marlin and GPTQ-Marlin artifacts. Under the locked constraint `predicted_quality_risk <= 0.01`, the solver selects `llama31_8b_instruct_gptq_marlin_artifact` for all three matched Instruct workloads:
+
+| Workload | Prompt NLL delta vs bf16 | Latency delta vs bf16 | Output tok/s delta vs bf16 |
+|---|---:|---:|---:|
+| decode_heavy | +0.773771% | -62.721734% | +168.254866% |
+| mixed | +0.773771% | -62.445208% | +166.278850% |
+| prefill_heavy | +0.773771% | -60.494807% | +153.139001% |
+
+AWQ-Marlin is backend-feasible and similarly fast, but its prompt-NLL delta is +2.851377%, so it fails the strict gate and is only accepted in a relaxed 3% sensitivity analysis. This gives the first strict positive H10 result: a backend-real inference PTQ policy selected by the action-table solver passes the locked quality gate and improves the deployment frontier.
+
 ## 5. Discussion
 
 The central result is not that fake-int8 hooks make training faster. They do not. The central result is that module sensitivity is measurable before training, and those measurements identify modules whose precision can be changed or rescued without breaking LoRA updates.
@@ -279,6 +293,8 @@ and a budgeted optimizer can choose assignments under a memory, throughput, or q
 
 The selector experiments also clarify what should not be claimed. Cross-model learned predictors are not yet strong enough to replace target perturbation checks: on Llama-3.1-8B, the cheap selectors and learned transfer predictors recover only one of three unsafe projection candidates at `k=4`. The main method should therefore be described as measured target calibration and perturbation followed by backend-aware assignment. Learned predictors are promising only as future amortization once more labeled models exist.
 
+For H10, the project-aligned version of the same idea is inference-side PTQ rather than PEFT. The final GPTQ-Marlin result shows why the table needs backend feasibility, quality, latency, throughput, memory, and workload identity in the same object: AWQ-Marlin is fast but fails the strict prompt-NLL gate, while GPTQ-Marlin passes the gate and gives large latency and throughput wins. The result should be reported as a Pareto-frontier deployment claim, not as a generic statement that all quantized artifacts are safe.
+
 ## 6. Limitations
 
 The current selective low-precision path is fake-int8 output quantization implemented with Python hooks. It is useful for sensitivity testing but not a resource-saving kernel. The backend-real selective-rescue path addresses memory, but it is still a narrow QLoRA/NF4 plus bf16 projection-rescue prototype.
@@ -293,6 +309,8 @@ QLoRA and selective fake-int8 are separate interventions for most Qwen experimen
 
 The H10 selector-aware table is partly a planning artifact. It compares selector policies by scaling measured H8 top-4 rescue recovery by unsafe recall, so it should guide which policy deserves validation rather than substitute for a fresh training run.
 
+The active H10 inference result is currently limited to matched Llama-3.1-8B-Instruct vLLM workloads and prompt-NLL quality scoring. It should be replicated on another model or artifact family and checked with downstream task metrics before claiming broad PTQ generality. It also uses whole-artifact GPTQ/AWQ choices rather than true layer-wise mixed precision; a backend-supported layer/group assignment path remains future work.
+
 ## 7. Related Work
 
 Mixed precision training was formalized by Micikevicius et al. as a recipe combining low-precision tensors with higher-precision safeguards such as master weights and loss scaling. BF16 training work motivates bf16 as a strong baseline because it preserves FP32-like exponent range. FP8 and FP4 training papers further show that different tensors and operations require different numerical treatment.
@@ -301,15 +319,15 @@ LoRA and QLoRA define the low-resource adaptation setting closest to this projec
 
 LLM.int8(), SmoothQuant, and ZeroQuant motivate activation-aware and module-aware quantization for Transformers. These works support our use of activation outlier statistics as a signal, although they primarily target inference or post-training quantization. HAQ, HAWQ, and HAWQ-V3 frame mixed precision as sensitivity-aware or hardware-aware constrained optimization. Recent adaptive and subbyte training work, including convergence-aware operator-wise mixed precision, FP4 LLM training, SNIP-style adaptive subbyte training, and attention quantization-aware training, further motivates operation-wise precision assignment during training.
 
-This project contributes a small but concrete LoRA-focused empirical result: cheap calibration and perturbation probes can select module precision assignments that preserve training quality across seeds and scale to a conservative 7B panel. It also gives a first backend-aware PEFT instantiation of HAQ-style assignment through QLoRA/NF4 plus selected bf16 projection rescue.
+This project contributes a small but concrete LoRA-focused empirical result: cheap calibration and perturbation probes can select module precision assignments that preserve training quality across seeds and scale to a conservative 7B panel. It also gives a first backend-aware PEFT instantiation of HAQ-style assignment through QLoRA/NF4 plus selected bf16 projection rescue, and a project-aligned inference PTQ instantiation through matched vLLM GPTQ-Marlin action-table selection.
 
 ## 8. Conclusion
 
 Precision assignment in Transformer fine-tuning is a structured combinatorial problem. This project shows that cheap calibration signals and one-module perturbation probes can reduce that problem to a measured ranking over candidate modules. At 0.5B, calibration-selected fake-int8 policies preserve bf16 validation quality across seeds and can be widened to 24 MLP gate/up modules. At 7B, fixed thresholds from 0.5B fail, but rank/perturbation selection transfers: a conservative four-module fake-int8 policy preserves LoRA quality across seeds with mean eval degradation of only +0.162%.
 
-The current evidence supports calibration-guided sensitivity ranking and quality-preserving policy selection. It does not support a resource-saving claim for the fake-int8 implementation. Hardware-backed QLoRA separately gives a robust 7B memory-capacity trade-off, and selective bf16 projection rescue from QLoRA/NF4 improves the quality side of that trade-off on Llama-3.1-8B while retaining most memory savings.
+The current evidence supports calibration-guided sensitivity ranking and quality-preserving policy selection. It does not support a resource-saving claim for the fake-int8 implementation. Hardware-backed QLoRA separately gives a robust 7B memory-capacity trade-off, and selective bf16 projection rescue from QLoRA/NF4 improves the quality side of that trade-off on Llama-3.1-8B while retaining most memory savings. In the active H10 inference setting, matched GPTQ-Marlin serving passes the strict 1% prompt-NLL gate and substantially improves latency and output throughput versus bf16 on Llama-3.1-8B-Instruct.
 
-The next step is to validate the selector-aware rescue set chosen from target perturbation labels, or to move the H10 table-and-solver method into a full paper section: calibration and perturbation risk estimation, backend action table, constrained assignment, and frozen policy validation.
+The next step is to test whether the H10 inference result replicates beyond one artifact and model family, add task-level quality checks beyond prompt NLL, and pursue a backend-supported path from whole-artifact PTQ choices toward true layer/group mixed precision.
 
 ## Citation Notes
 

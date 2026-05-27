@@ -118,6 +118,22 @@ python experiments/h10-inference-ptq-assignment/code/solve_inference_assignment.
   --quality-epsilon 0.03
 ```
 
+Next task-quality check for the strict H10 claim:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h10-inference-ptq-assignment/code/run_h10_task_quality.py \
+  --policies experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates_instruct_gptq_marlin.json \
+  --policy-name bf16_default \
+  --policy-name fp16_default \
+  --policy-name llama31_8b_instruct_gptq_marlin_artifact \
+  --hardware-label rtx3090-lab
+```
+
+This complements prompt-NLL scoring with a small deterministic exact-match
+screen. Treat it as a regression check, not a replacement for a full downstream
+benchmark suite.
+
 ## One-Command Artifact PTQ Path
 
 You do not need to train a model to test artifact-backed PTQ. Use an existing
