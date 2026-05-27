@@ -18,11 +18,13 @@
     "candidate_action": "fp16_transformers",
     "workload_name": "decode_heavy",
     "backend_feasible": true,
-    "accepted_before_pareto": true,
-    "rejection_reasons": [],
-    "predicted_quality_risk": -0.00288429,
-    "latency_delta_pct_vs_bf16": -3.334608,
-    "output_tokens_per_sec_delta_pct_vs_bf16": 3.435741,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": -0.00193356,
+    "latency_delta_pct_vs_bf16": 0.039861,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -0.060099,
     "memory_delta_gib_vs_bf16": 0.007812,
     "failure_reason": ""
   },
@@ -34,9 +36,9 @@
     "rejection_reasons": [
       "no_deployment_metric_improves"
     ],
-    "predicted_quality_risk": -0.0032032,
-    "latency_delta_pct_vs_bf16": 22.268294,
-    "output_tokens_per_sec_delta_pct_vs_bf16": -17.226075,
+    "predicted_quality_risk": -0.00224104,
+    "latency_delta_pct_vs_bf16": 17.26958,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -14.735315,
     "memory_delta_gib_vs_bf16": 0.132812,
     "failure_reason": ""
   },
@@ -46,12 +48,13 @@
     "backend_feasible": true,
     "accepted_before_pareto": false,
     "rejection_reasons": [
+      "missing_quality",
       "no_deployment_metric_improves"
     ],
-    "predicted_quality_risk": NaN,
-    "latency_delta_pct_vs_bf16": 19.548194,
-    "output_tokens_per_sec_delta_pct_vs_bf16": -16.329392,
-    "memory_delta_gib_vs_bf16": 0.105469,
+    "predicted_quality_risk": null,
+    "latency_delta_pct_vs_bf16": 25.386061,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -20.263729,
+    "memory_delta_gib_vs_bf16": 0.117188,
     "failure_reason": ""
   },
   {
@@ -77,9 +80,9 @@
     "rejection_reasons": [
       "no_deployment_metric_improves"
     ],
-    "predicted_quality_risk": -0.00288429,
-    "latency_delta_pct_vs_bf16": 3.906802,
-    "output_tokens_per_sec_delta_pct_vs_bf16": -3.618152,
+    "predicted_quality_risk": -0.00193356,
+    "latency_delta_pct_vs_bf16": 2.263647,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -2.207995,
     "memory_delta_gib_vs_bf16": 0.007812,
     "failure_reason": ""
   },
@@ -91,9 +94,9 @@
     "rejection_reasons": [
       "no_deployment_metric_improves"
     ],
-    "predicted_quality_risk": -0.0032032,
-    "latency_delta_pct_vs_bf16": 11.096466,
-    "output_tokens_per_sec_delta_pct_vs_bf16": -9.986694,
+    "predicted_quality_risk": -0.00224104,
+    "latency_delta_pct_vs_bf16": 14.7227,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -12.819698,
     "memory_delta_gib_vs_bf16": 0.132812,
     "failure_reason": ""
   },
@@ -103,12 +106,13 @@
     "backend_feasible": true,
     "accepted_before_pareto": false,
     "rejection_reasons": [
+      "missing_quality",
       "no_deployment_metric_improves"
     ],
-    "predicted_quality_risk": NaN,
-    "latency_delta_pct_vs_bf16": 8.835034,
-    "output_tokens_per_sec_delta_pct_vs_bf16": -8.119091,
-    "memory_delta_gib_vs_bf16": 0.107422,
+    "predicted_quality_risk": null,
+    "latency_delta_pct_vs_bf16": 23.122701,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -18.773236,
+    "memory_delta_gib_vs_bf16": 0.117188,
     "failure_reason": ""
   },
   {
@@ -134,9 +138,9 @@
     "rejection_reasons": [
       "no_deployment_metric_improves"
     ],
-    "predicted_quality_risk": -0.00288429,
-    "latency_delta_pct_vs_bf16": 3.627352,
-    "output_tokens_per_sec_delta_pct_vs_bf16": -3.345692,
+    "predicted_quality_risk": -0.00193356,
+    "latency_delta_pct_vs_bf16": 0.999807,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -0.990225,
     "memory_delta_gib_vs_bf16": 0.007812,
     "failure_reason": ""
   },
@@ -148,9 +152,9 @@
     "rejection_reasons": [
       "no_deployment_metric_improves"
     ],
-    "predicted_quality_risk": -0.0032032,
-    "latency_delta_pct_vs_bf16": 12.687914,
-    "output_tokens_per_sec_delta_pct_vs_bf16": -11.289256,
+    "predicted_quality_risk": -0.00224104,
+    "latency_delta_pct_vs_bf16": 16.505065,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -14.167435,
     "memory_delta_gib_vs_bf16": 0.132812,
     "failure_reason": ""
   },
@@ -160,12 +164,13 @@
     "backend_feasible": true,
     "accepted_before_pareto": false,
     "rejection_reasons": [
+      "missing_quality",
       "no_deployment_metric_improves"
     ],
-    "predicted_quality_risk": NaN,
-    "latency_delta_pct_vs_bf16": 13.830992,
-    "output_tokens_per_sec_delta_pct_vs_bf16": -12.18597,
-    "memory_delta_gib_vs_bf16": 0.105469,
+    "predicted_quality_risk": null,
+    "latency_delta_pct_vs_bf16": 37.963395,
+    "output_tokens_per_sec_delta_pct_vs_bf16": -27.446818,
+    "memory_delta_gib_vs_bf16": 0.117188,
     "failure_reason": ""
   },
   {
@@ -182,6 +187,22 @@
     "latency_delta_pct_vs_bf16": null,
     "output_tokens_per_sec_delta_pct_vs_bf16": null,
     "memory_delta_gib_vs_bf16": null,
-    "failure_reason": "ImportError: Requires mslk >= 1.0.0"
+    "failure_reason": "RuntimeError: Only fp32 an bf16 scales supported."
+  },
+  {
+    "candidate_action": "h10_lg_late_gate_up_int4wo_g128_bf16",
+    "workload_name": "",
+    "backend_feasible": false,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "backend_infeasible",
+      "missing_quality",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": null,
+    "latency_delta_pct_vs_bf16": null,
+    "output_tokens_per_sec_delta_pct_vs_bf16": null,
+    "memory_delta_gib_vs_bf16": null,
+    "failure_reason": "RuntimeError: cutlass cannot initialize"
   }
 ]

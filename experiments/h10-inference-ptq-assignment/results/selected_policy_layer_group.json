@@ -5,28 +5,10 @@
     "requires_backend_feasible": true,
     "requires_one_deployment_metric_improves": true
   },
-  "n_input_rows": 13,
+  "n_input_rows": 14,
   "n_quality_passed_feasible_rows": 9,
-  "n_accepted_before_pareto": 1,
-  "n_selected_pareto_rows": 1,
-  "selected_pareto_rows": [
-    {
-      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
-      "group_name": "decode",
-      "workload_name": "decode_heavy",
-      "candidate_action": "fp16_transformers",
-      "backend": "transformers+float16",
-      "hardware_label": "rtx3090-lab",
-      "predicted_quality_risk": -0.00288429,
-      "prompt_nll_delta_pct_vs_bf16": -0.288429,
-      "latency_delta_pct_vs_bf16": -3.334608,
-      "output_tokens_per_sec_delta_pct_vs_bf16": 3.435741,
-      "total_tokens_per_sec_delta_pct_vs_bf16": 3.435741,
-      "memory_delta_gib_vs_bf16": 0.007812,
-      "kv_cache_memory_delta_gib_vs_bf16": 0.007812,
-      "source_artifact": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/fp16_transformers/benchmark.json",
-      "notes": "h10_layer_group; quality risk is prompt-NLL percent delta divided by 100. Memory and KV-cache deltas use total CUDA mem_get_info used GiB because backend worker allocation may not be captured by PyTorch reserved memory."
-    }
-  ],
+  "n_accepted_before_pareto": 0,
+  "n_selected_pareto_rows": 0,
+  "selected_pareto_rows": [],
   "accepted_but_dominated_rows": []
 }

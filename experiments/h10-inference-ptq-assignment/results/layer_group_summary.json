@@ -1,10 +1,10 @@
 {
   "results_dir": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks",
   "baseline_policy": "bf16_transformers",
-  "n_artifacts": 5,
+  "n_artifacts": 6,
   "n_completed_policy_workloads": 12,
-  "n_failed_policies": 1,
-  "n_quality_artifacts": 5,
+  "n_failed_policies": 2,
+  "n_quality_artifacts": 6,
   "completed": [
     {
       "policy_name": "bf16_transformers",
@@ -15,22 +15,22 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 3.6685796313298247,
-        "stdev": 0.0522884652149671,
-        "min": 3.615652976091951,
-        "max": 3.720205639023334
+        "mean": 3.332481739576906,
+        "stdev": 0.060452089301506785,
+        "min": 3.2778802872635424,
+        "max": 3.397444995585829
       },
       "output_tokens_per_sec": {
-        "mean": 34.89561656910072,
-        "stdev": 0.49768392487643603,
-        "min": 34.406700171984006,
-        "max": 35.401627547329305
+        "mean": 38.41820379528042,
+        "stdev": 0.6938686617369856,
+        "min": 37.675370805503995,
+        "max": 39.04962621647713
       },
       "total_tokens_per_sec": {
-        "mean": 38.984946635792205,
-        "stdev": 0.5560062598228963,
-        "min": 38.43873534838838,
-        "max": 39.55025577553196
+        "mean": 42.92033705253984,
+        "stdev": 0.7751813955342859,
+        "min": 42.090453321774,
+        "max": 43.62575428872054
       },
       "peak_reserved_gib": {
         "mean": 15.21875,
@@ -54,11 +54,11 @@
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.8624553191844765,
+        "mean_prompt_nll": 0.8615777250141134,
         "tokens_scored": 782,
         "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/bf16_transformers/quality.json"
       },
-      "pareto_non_dominated": false
+      "pareto_non_dominated": true
     },
     {
       "policy_name": "fp16_transformers",
@@ -69,22 +69,22 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 3.5462468662299216,
-        "stdev": 0.004664883023147269,
-        "min": 3.5413469010964036,
-        "max": 3.550634344574064
+        "mean": 3.3338100837233164,
+        "stdev": 0.016203011738338827,
+        "min": 3.3153472831472754,
+        "max": 3.345664713997394
       },
       "output_tokens_per_sec": {
-        "mean": 36.09453952870576,
-        "stdev": 0.04749049117518794,
-        "min": 36.049896322217585,
-        "max": 36.14443983456439
+        "mean": 38.39511476108783,
+        "stdev": 0.187072440640935,
+        "min": 38.25846608731628,
+        "max": 38.608323372533384
       },
       "total_tokens_per_sec": {
-        "mean": 40.32436837972597,
-        "stdev": 0.053055783109778994,
-        "min": 40.27449354747746,
-        "max": 40.3801163776774
+        "mean": 42.894542272152805,
+        "stdev": 0.20899499227854385,
+        "min": 42.741880081923654,
+        "max": 43.132736267752136
       },
       "peak_reserved_gib": {
         "mean": 15.21875,
@@ -100,19 +100,19 @@
       },
       "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/fp16_transformers/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": -3.334608415070948,
-        "output_tokens_per_sec_percent": -3.4357408679996255,
+        "latency_percent": 0.039860507880205925,
+        "output_tokens_per_sec_percent": 0.060099202751960915,
         "peak_reserved_gib_percent": 0.0,
         "used_gib_from_mem_get_info_percent": 0.05030457850265278,
-        "prompt_nll_percent": -0.2884293021428004
+        "prompt_nll_percent": -0.19335557752569354
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.8599677453260592,
+        "mean_prompt_nll": 0.8599118164280797,
         "tokens_scored": 782,
         "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/fp16_transformers/quality.json"
       },
-      "pareto_non_dominated": true
+      "pareto_non_dominated": false
     },
     {
       "policy_name": "h10_lg_late_gate_up_int8wo",
@@ -123,22 +123,22 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 4.48550972264881,
-        "stdev": 0.6269083381280356,
-        "min": 4.108834131155163,
-        "max": 5.209198513999581
+        "mean": 3.9079873439234993,
+        "stdev": 0.05090349187300224,
+        "min": 3.8504634886048734,
+        "max": 3.9472096748650074
       },
       "output_tokens_per_sec": {
-        "mean": 28.884471337414414,
-        "stdev": 3.7364487717311627,
-        "min": 24.5719182434694,
-        "max": 31.152389197082023
+        "mean": 32.75716058895929,
+        "stdev": 0.4293165870904425,
+        "min": 32.427970780239214,
+        "max": 33.24275126327139
       },
       "total_tokens_per_sec": {
-        "mean": 32.26937032226766,
-        "stdev": 4.174313862168411,
-        "min": 27.45143991262597,
-        "max": 34.80305980611507
+        "mean": 36.595890345477954,
+        "stdev": 0.479627124640103,
+        "min": 36.2281236060485,
+        "max": 37.138386176936
       },
       "peak_reserved_gib": {
         "mean": 15.34375,
@@ -154,15 +154,15 @@
       },
       "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_gate_up_int8wo/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": 22.26829381983064,
-        "output_tokens_per_sec_percent": 17.226075429224647,
+        "latency_percent": 17.269580130382348,
+        "output_tokens_per_sec_percent": 14.735314634924647,
         "peak_reserved_gib_percent": 0.8213552361396304,
         "used_gib_from_mem_get_info_percent": 0.8551778345450972,
-        "prompt_nll_percent": -0.32031957390346083
+        "prompt_nll_percent": -0.22410394390708113
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.859692705980957,
+        "mean_prompt_nll": 0.8596468953525319,
         "tokens_scored": 782,
         "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/h10_lg_late_gate_up_int8wo/quality.json"
       },
@@ -177,41 +177,41 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 4.3857207079418,
-        "stdev": 0.10847333133039053,
-        "min": 4.311203490011394,
-        "max": 4.510167915839702
+        "mean": 4.178467593466242,
+        "stdev": 0.0017114101954180069,
+        "min": 4.17668654769659,
+        "max": 4.180099622812122
       },
       "output_tokens_per_sec": {
-        "mean": 29.19737454002549,
-        "stdev": 0.7125816998159908,
-        "min": 28.38031806985816,
-        "max": 29.690085447500348
+        "mean": 30.633243277023944,
+        "stdev": 0.01254738280274086,
+        "min": 30.62127976602845,
+        "max": 30.646302646434165
       },
       "total_tokens_per_sec": {
-        "mean": 32.618941868934726,
-        "stdev": 0.7960873677631768,
-        "min": 31.70613659366966,
-        "max": 33.169392335879294
+        "mean": 34.223076473550194,
+        "stdev": 0.014017779224937249,
+        "min": 34.20971098860991,
+        "max": 34.23766623781317
       },
       "peak_reserved_gib": {
-        "mean": 15.32421875,
+        "mean": 15.328125,
         "stdev": 0.0,
-        "min": 15.32421875,
-        "max": 15.32421875
+        "min": 15.328125,
+        "max": 15.328125
       },
       "used_gib_from_mem_get_info": {
-        "mean": 15.6358642578125,
+        "mean": 15.6475830078125,
         "stdev": 0.0,
-        "min": 15.6358642578125,
-        "max": 15.6358642578125
+        "min": 15.6475830078125,
+        "max": 15.6475830078125
       },
       "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_mlp_int8wo/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": 19.548194360770058,
-        "output_tokens_per_sec_percent": 16.32939202490233,
-        "peak_reserved_gib_percent": 0.6930184804928131,
-        "used_gib_from_mem_get_info_percent": 0.6791118097858125,
+        "latency_percent": 25.38606120004555,
+        "output_tokens_per_sec_percent": 20.263728517190174,
+        "peak_reserved_gib_percent": 0.7186858316221766,
+        "used_gib_from_mem_get_info_percent": 0.7545686775397917,
         "prompt_nll_percent": NaN
       },
       "quality": {
@@ -231,22 +231,22 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 2.453653732004265,
-        "stdev": 0.02253015209523392,
-        "min": 2.4280043528415263,
-        "max": 2.4702453520148993
+        "mean": 2.2166006981084743,
+        "stdev": 0.0058599188092918406,
+        "min": 2.209898001048714,
+        "max": 2.2207545661367476
       },
       "output_tokens_per_sec": {
-        "mean": 78.25506947276283,
-        "stdev": 0.7219189148149647,
-        "min": 77.72507287318315,
-        "max": 79.07728821626691
+        "mean": 86.61952330847248,
+        "stdev": 0.2293126183579163,
+        "min": 86.45710018014535,
+        "max": 86.88183794405253
       },
       "total_tokens_per_sec": {
-        "mean": 158.54803137971217,
-        "stdev": 1.462637801369924,
-        "min": 157.4742361857721,
-        "max": 160.2138808131658
+        "mean": 175.49476336976977,
+        "stdev": 0.46459691948557635,
+        "min": 175.16568734414864,
+        "max": 176.02622375123144
       },
       "peak_reserved_gib": {
         "mean": 15.21875,
@@ -270,7 +270,7 @@
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.8624553191844765,
+        "mean_prompt_nll": 0.8615777250141134,
         "tokens_scored": 782,
         "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/bf16_transformers/quality.json"
       },
@@ -285,22 +285,22 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 2.549513136036694,
-        "stdev": 0.12249382764067021,
-        "min": 2.4349061981774867,
-        "max": 2.678605706896633
+        "mean": 2.26677671338742,
+        "stdev": 0.02175814708937684,
+        "min": 2.245760025922209,
+        "max": 2.2892073513939977
       },
       "output_tokens_per_sec": {
-        "mean": 75.42368207843673,
-        "stdev": 3.5973964157120597,
-        "min": 71.6790827054746,
-        "max": 78.85314027444298
+        "mean": 84.70696839658333,
+        "stdev": 0.8123577201768316,
+        "min": 83.8718257142949,
+        "max": 85.49444187437447
       },
       "total_tokens_per_sec": {
-        "mean": 152.81152254433275,
-        "stdev": 7.288475029749955,
-        "min": 145.2248081897376,
-        "max": 159.7597477435329
+        "mean": 171.61984742849435,
+        "stdev": 1.645870589316608,
+        "min": 169.9278135565662,
+        "max": 173.2153015058941
       },
       "peak_reserved_gib": {
         "mean": 15.21875,
@@ -316,15 +316,15 @@
       },
       "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/fp16_transformers/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": 3.9068024465753175,
-        "output_tokens_per_sec_percent": 3.6181520422923943,
+        "latency_percent": 2.263647003349008,
+        "output_tokens_per_sec_percent": 2.2079951941989893,
         "peak_reserved_gib_percent": 0.0,
         "used_gib_from_mem_get_info_percent": 0.05030457850265278,
-        "prompt_nll_percent": -0.2884293021428004
+        "prompt_nll_percent": -0.19335557752569354
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.8599677453260592,
+        "mean_prompt_nll": 0.8599118164280797,
         "tokens_scored": 782,
         "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/fp16_transformers/quality.json"
       },
@@ -339,22 +339,22 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 2.7259225749100247,
-        "stdev": 0.028504661886561193,
-        "min": 2.706425780430436,
-        "max": 2.7586366422474384
+        "mean": 2.542944160134842,
+        "stdev": 0.03931114254563124,
+        "min": 2.4980950611643493,
+        "max": 2.5714337462559342
       },
       "output_tokens_per_sec": {
-        "mean": 70.43997497263695,
-        "stdev": 0.73240551916476,
-        "min": 69.5995975184246,
-        "max": 70.94227426752633
+        "mean": 75.51516216896877,
+        "stdev": 1.1767992497950714,
+        "min": 74.66651640531526,
+        "max": 76.85856434562974
       },
       "total_tokens_per_sec": {
-        "mean": 142.71432429351967,
-        "stdev": 1.4838840987244328,
-        "min": 141.0116845555582,
-        "max": 143.73200359410282
+        "mean": 152.9968650194211,
+        "stdev": 2.3842443133868825,
+        "min": 151.27747334201894,
+        "max": 155.7186538044269
       },
       "peak_reserved_gib": {
         "mean": 15.34375,
@@ -370,15 +370,15 @@
       },
       "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_gate_up_int8wo/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": 11.096465624077984,
-        "output_tokens_per_sec_percent": 9.986694220297094,
+        "latency_percent": 14.722699596045944,
+        "output_tokens_per_sec_percent": 12.819697817960124,
         "peak_reserved_gib_percent": 0.8213552361396304,
         "used_gib_from_mem_get_info_percent": 0.8551778345450972,
-        "prompt_nll_percent": -0.32031957390346083
+        "prompt_nll_percent": -0.22410394390708113
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.859692705980957,
+        "mean_prompt_nll": 0.8596468953525319,
         "tokens_scored": 782,
         "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/h10_lg_late_gate_up_int8wo/quality.json"
       },
@@ -393,41 +393,41 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 2.6704348786734045,
-        "stdev": 0.021400914424871974,
-        "min": 2.6539402422495186,
-        "max": 2.6946178288199008
+        "mean": 2.7291386482926705,
+        "stdev": 0.03169670767151462,
+        "min": 2.6926726950332522,
+        "max": 2.7500839978456497
       },
       "output_tokens_per_sec": {
-        "mean": 71.90146888552218,
-        "stdev": 0.5740668049150256,
-        "min": 71.25314690138667,
-        "max": 72.34526118691278
+        "mean": 70.35823565108585,
+        "stdev": 0.8224907536706814,
+        "min": 69.81604930991497,
+        "max": 71.30461877306962
       },
       "total_tokens_per_sec": {
-        "mean": 145.6753718566048,
-        "stdev": 1.1630832662080341,
-        "min": 144.3618445033303,
-        "max": 146.57451355056807
+        "mean": 142.54871702225205,
+        "stdev": 1.6664005373848758,
+        "min": 141.4502249039423,
+        "max": 144.46612866002127
       },
       "peak_reserved_gib": {
-        "mean": 15.32421875,
+        "mean": 15.328125,
         "stdev": 0.0,
-        "min": 15.32421875,
-        "max": 15.32421875
+        "min": 15.328125,
+        "max": 15.328125
       },
       "used_gib_from_mem_get_info": {
-        "mean": 15.6378173828125,
+        "mean": 15.6475830078125,
         "stdev": 0.0,
-        "min": 15.6378173828125,
-        "max": 15.6378173828125
+        "min": 15.6475830078125,
+        "max": 15.6475830078125
       },
       "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_mlp_int8wo/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": 8.835034212103846,
-        "output_tokens_per_sec_percent": 8.119091363725719,
-        "peak_reserved_gib_percent": 0.6930184804928131,
-        "used_gib_from_mem_get_info_percent": 0.6916879544114757,
+        "latency_percent": 23.122700927666767,
+        "output_tokens_per_sec_percent": 18.77323614386143,
+        "peak_reserved_gib_percent": 0.7186858316221766,
+        "used_gib_from_mem_get_info_percent": 0.7545686775397917,
         "prompt_nll_percent": NaN
       },
       "quality": {
@@ -447,22 +447,22 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 0.6069117745695015,
-        "stdev": 0.014974885173245111,
-        "min": 0.5912687298841774,
-        "max": 0.6211144058033824
+        "mean": 0.5775943881211182,
+        "stdev": 0.004643262386802416,
+        "min": 0.5745180691592395,
+        "max": 0.5829354519955814
       },
       "output_tokens_per_sec": {
-        "mean": 26.373719277588602,
-        "stdev": 0.6532322664280931,
-        "min": 25.760149580341402,
-        "max": 27.06045354898814
+        "mean": 27.702288347629782,
+        "stdev": 0.2217045309299317,
+        "min": 27.44729274094875,
+        "max": 27.84942869319097
       },
       "total_tokens_per_sec": {
-        "mean": 1190.1140824011857,
-        "stdev": 29.477106022567778,
-        "min": 1162.4267498129057,
-        "max": 1221.1029663980898
+        "mean": 1250.0657616867938,
+        "stdev": 10.004416958213223,
+        "min": 1238.5590849353123,
+        "max": 1256.7054697802425
       },
       "peak_reserved_gib": {
         "mean": 15.19921875,
@@ -486,7 +486,7 @@
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.8624553191844765,
+        "mean_prompt_nll": 0.8615777250141134,
         "tokens_scored": 782,
         "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/bf16_transformers/quality.json"
       },
@@ -501,22 +501,22 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 0.6289266020370027,
-        "stdev": 0.03422210096776637,
-        "min": 0.5917685441672802,
-        "max": 0.6591508551500738
+        "mean": 0.5833692153294882,
+        "stdev": 0.004510937801755432,
+        "min": 0.5800445107743144,
+        "max": 0.5885040760040283
       },
       "output_tokens_per_sec": {
-        "mean": 25.491335962260557,
-        "stdev": 1.4109641942908349,
-        "min": 24.273654315986832,
-        "max": 27.037597989455055
+        "mean": 27.42797342321645,
+        "stdev": 0.21126498753690237,
+        "min": 27.187577201913008,
+        "max": 27.58409001861123
       },
       "total_tokens_per_sec": {
-        "mean": 1150.2965352970075,
-        "stdev": 63.6697592673739,
-        "min": 1095.3486510089058,
-        "max": 1220.0716092741593
+        "mean": 1237.6873007226422,
+        "stdev": 9.533332562602766,
+        "min": 1226.8394212363244,
+        "max": 1244.7320620898317
       },
       "peak_reserved_gib": {
         "mean": 15.19921875,
@@ -532,15 +532,15 @@
       },
       "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/fp16_transformers/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": 3.627352177030485,
-        "output_tokens_per_sec_percent": 3.345691618390212,
+        "latency_percent": 0.9998066683360889,
+        "output_tokens_per_sec_percent": 0.9902247820505504,
         "peak_reserved_gib_percent": 0.0,
         "used_gib_from_mem_get_info_percent": 0.05036792192972101,
-        "prompt_nll_percent": -0.2884293021428004
+        "prompt_nll_percent": -0.19335557752569354
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.8599677453260592,
+        "mean_prompt_nll": 0.8599118164280797,
         "tokens_scored": 782,
         "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/fp16_transformers/quality.json"
       },
@@ -555,22 +555,22 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 0.6839162164057294,
-        "stdev": 0.007034807030605572,
-        "min": 0.6780035849660635,
-        "max": 0.6916963378898799
+        "mean": 0.6729267172825834,
+        "stdev": 0.004917691729801605,
+        "min": 0.6672826479189098,
+        "max": 0.6762891709804535
       },
       "output_tokens_per_sec": {
-        "mean": 23.39632253920156,
-        "stdev": 0.23975083785342205,
-        "min": 23.131537820209257,
-        "max": 23.59869527946649
+        "mean": 23.777584621522273,
+        "stdev": 0.17446136296761564,
+        "min": 23.658518702589785,
+        "max": 23.977845145381885
       },
       "total_tokens_per_sec": {
-        "mean": 1055.7590545814703,
-        "stdev": 10.818756558135588,
-        "min": 1043.8106441369428,
-        "max": 1064.8911244859253
+        "mean": 1072.9635060461926,
+        "stdev": 7.872569003913633,
+        "min": 1067.590656454364,
+        "max": 1082.0002621853575
       },
       "peak_reserved_gib": {
         "mean": 15.32421875,
@@ -586,15 +586,15 @@
       },
       "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_gate_up_int8wo/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": 12.687913641294763,
-        "output_tokens_per_sec_percent": 11.289256198753593,
+        "latency_percent": 16.505064994065442,
+        "output_tokens_per_sec_percent": 14.167435111703718,
         "peak_reserved_gib_percent": 0.8224106913389874,
         "used_gib_from_mem_get_info_percent": 0.8562546728052571,
-        "prompt_nll_percent": -0.32031957390346083
+        "prompt_nll_percent": -0.22410394390708113
       },
       "quality": {
         "status": "completed",
-        "mean_prompt_nll": 0.859692705980957,
+        "mean_prompt_nll": 0.8596468953525319,
         "tokens_scored": 782,
         "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_quality/h10_lg_late_gate_up_int8wo/quality.json"
       },
@@ -609,41 +609,41 @@
       "runtime": "transformers_torchao_layer_group",
       "n_runs": 3,
       "latency_sec": {
-        "mean": 0.6908536915046474,
-        "stdev": 0.0015109095333612971,
-        "min": 0.6891968720592558,
-        "max": 0.6921554505825043
+        "mean": 0.7968688251761099,
+        "stdev": 0.03137060087265897,
+        "min": 0.7784604830667377,
+        "max": 0.8330908478237689
       },
       "output_tokens_per_sec": {
-        "mean": 23.15982566690394,
-        "stdev": 0.05068795714751318,
-        "min": 23.11619447124879,
-        "max": 23.21542747603235
+        "mean": 20.098891652609094,
+        "stdev": 0.7736629986416663,
+        "min": 19.20558849229445,
+        "max": 20.553387548932673
       },
       "total_tokens_per_sec": {
-        "mean": 1045.0871332190404,
-        "stdev": 2.2872940662815426,
-        "min": 1043.1182755151017,
-        "max": 1047.5961648559598
+        "mean": 906.9624858239853,
+        "stdev": 34.911542813705225,
+        "min": 866.6521807147869,
+        "max": 927.4716131455868
       },
       "peak_reserved_gib": {
-        "mean": 15.3046875,
+        "mean": 15.30859375,
         "stdev": 0.0,
-        "min": 15.3046875,
-        "max": 15.3046875
+        "min": 15.30859375,
+        "max": 15.30859375
       },
       "used_gib_from_mem_get_info": {
-        "mean": 15.6163330078125,
+        "mean": 15.6280517578125,
         "stdev": 0.0,
-        "min": 15.6163330078125,
-        "max": 15.6163330078125
+        "min": 15.6280517578125,
+        "max": 15.6280517578125
       },
       "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_mlp_int8wo/benchmark.json",
       "delta_vs_baseline": {
-        "latency_percent": 13.830991661792698,
-        "output_tokens_per_sec_percent": 12.185970347442453,
-        "peak_reserved_gib_percent": 0.6939090208172706,
-        "used_gib_from_mem_get_info_percent": 0.6799669460512336,
+        "latency_percent": 37.96339465282532,
+        "output_tokens_per_sec_percent": 27.446818109779862,
+        "peak_reserved_gib_percent": 0.7196093549216139,
+        "used_gib_from_mem_get_info_percent": 0.7555188289458151,
         "prompt_nll_percent": NaN
       },
       "quality": {
@@ -659,10 +659,18 @@
     {
       "policy_name": "h10_lg_late_gate_up_int4wo_g128",
       "hardware_label": "rtx3090-lab",
-      "error": "ImportError: Requires mslk >= 1.0.0",
+      "error": "RuntimeError: Only fp32 an bf16 scales supported.",
       "known_failure": null,
       "failure_interpretation": null,
       "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_gate_up_int4wo_g128/benchmark.json"
+    },
+    {
+      "policy_name": "h10_lg_late_gate_up_int4wo_g128_bf16",
+      "hardware_label": "rtx3090-lab",
+      "error": "RuntimeError: cutlass cannot initialize",
+      "known_failure": null,
+      "failure_interpretation": null,
+      "artifact_path": "experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks/h10_lg_late_gate_up_int4wo_g128_bf16/benchmark.json"
     }
   ],
   "note": "Quality metrics are included when quality artifacts exist. Pareto marking uses latency, output throughput, and memory; memory falls back to cuda mem_get_info used GiB when PyTorch allocator stats do not capture vLLM worker allocations."
