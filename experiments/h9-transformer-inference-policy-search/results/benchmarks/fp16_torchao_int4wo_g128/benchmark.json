@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-27T05:17:30.973984+00:00",
+  "status": "failed",
+  "policy_name": "fp16_torchao_int4wo_g128",
+  "policy": {
+    "policy_name": "fp16_torchao_int4wo_g128",
+    "description": "vLLM TorchAO int4 weight-only online quantization with group size 128 and fp16 activation dtype.",
+    "expected_role": "weight_quantization_candidate",
+    "llm_kwargs": {
+      "dtype": "float16",
+      "quantization": "torchao",
+      "enforce_eager": false,
+      "gpu_memory_utilization": 0.88,
+      "max_model_len": 4096,
+      "block_size": 16,
+      "trust_remote_code": true,
+      "hf_overrides": {
+        "quantization_config_dict_json": "{\"_type\": \"Int4WeightOnlyConfig\", \"_version\": 2, \"_data\": {\"group_size\": 128, \"set_inductor_config\": true, \"int4_packing_format\": {\"_type\": \"Int4PackingFormat\", \"_data\": \"PLAIN\"}, \"int4_choose_qparams_algorithm\": {\"_type\": \"Int4ChooseQParamsAlgorithm\", \"_data\": \"TINYGEMM\"}}}"
+      }
+    },
+    "search_tags": {
+      "dtype": "float16",
+      "quantization": "torchao",
+      "kv_cache_dtype": "auto",
+      "runtime_mode": "default"
+    }
+  },
+  "model_name": "meta-llama/Llama-3.1-8B",
+  "runtime": "vllm",
+  "hardware_label": "rtx3090-lab",
+  "seed": 42,
+  "smoke": true,
+  "repeats": 1,
+  "warmup_runs": 0,
+  "cuda_visible_devices": "2",
+  "runs": [],
+  "pre_load_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 0.0,
+    "reserved_gib": 0.0,
+    "max_allocated_gib": 0.0,
+    "max_reserved_gib": 0.0,
+    "free_gib": 23.31353759765625,
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 0.2550048828125
+  },
+  "error": "RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}",
+  "failure_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 0.0,
+    "reserved_gib": 0.0,
+    "max_allocated_gib": 0.0,
+    "max_reserved_gib": 0.0,
+    "free_gib": 23.31353759765625,
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 0.2550048828125
+  }
+}
