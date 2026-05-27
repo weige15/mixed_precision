@@ -139,6 +139,8 @@ def download(args: argparse.Namespace, spec: dict[str, str], local_dir: Path) ->
 
 
 def run_pipeline(args: argparse.Namespace, spec: dict[str, str], local_dir: Path) -> None:
+    local_dir = local_dir.expanduser().resolve()
+    runtime_cache_dir = args.runtime_cache_dir.expanduser().resolve()
     cmd = [
         sys.executable,
         str(PIPELINE),
@@ -151,7 +153,7 @@ def run_pipeline(args: argparse.Namespace, spec: dict[str, str], local_dir: Path
         "--hardware-label",
         args.hardware_label,
         "--runtime-cache-dir",
-        str(args.runtime_cache_dir),
+        str(runtime_cache_dir),
     ]
     if args.run_smoke and not args.run_full:
         cmd.append("--smoke-only")

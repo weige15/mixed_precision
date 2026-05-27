@@ -92,7 +92,7 @@ def command_env(args: argparse.Namespace) -> dict[str, str]:
     if args.cuda_visible_devices is not None:
         env["CUDA_VISIBLE_DEVICES"] = str(args.cuda_visible_devices)
     env["HARDWARE_LABEL"] = args.hardware_label
-    runtime_cache = args.runtime_cache_dir
+    runtime_cache = args.runtime_cache_dir.expanduser().resolve()
     runtime_cache.mkdir(parents=True, exist_ok=True)
     for child in ["tmp", "torchinductor", "triton", "cuda", "xdg", "vllm"]:
         (runtime_cache / child).mkdir(parents=True, exist_ok=True)
