@@ -229,3 +229,25 @@ Interpretation: the task-quality screen adds robustness evidence for H10. It
 does not show a functional task-quality regression for GPTQ-Marlin relative to
 matched bf16/fp16 baselines. The task screen remains small and should be treated
 as a sanity check, not a full downstream benchmark.
+
+## 2026-05-28 Layer/Group Backend Path Implementation
+
+Started the true layer/group backend path for the Llama-focused branch. Added:
+
+```text
+experiments/h10-inference-ptq-assignment/code/generate_layer_group_policies.py
+experiments/h10-inference-ptq-assignment/code/run_layer_group_backend.py
+```
+
+The generated policy grid targets `meta-llama/Llama-3.1-8B-Instruct` by
+default and includes matched `bf16_transformers` / `fp16_transformers`
+baselines plus TorchAO `FqnToConfig` candidates for late-layer Llama MLP
+projection groups. The runner loads the model with Transformers, applies
+TorchAO module-FQN quantization in place, then writes H9-compatible benchmark
+and prompt-NLL quality artifacts.
+
+This is implementation readiness, not new empirical support yet. The next CUDA
+step is to run the matched Transformers baselines and the first late gate/up
+int8 policy, summarize with `baseline_policy=bf16_transformers`, build
+`action_table_layer_group.csv`, and solve with `baseline-policy
+bf16_transformers`.

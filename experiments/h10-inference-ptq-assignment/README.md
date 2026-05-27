@@ -180,6 +180,73 @@ not use it for the vLLM deployment-frontier latency or memory claim.
 You do not need to train a model to test artifact-backed PTQ. Use an existing
 quantized checkpoint from Hugging Face or a local path that vLLM can load.
 
+## Layer/Group Backend Path
+
+The first true layer/group backend path is now implemented with Transformers
+plus TorchAO `FqnToConfig`. It is separate from the vLLM artifact path because
+vLLM does not currently expose arbitrary per-layer precision overrides for a
+normal Hugging Face checkpoint in this project setup.
+
+Generate the Llama layer/group policies:
+
+```bash
+python experiments/h10-inference-ptq-assignment/code/generate_layer_group_policies.py
+```
+
+The generated grid includes matched `bf16_transformers` and `fp16_transformers`
+baselines plus starter TorchAO policies that quantize late Llama MLP projection
+groups through regex FQN matching.
+
+Validate wiring without loading the model:
+
+```bash
+python experiments/h10-inference-ptq-assignment/code/run_layer_group_backend.py \
+  --policy-name h10_lg_late_gate_up_int8wo \
+  --dry-run \
+  --repeats 1 \
+  --warmup-runs 0
+```
+
+Run the CUDA benchmark and prompt-NLL quality pass:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h10-inference-ptq-assignment/code/run_layer_group_backend.py \
+  --policy-name bf16_transformers \
+  --policy-name fp16_transformers \
+  --policy-name h10_lg_late_gate_up_int8wo \
+  --policy-name h10_lg_late_mlp_int8wo \
+  --hardware-label rtx3090-lab
+```
+
+Summarize and solve with the matched Transformers baseline:
+
+```bash
+python experiments/h9-transformer-inference-policy-search/code/summarize_h9_results.py \
+  --results-dir experiments/h10-inference-ptq-assignment/results/layer_group_benchmarks \
+  --quality-dir experiments/h10-inference-ptq-assignment/results/layer_group_quality \
+  --baseline-policy bf16_transformers \
+  --output experiments/h10-inference-ptq-assignment/results/layer_group_summary.json
+
+python experiments/h10-inference-ptq-assignment/code/build_inference_action_table.py \
+  --skip-default-summaries \
+  --policy-candidates experiments/h10-inference-ptq-assignment/results/layer_group_policy_candidates.json \
+  --extra-h9-summary h10_layer_group=experiments/h10-inference-ptq-assignment/results/layer_group_summary.json \
+  --output experiments/h10-inference-ptq-assignment/results/action_table_layer_group.csv
+
+python experiments/h10-inference-ptq-assignment/code/solve_inference_assignment.py \
+  --action-table experiments/h10-inference-ptq-assignment/results/action_table_layer_group.csv \
+  --baseline-policy bf16_transformers \
+  --output experiments/h10-inference-ptq-assignment/results/selected_policy_layer_group.json \
+  --trace-output experiments/h10-inference-ptq-assignment/results/solver_trace_layer_group.json
+```
+
+This path is backend-real once run on CUDA: the model is loaded with
+Transformers, selected Llama module FQNs are quantized in place with TorchAO,
+and the benchmark/quality artifacts use the same schema as H9 summaries. Until
+those CUDA artifacts complete, it should be treated as implementation readiness,
+not empirical H10 support.
+
 List built-in downloadable candidates:
 
 ```bash

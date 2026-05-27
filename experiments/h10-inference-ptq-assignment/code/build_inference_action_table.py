@@ -146,12 +146,51 @@ def backend_for_policy(policy: dict[str, Any] | None) -> str:
     quantization = tags.get("quantization") or "none"
     kv_cache = tags.get("kv_cache_dtype") or "auto"
     dtype = tags.get("dtype") or (policy.get("llm_kwargs") or {}).get("dtype") or "auto"
-    pieces = ["vllm", str(dtype)]
+    runtime_mode = str(tags.get("runtime_mode") or "")
+    runtime = "transformers" if runtime_mode == "transformers" else "vllm"
+    pieces = [runtime, str(dtype)]
+    layer_group_backend = tags.get("layer_group_backend")
+    if layer_group_backend and layer_group_backend != "none":
+        pieces.append(str(layer_group_backend))
     if quantization != "none":
         pieces.append(str(quantization))
     if kv_cache != "auto":
         pieces.append(f"kv_{kv_cache}")
     return "+".join(pieces)
+
+
+def layer_group_policy_summary(policy: dict[str, Any] | None) -> str | None:
+    if not policy:
+        return None
+    layer_group_policy = policy.get("layer_group_policy")
+    if not layer_group_policy:
+        return None
+    groups = []
+    for group in layer_group_policy.get("groups", []):
+        config = group.get("config") or {}
+        groups.append(
+            "{group}:{config}:{pattern}".format(
+                group=group.get("group_name", "unnamed_group"),
+                config=config.get("type", "unknown_config"),
+                pattern=group.get("module_regex", ""),
+            )
+        )
+    return "; ".join(groups)
+
+
+def calibration_signal_for_policy(policy: dict[str, Any] | None) -> str:
+    if not policy or not policy.get("layer_group_policy"):
+        return "not_applicable_global_vllm_policy"
+    layer_group_policy = policy["layer_group_policy"]
+    source = layer_group_policy.get("selection_source") or "unspecified_layer_group_selection"
+    return f"layer_group_policy:{source}"
+
+
+def perturbation_risk_for_policy(policy: dict[str, Any] | None) -> str:
+    summary = layer_group_policy_summary(policy)
+    if summary is None:
+        return "not_applicable_global_vllm_policy"
+    return f"backend_real_layer_group:{summary}"
 
 
 def load_inventory_reasons(backend_inventory: dict[str, Any]) -> dict[str, str]:
@@ -230,8 +269,8 @@ def build_completed_action_row(
         "backend": backend_for_policy(policy),
         "hardware_label": str(row.get("hardware_label", "")),
         "backend_feasible": "true",
-        "calibration_signal": "not_applicable_global_vllm_policy",
-        "perturbation_risk": "not_applicable_global_vllm_policy",
+        "calibration_signal": calibration_signal_for_policy(policy),
+        "perturbation_risk": perturbation_risk_for_policy(policy),
         "predicted_quality_risk": fmt_risk(quality_risk),
         "prompt_nll_delta_pct_vs_bf16": fmt_float(prompt_nll_delta),
         "latency_delta_pct_vs_bf16": fmt_float(latency_delta),
@@ -247,7 +286,7 @@ def build_completed_action_row(
         "notes": (
             f"{source_label}; quality risk is prompt-NLL percent delta divided by 100. "
             "Memory and KV-cache deltas use total CUDA mem_get_info used GiB because "
-            "vLLM worker allocation is not captured by PyTorch reserved memory."
+            "backend worker allocation may not be captured by PyTorch reserved memory."
         ),
     }
 

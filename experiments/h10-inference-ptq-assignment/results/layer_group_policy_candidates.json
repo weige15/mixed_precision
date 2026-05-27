@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-27T18:32:31.814263+00:00",
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "runtime": "transformers_torchao_layer_group",
+  "profile": "h10_layer_group_backend",
+  "search_objective": "pareto_latency_memory_quality_layer_group",
+  "max_model_len": 4096,
+  "candidate_policies": [
+    {
+      "policy_name": "bf16_transformers",
+      "description": "Transformers bfloat16 baseline for matched layer/group backend comparisons.",
+      "expected_role": "baseline",
+      "llm_kwargs": {
+        "torch_dtype": "bfloat16",
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "bfloat16",
+        "quantization": "none",
+        "runtime_mode": "transformers",
+        "layer_group_backend": "none"
+      }
+    },
+    {
+      "policy_name": "fp16_transformers",
+      "description": "Transformers float16 baseline for matched layer/group backend comparisons.",
+      "expected_role": "baseline",
+      "llm_kwargs": {
+        "torch_dtype": "float16",
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "none",
+        "runtime_mode": "transformers",
+        "layer_group_backend": "none"
+      }
+    },
+    {
+      "policy_name": "h10_lg_late_mlp_int8wo",
+      "description": "TorchAO FqnToConfig policy that keeps the Llama model in fp16 but applies int8 weight-only quantization to late-layer MLP projections.",
+      "expected_role": "layer_group_mixed_precision_candidate",
+      "llm_kwargs": {
+        "torch_dtype": "float16",
+        "trust_remote_code": true
+      },
+      "layer_group_policy": {
+        "backend": "torchao_fqn_to_config",
+        "default_precision": "float16",
+        "selection_source": "starter_backend_policy_from_h6_h7_late_mlp_low_risk_pattern",
+        "groups": [
+          {
+            "group_name": "late_mlp_proj_layers_24_31",
+            "module_regex": "model\\.layers\\.(2[4-9]|3[0-1])\\.mlp\\.(gate_proj|up_proj|down_proj)",
+            "config": {
+              "type": "int8_weight_only",
+              "group_size": null
+            }
+          }
+        ]
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "int8_weight_only",
+        "runtime_mode": "transformers",
+        "layer_group_backend": "torchao_fqn_to_config"
+      }
+    },
+    {
+      "policy_name": "h10_lg_late_gate_up_int8wo",
+      "description": "TorchAO FqnToConfig policy that quantizes only late-layer MLP gate/up projections, leaving down projections and attention in fp16.",
+      "expected_role": "layer_group_mixed_precision_candidate",
+      "llm_kwargs": {
+        "torch_dtype": "float16",
+        "trust_remote_code": true
+      },
+      "layer_group_policy": {
+        "backend": "torchao_fqn_to_config",
+        "default_precision": "float16",
+        "selection_source": "starter_backend_policy_from_h6_h7_gate_up_low_risk_pattern",
+        "groups": [
+          {
+            "group_name": "late_mlp_gate_up_layers_24_31",
+            "module_regex": "model\\.layers\\.(2[4-9]|3[0-1])\\.mlp\\.(gate_proj|up_proj)",
+            "config": {
+              "type": "int8_weight_only",
+              "group_size": null
+            }
+          }
+        ]
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "int8_weight_only",
+        "runtime_mode": "transformers",
+        "layer_group_backend": "torchao_fqn_to_config"
+      }
+    },
+    {
+      "policy_name": "h10_lg_late_gate_up_int4wo_g128",
+      "description": "TorchAO FqnToConfig policy that applies int4 weight-only group-128 quantization to late-layer MLP gate/up projections.",
+      "expected_role": "layer_group_mixed_precision_candidate",
+      "llm_kwargs": {
+        "torch_dtype": "float16",
+        "trust_remote_code": true
+      },
+      "layer_group_policy": {
+        "backend": "torchao_fqn_to_config",
+        "default_precision": "float16",
+        "selection_source": "starter_backend_policy_from_h6_h7_gate_up_low_risk_pattern",
+        "groups": [
+          {
+            "group_name": "late_mlp_gate_up_layers_24_31",
+            "module_regex": "model\\.layers\\.(2[4-9]|3[0-1])\\.mlp\\.(gate_proj|up_proj)",
+            "config": {
+              "type": "int4_weight_only",
+              "group_size": 128
+            }
+          }
+        ]
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "int4_weight_only",
+        "runtime_mode": "transformers",
+        "layer_group_backend": "torchao_fqn_to_config"
+      }
+    }
+  ],
+  "workloads": [
+    {
+      "name": "prefill_heavy",
+      "max_tokens": 16,
+      "prompts": [
+        "Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. "
+      ],
+      "description": "Long prompt and short generation; prefill-dominated latency proxy."
+    },
+    {
+      "name": "decode_heavy",
+      "max_tokens": 128,
+      "prompts": [
+        "Explain hardware-aware mixed precision for LLM serving in one paragraph."
+      ],
+      "description": "Short prompt and long generation; decode-throughput proxy."
+    },
+    {
+      "name": "mixed",
+      "max_tokens": 64,
+      "prompts": [
+        "Define layer-wise post-training quantization.",
+        "Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. Transformer inference has separate prefill and decode phases. Prefill processes the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Layer-wise mixed precision must preserve quality while mapping to real kernels. ",
+        "List two risks of quantizing MLP projections."
+      ],
+      "description": "Small varied batch mixing prompt and generation lengths."
+    }
+  ],
+  "notes": [
+    "These are real backend policies for Transformers plus TorchAO FqnToConfig.",
+    "Only rows that complete benchmark and prompt-NLL quality runs should be used as H10 evidence.",
+    "The starter Llama groups intentionally quantize late MLP projections before adding broader layer search."
+  ]
+}
