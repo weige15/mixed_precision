@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-27T11:44:50.497692+00:00",
+  "status": "failed",
+  "policy_name": "bf16_default",
+  "policy": {
+    "policy_name": "bf16_default",
+    "description": "Default bf16 vLLM baseline with automatic KV-cache dtype.",
+    "expected_role": "baseline",
+    "llm_kwargs": {
+      "dtype": "bfloat16",
+      "enforce_eager": false,
+      "gpu_memory_utilization": 0.88,
+      "max_model_len": 4096,
+      "block_size": 16,
+      "trust_remote_code": true
+    },
+    "search_tags": {
+      "dtype": "bfloat16",
+      "quantization": "none",
+      "kv_cache_dtype": "auto",
+      "runtime_mode": "default"
+    }
+  },
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "baseline_model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "runtime": "vllm",
+  "hardware_label": "rtx3090-lab",
+  "seed": 42,
+  "smoke": false,
+  "repeats": 3,
+  "warmup_runs": 1,
+  "cuda_visible_devices": "6",
+  "runs": [],
+  "pre_load_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 0.0,
+    "reserved_gib": 0.0,
+    "max_allocated_gib": 0.0,
+    "max_reserved_gib": 0.0,
+    "free_gib": 23.31353759765625,
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 0.2550048828125
+  },
+  "error": "OSError: [Errno 28] No space left on device: '/var/cache/huggingface/hub/models--meta-llama--Llama-3.1-8B-Instruct'",
+  "failure_cuda": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "allocated_gib": 0.0,
+    "reserved_gib": 0.0,
+    "max_allocated_gib": 0.0,
+    "max_reserved_gib": 0.0,
+    "free_gib": 23.31353759765625,
+    "total_gib": 23.56854248046875,
+    "used_gib_from_mem_get_info": 0.2550048828125
+  }
+}
