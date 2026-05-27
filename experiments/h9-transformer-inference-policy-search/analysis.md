@@ -228,3 +228,24 @@ configured TorchAO policies as backend-infeasible on this stack unless either:
 For the current H10 path, the pragmatic next candidate family should be
 artifact-backed AWQ/GPTQ/Marlin or another vLLM-supported quantized checkpoint,
 not more online TorchAO retries with the same base safetensors.
+
+## 2026-05-27 Artifact-Backed PTQ Policy Hook
+
+Added a policy-grid extension for artifact-backed quantized checkpoints. H9 can
+now append policies from a JSON file such as:
+
+```text
+artifact_policies.example.json
+```
+
+Each artifact policy can override `model_name`, so the baseline grid can remain
+`meta-llama/Llama-3.1-8B` while a candidate points to a local or Hugging Face
+AWQ/GPTQ/Marlin artifact. The H9 benchmark and quality runners now use the
+per-policy `model_name` override when present and record both `model_name` and
+`baseline_model_name` in their outputs.
+
+Validation was CPU-only/dry-run in this shell: a temporary grid with the example
+AWQ/GPTQ-Marlin policies generated successfully, and dry-run benchmark plus
+quality plans recorded the artifact model override correctly. The next empirical
+step is to replace the example paths with a real quantized artifact and run the
+smoke benchmark on the CUDA host.

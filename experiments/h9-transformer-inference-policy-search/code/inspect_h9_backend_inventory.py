@@ -142,6 +142,7 @@ def classify_policy(policy: dict[str, Any], packages: dict[str, dict[str, Any]],
         reasons.append("No preflight blocker found; run vLLM smoke benchmark to confirm.")
     return {
         "policy_name": policy.get("policy_name"),
+        "model_name": policy.get("model_name") or None,
         "status": status,
         "reasons": reasons,
         "llm_kwargs": kwargs,

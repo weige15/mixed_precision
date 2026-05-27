@@ -27,6 +27,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--gpu-memory-utilization", type=float, default=0.88)
     parser.add_argument("--max-model-len", type=int, default=4096)
     parser.add_argument("--block-size", type=int, default=16)
+    parser.add_argument(
+        "--artifact-policies",
+        type=Path,
+        action="append",
+        default=[],
+        help="JSON file(s) with artifact-backed quantized policies to append.",
+    )
     return parser.parse_args()
 
 
@@ -71,6 +78,78 @@ def policy(
             "runtime_mode": "eager" if enforce_eager else "default",
         },
     }
+
+
+def artifact_policy(
+    spec: dict[str, Any],
+    *,
+    gpu_memory_utilization: float,
+    max_model_len: int,
+    block_size: int,
+) -> dict[str, Any]:
+    missing = [key for key in ("policy_name", "model_name", "quantization") if not spec.get(key)]
+    if missing:
+        raise SystemExit(f"Artifact policy is missing required keys {missing}: {spec}")
+    dtype = str(spec.get("dtype", "float16"))
+    quantization = str(spec["quantization"])
+    llm_kwargs = clean_kwargs(
+        {
+            "dtype": dtype,
+            "quantization": quantization,
+            "kv_cache_dtype": spec.get("kv_cache_dtype"),
+            "enforce_eager": bool(spec.get("enforce_eager", False)),
+            "gpu_memory_utilization": float(spec.get("gpu_memory_utilization", gpu_memory_utilization)),
+            "max_model_len": int(spec.get("max_model_len", max_model_len)),
+            "block_size": int(spec.get("block_size", block_size)),
+            "trust_remote_code": bool(spec.get("trust_remote_code", True)),
+            "revision": spec.get("revision"),
+            "tokenizer_revision": spec.get("tokenizer_revision"),
+            "hf_overrides": spec.get("hf_overrides"),
+        }
+    )
+    return {
+        "policy_name": str(spec["policy_name"]),
+        "model_name": str(spec["model_name"]),
+        "description": str(
+            spec.get(
+                "description",
+                f"Artifact-backed {quantization} policy for {spec['model_name']}.",
+            )
+        ),
+        "expected_role": str(spec.get("expected_role", "artifact_backed_quantization_candidate")),
+        "llm_kwargs": llm_kwargs,
+        "search_tags": {
+            "dtype": dtype,
+            "quantization": quantization,
+            "kv_cache_dtype": spec.get("kv_cache_dtype") or "auto",
+            "runtime_mode": "eager" if spec.get("enforce_eager", False) else "default",
+            "artifact_backed": "true",
+        },
+        "artifact_notes": str(spec.get("notes", "")),
+    }
+
+
+def load_artifact_policies(paths: list[Path], args: argparse.Namespace) -> list[dict[str, Any]]:
+    policies = []
+    for path in paths:
+        if not path.exists():
+            raise SystemExit(f"Artifact policy file does not exist: {path}")
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        specs = payload.get("artifact_policies", payload if isinstance(payload, list) else [])
+        if not isinstance(specs, list):
+            raise SystemExit(f"Expected list or artifact_policies list in {path}")
+        for spec in specs:
+            if not isinstance(spec, dict):
+                raise SystemExit(f"Expected artifact policy objects in {path}: {spec}")
+            policies.append(
+                artifact_policy(
+                    spec,
+                    gpu_memory_utilization=args.gpu_memory_utilization,
+                    max_model_len=args.max_model_len,
+                    block_size=args.block_size,
+                )
+            )
+    return policies
 
 
 TORCHAO_INT8_WEIGHT_ONLY = {
@@ -345,7 +424,8 @@ def candidate_policies(args: argparse.Namespace) -> list[dict[str, Any]]:
             "fp16_torchao_int8dyn_int8w",
             "fp16_torchao_int4wo_g128",
         }
-        return [candidate for candidate in all_policies if candidate["policy_name"] in keep]
+        all_policies = [candidate for candidate in all_policies if candidate["policy_name"] in keep]
+    all_policies.extend(load_artifact_policies(args.artifact_policies, args))
     return all_policies
 
 

@@ -230,13 +230,15 @@ def run_policy(
     args: argparse.Namespace,
 ) -> dict[str, Any]:
     policy_name = policy["policy_name"]
+    model_name = str(policy.get("model_name") or grid["model_name"])
     payload: dict[str, Any] = {
         "schema_version": 1,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "started",
         "policy_name": policy_name,
         "policy": policy,
-        "model_name": grid["model_name"],
+        "model_name": model_name,
+        "baseline_model_name": grid["model_name"],
         "runtime": grid.get("runtime", "vllm"),
         "hardware_label": args.hardware_label,
         "seed": args.seed,
@@ -274,7 +276,7 @@ def run_policy(
         llm_kwargs["seed"] = args.seed
         payload["pre_load_cuda"] = cuda_snapshot()
         load_start = time.perf_counter()
-        llm = LLM(model=grid["model_name"], **llm_kwargs)
+        llm = LLM(model=model_name, **llm_kwargs)
         payload["load_time_sec"] = time.perf_counter() - load_start
         payload["post_load_cuda"] = cuda_snapshot()
 

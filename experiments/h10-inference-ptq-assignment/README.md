@@ -52,6 +52,24 @@ Only after smoke success, run full benchmark and quality passes for the
 surviving TorchAO policies, regenerate H9 summaries, then rerun the H10 build
 and solve commands above.
 
+The preferred next path after the TorchAO loader failure is artifact-backed
+PTQ. Add a local AWQ/GPTQ/Marlin artifact policy to H9, smoke-test it, then
+let H10 ingest the resulting H9 benchmark and quality artifacts:
+
+```bash
+python experiments/h9-transformer-inference-policy-search/code/generate_h9_policies.py \
+  --artifact-policies experiments/h9-transformer-inference-policy-search/artifact_policies.local.json \
+  --output experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates.json
+
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_benchmark.py \
+  --policy-name llama31_8b_awq_artifact \
+  --smoke \
+  --repeats 1 \
+  --warmup-runs 0 \
+  --hardware-label rtx3090-lab
+```
+
 The H10 table and solver outputs are:
 
 ```text

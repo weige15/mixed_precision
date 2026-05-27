@@ -172,13 +172,15 @@ def classify_failure(policy: dict[str, Any], error: str) -> dict[str, Any]:
 
 def run_policy(grid: dict[str, Any], policy: dict[str, Any], args: argparse.Namespace) -> dict[str, Any]:
     prompts = quality_prompts(grid)
+    model_name = str(policy.get("model_name") or grid["model_name"])
     payload: dict[str, Any] = {
         "schema_version": 1,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "started",
         "policy_name": policy["policy_name"],
         "policy": policy,
-        "model_name": grid["model_name"],
+        "model_name": model_name,
+        "baseline_model_name": grid["model_name"],
         "runtime": grid.get("runtime", "vllm"),
         "hardware_label": args.hardware_label,
         "seed": args.seed,
@@ -214,7 +216,7 @@ def run_policy(grid: dict[str, Any], policy: dict[str, Any], args: argparse.Name
         if args.gpu_memory_utilization is not None:
             llm_kwargs["gpu_memory_utilization"] = args.gpu_memory_utilization
         load_start = time.perf_counter()
-        llm = LLM(model=grid["model_name"], **llm_kwargs)
+        llm = LLM(model=model_name, **llm_kwargs)
         payload["load_time_sec"] = time.perf_counter() - load_start
         sampling_params = SamplingParams(temperature=0.0, max_tokens=1, prompt_logprobs=1, seed=args.seed)
         start = time.perf_counter()

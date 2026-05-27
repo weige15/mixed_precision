@@ -1,0 +1,22 @@
+{
+  "artifact_policies": [
+    {
+      "policy_name": "llama31_8b_awq_artifact",
+      "model_name": "/path/to/local-or-hf-awq-llama31-8b",
+      "quantization": "awq",
+      "dtype": "float16",
+      "description": "Artifact-backed AWQ Llama-3.1-8B policy; replace model_name with a local path or HF repo.",
+      "expected_role": "artifact_backed_quantization_candidate",
+      "notes": "Use only after the artifact is available to vLLM on the benchmark host."
+    },
+    {
+      "policy_name": "llama31_8b_gptq_marlin_artifact",
+      "model_name": "/path/to/local-or-hf-gptq-marlin-llama31-8b",
+      "quantization": "gptq_marlin",
+      "dtype": "float16",
+      "description": "Artifact-backed GPTQ-Marlin Llama-3.1-8B policy; replace model_name with a local path or HF repo.",
+      "expected_role": "artifact_backed_quantization_candidate",
+      "notes": "Use only after the artifact is available to vLLM on the benchmark host."
+    }
+  ]
+}

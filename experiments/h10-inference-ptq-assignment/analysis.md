@@ -107,3 +107,13 @@ cannot read the ordinary Llama safetensors checkpoint and raises
 `torchao_online_quant_uses_serialized_safetensors_loader`, and H10 will retain
 such rows as backend-infeasible systems evidence once the H9 summaries are
 regenerated.
+
+## 2026-05-27 Artifact-Backed PTQ Ingestion Path
+
+H9 now supports artifact-backed quantized policy rows through an external JSON
+file. This is the preferred next H10 ingestion path after the online TorchAO
+loader failure. A candidate can point to a local or Hugging Face AWQ/GPTQ/Marlin
+checkpoint while H9 keeps `meta-llama/Llama-3.1-8B` as the matched bf16/fp16
+baseline. Once an artifact policy has benchmark and quality outputs, the
+existing H10 action-table builder can ingest it through the regenerated H9
+summary.

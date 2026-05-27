@@ -294,7 +294,7 @@ experiments:
   proxy_metric: "Held-out validation negative log likelihood after a fixed 1,000 optimizer-step LoRA fine-tuning budget; lower is better. Stability diagnostics include NaN/Inf incidence, loss-spike count, and gradient-norm spikes."
   baseline_value: 2.0906627424955366
   best_value: 2.086417777657509
-  total_runs: 36
+  total_runs: 37
   trajectory:
     - experiment_id: "h1_baseline_bf16_seed42"
       hypothesis: "H1"
@@ -856,11 +856,21 @@ experiments:
       wall_time_sec: null
       change_summary: "Classified the CUDA-host TorchAO smoke failure where vLLM routes quantization='torchao' through TorchAO's serialized safetensors loader before online quantization. Ordinary Llama Hugging Face safetensors lack TorchAO tensor_names metadata, causing ValueError: No tensors found. The H9 benchmark and quality runners now label this as torchao_online_quant_uses_serialized_safetensors_loader, and H10 failure rows preserve the known-failure interpretation."
       artifact: "experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_benchmark.py"
+    - experiment_id: "h9_artifact_backed_ptq_policy_hook_2026_05_27"
+      hypothesis: "H9"
+      type: "policy_grid_expansion"
+      metric_value: 1
+      metric_name: "artifact_policy_hook_added"
+      baseline: null
+      delta: null
+      wall_time_sec: null
+      change_summary: "Added support for artifact-backed quantized checkpoint policies in H9. The policy generator can append AWQ/GPTQ/Marlin-style candidates from an external JSON file, and benchmark/quality runners now honor per-policy model_name overrides while recording the matched baseline_model_name. Dry-run validation confirmed that artifact model overrides propagate into benchmark and quality plans."
+      artifact: "experiments/h9-transformer-inference-policy-search/artifact_policies.example.json"
 
 outer_loop:
-  cycle: 30
-  last_direction: "classify TorchAO online-quantization loader failure"
-  last_reflection: "The CUDA-host TorchAO smoke failure is a backend feasibility result, not a transient training or memory issue. This vLLM/TorchAO stack tries to read ordinary Llama safetensors with TorchAO's serialized-checkpoint loader and fails because tensor_names metadata is absent. The current H10 path should record configured TorchAO online quantization as infeasible on this stack and pivot to artifact-backed AWQ/GPTQ/Marlin or TorchAO-serialized checkpoints."
+  cycle: 31
+  last_direction: "add artifact-backed PTQ policy hook for AWQ/GPTQ/Marlin"
+  last_reflection: "H9 can now test real quantized checkpoints by appending artifact-backed policy rows with per-policy model_name overrides. This is the practical next path for H10 after the online TorchAO loader failure. The next empirical step is to create a local artifact_policies.local.json pointing at a real AWQ/GPTQ/Marlin Llama-3.1-8B artifact, smoke-test it on CUDA, then run full H9 benchmark and quality before regenerating H10."
 
 workspace:
   findings: "findings.md"

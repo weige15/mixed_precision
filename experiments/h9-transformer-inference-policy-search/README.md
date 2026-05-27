@@ -24,6 +24,19 @@ python experiments/h9-transformer-inference-policy-search/code/generate_h9_polic
   --output experiments/h9-transformer-inference-policy-search/results/h9_2_long_context_policy_candidates.json
 ```
 
+To append artifact-backed AWQ/GPTQ/Marlin candidates, create a local copy of
+`artifact_policies.example.json` with real `model_name` paths or HF repos, then
+generate a grid with:
+
+```bash
+python experiments/h9-transformer-inference-policy-search/code/generate_h9_policies.py \
+  --artifact-policies experiments/h9-transformer-inference-policy-search/artifact_policies.local.json \
+  --output experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates.json
+```
+
+Each artifact policy may override `model_name`; the bf16/fp16 baseline remains
+`meta-llama/Llama-3.1-8B`.
+
 Inspect local backend support without loading the full model:
 
 ```bash
@@ -37,6 +50,18 @@ CUDA_VISIBLE_DEVICES=0 \
 python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_benchmark.py \
   --policy-name bf16_default \
   --smoke \
+  --hardware-label rtx3090-lab
+```
+
+Run a smoke benchmark for an artifact-backed policy:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h9-transformer-inference-policy-search/code/run_h9_vllm_benchmark.py \
+  --policy-name llama31_8b_awq_artifact \
+  --smoke \
+  --repeats 1 \
+  --warmup-runs 0 \
   --hardware-label rtx3090-lab
 ```
 
