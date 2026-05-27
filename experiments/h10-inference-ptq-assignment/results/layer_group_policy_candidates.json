@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-05-27T18:32:31.814263+00:00",
+  "generated_at_utc": "2026-05-27T20:35:24.213412+00:00",
   "model_name": "meta-llama/Llama-3.1-8B-Instruct",
   "runtime": "transformers_torchao_layer_group",
   "profile": "h10_layer_group_backend",
@@ -99,7 +99,7 @@
     },
     {
       "policy_name": "h10_lg_late_gate_up_int4wo_g128",
-      "description": "TorchAO FqnToConfig policy that applies int4 weight-only group-128 quantization to late-layer MLP gate/up projections.",
+      "description": "TorchAO FqnToConfig policy that applies int4 weight-only group-128 quantization to late-layer MLP gate/up projections with fp16 default dtype.",
       "expected_role": "layer_group_mixed_precision_candidate",
       "llm_kwargs": {
         "torch_dtype": "float16",
@@ -122,6 +122,36 @@
       },
       "search_tags": {
         "dtype": "float16",
+        "quantization": "int4_weight_only",
+        "runtime_mode": "transformers",
+        "layer_group_backend": "torchao_fqn_to_config"
+      }
+    },
+    {
+      "policy_name": "h10_lg_late_gate_up_int4wo_g128_bf16",
+      "description": "TorchAO FqnToConfig policy that applies int4 weight-only group-128 quantization to late-layer MLP gate/up projections with bf16 default dtype. This variant targets the MSLK/TorchAO scale-dtype requirement.",
+      "expected_role": "layer_group_mixed_precision_candidate",
+      "llm_kwargs": {
+        "torch_dtype": "bfloat16",
+        "trust_remote_code": true
+      },
+      "layer_group_policy": {
+        "backend": "torchao_fqn_to_config",
+        "default_precision": "bfloat16",
+        "selection_source": "starter_backend_policy_from_h6_h7_gate_up_low_risk_pattern",
+        "groups": [
+          {
+            "group_name": "late_mlp_gate_up_layers_24_31",
+            "module_regex": "model\\.layers\\.(2[4-9]|3[0-1])\\.mlp\\.(gate_proj|up_proj)",
+            "config": {
+              "type": "int4_weight_only",
+              "group_size": 128
+            }
+          }
+        ]
+      },
+      "search_tags": {
+        "dtype": "bfloat16",
         "quantization": "int4_weight_only",
         "runtime_mode": "transformers",
         "layer_group_backend": "torchao_fqn_to_config"

@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -52,7 +53,8 @@ def parse_bool(value: str) -> bool:
 def parse_float(value: str | None) -> float | None:
     if value is None or value == "":
         return None
-    return float(value)
+    parsed = float(value)
+    return parsed if math.isfinite(parsed) else None
 
 
 def load_rows(path: Path) -> list[dict[str, Any]]:

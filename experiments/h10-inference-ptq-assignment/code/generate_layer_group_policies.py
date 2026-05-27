@@ -146,9 +146,22 @@ def candidate_policies() -> list[dict[str, Any]]:
             name="h10_lg_late_gate_up_int4wo_g128",
             description=(
                 "TorchAO FqnToConfig policy that applies int4 weight-only group-128 "
-                "quantization to late-layer MLP gate/up projections."
+                "quantization to late-layer MLP gate/up projections with fp16 default dtype."
             ),
             dtype="float16",
+            config={"type": "int4_weight_only", "group_size": 128},
+            module_regex=late_gate_up_regex,
+            group_name="late_mlp_gate_up_layers_24_31",
+            selection_source="starter_backend_policy_from_h6_h7_gate_up_low_risk_pattern",
+        ),
+        layer_group_policy(
+            name="h10_lg_late_gate_up_int4wo_g128_bf16",
+            description=(
+                "TorchAO FqnToConfig policy that applies int4 weight-only group-128 "
+                "quantization to late-layer MLP gate/up projections with bf16 default dtype. "
+                "This variant targets the MSLK/TorchAO scale-dtype requirement."
+            ),
+            dtype="bfloat16",
             config={"type": "int4_weight_only", "group_size": 128},
             module_regex=late_gate_up_regex,
             group_name="late_mlp_gate_up_layers_24_31",
