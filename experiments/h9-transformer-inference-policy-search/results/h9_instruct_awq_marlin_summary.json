@@ -1,0 +1,498 @@
+{
+  "results_dir": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_benchmarks",
+  "baseline_policy": "bf16_default",
+  "n_artifacts": 3,
+  "n_completed_policy_workloads": 9,
+  "n_failed_policies": 0,
+  "n_quality_artifacts": 3,
+  "completed": [
+    {
+      "policy_name": "bf16_default",
+      "workload_name": "decode_heavy",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 2.638710167569419,
+        "stdev": 0.0025970646212791146,
+        "min": 2.636917946860194,
+        "max": 2.6416885131038725
+      },
+      "output_tokens_per_sec": {
+        "mean": 48.50857975618828,
+        "stdev": 0.04771753096824235,
+        "min": 48.453857964353794,
+        "max": 48.54151800681206
+      },
+      "total_tokens_per_sec": {
+        "mean": 54.193178946366594,
+        "stdev": 0.05330942912858323,
+        "min": 54.132044444551504,
+        "max": 54.22997714823535
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.87933349609375,
+        "stdev": 0.0,
+        "min": 21.87933349609375,
+        "max": 21.87933349609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_benchmarks/bf16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.0,
+        "output_tokens_per_sec_percent": -0.0,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.0
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6416391088388742,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_quality/bf16_default/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "fp16_default",
+      "workload_name": "decode_heavy",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 2.6305788250950477,
+        "stdev": 0.0006410543226755344,
+        "min": 2.629890074953437,
+        "max": 2.631158079020679
+      },
+      "output_tokens_per_sec": {
+        "mean": 48.65849441456003,
+        "stdev": 0.011858466090556881,
+        "min": 48.64778023813825,
+        "max": 48.67123581287567
+      },
+      "total_tokens_per_sec": {
+        "mean": 54.36066172876628,
+        "stdev": 0.01324813008554242,
+        "min": 54.34869198479508,
+        "max": 54.37489625969704
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.87933349609375,
+        "stdev": 0.0,
+        "min": 21.87933349609375,
+        "max": 21.87933349609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_benchmarks/fp16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -0.3081559534013232,
+        "output_tokens_per_sec_percent": -0.3090477171775458,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.009738261474567193
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.641701593333016,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_quality/fp16_default/quality.json"
+      },
+      "pareto_non_dominated": true
+    },
+    {
+      "policy_name": "llama31_8b_instruct_awq_marlin_artifact",
+      "workload_name": "decode_heavy",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "/nfs/home/s314511048/mixed_precision/models/hf_quantized/hugging-quants__Meta-Llama-3.1-8B-Instruct-AWQ-INT4",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.9988569573809704,
+        "stdev": 0.005357161147064164,
+        "min": 0.994282865896821,
+        "max": 1.0047505861148238
+      },
+      "output_tokens_per_sec": {
+        "mean": 128.1489297943941,
+        "stdev": 0.6860294618654152,
+        "min": 127.39480003186785,
+        "max": 128.73600098151832
+      },
+      "total_tokens_per_sec": {
+        "mean": 143.16638250467466,
+        "stdev": 0.7664235394277628,
+        "min": 142.32387816060236,
+        "max": 143.82225109654
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.93402099609375,
+        "stdev": 0.0,
+        "min": 21.93402099609375,
+        "max": 21.93402099609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_benchmarks/llama31_8b_instruct_awq_marlin_artifact/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -62.14601475913354,
+        "output_tokens_per_sec_percent": -164.17786387169173,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.24995048413958174,
+        "prompt_nll_percent": 2.851376934251417
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6599346583894422,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_quality/llama31_8b_instruct_awq_marlin_artifact/quality.json"
+      },
+      "pareto_non_dominated": true
+    },
+    {
+      "policy_name": "bf16_default",
+      "workload_name": "mixed",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 1.3863217867910862,
+        "stdev": 0.002794736226965358,
+        "min": 1.3834004011005163,
+        "max": 1.3889697790145874
+      },
+      "output_tokens_per_sec": {
+        "mean": 138.49635934148307,
+        "stdev": 0.27928217520459864,
+        "min": 138.23194924817983,
+        "max": 138.78845188078668
+      },
+      "total_tokens_per_sec": {
+        "mean": 354.1755856076468,
+        "stdev": 0.7142059792992475,
+        "min": 353.4994118794599,
+        "max": 354.92255142430344
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.88128662109375,
+        "stdev": 0.0,
+        "min": 21.88128662109375,
+        "max": 21.88128662109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_benchmarks/bf16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.0,
+        "output_tokens_per_sec_percent": -0.0,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.0
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6416391088388742,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_quality/bf16_default/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "fp16_default",
+      "workload_name": "mixed",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 1.374337699264288,
+        "stdev": 0.002435774013920218,
+        "min": 1.3719257568009198,
+        "max": 1.3767966250889003
+      },
+      "output_tokens_per_sec": {
+        "mean": 139.70394768996343,
+        "stdev": 0.24758859223990232,
+        "min": 139.45414776681523,
+        "max": 139.94926405325964
+      },
+      "total_tokens_per_sec": {
+        "mean": 357.2637412279794,
+        "stdev": 0.6331562436968547,
+        "min": 356.6249299661785,
+        "max": 357.8910867195338
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.88128662109375,
+        "stdev": 0.0,
+        "min": 21.88128662109375,
+        "max": 21.88128662109375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_benchmarks/fp16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -0.8644520803887653,
+        "output_tokens_per_sec_percent": -0.8719278645461509,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.009738261474567193
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.641701593333016,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_quality/fp16_default/quality.json"
+      },
+      "pareto_non_dominated": true
+    },
+    {
+      "policy_name": "llama31_8b_instruct_awq_marlin_artifact",
+      "workload_name": "mixed",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "/nfs/home/s314511048/mixed_precision/models/hf_quantized/hugging-quants__Meta-Llama-3.1-8B-Instruct-AWQ-INT4",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.5176826366223395,
+        "stdev": 0.0022353084763289746,
+        "min": 0.5158143718726933,
+        "max": 0.5201591029763222
+      },
+      "output_tokens_per_sec": {
+        "mean": 370.8882026298601,
+        "stdev": 1.5988624055901421,
+        "min": 369.11783125852537,
+        "max": 372.22692982154246
+      },
+      "total_tokens_per_sec": {
+        "mean": 948.4693098503192,
+        "stdev": 4.08875750596225,
+        "min": 943.9419538954998,
+        "max": 951.8928257415486
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.93402099609375,
+        "stdev": 0.0,
+        "min": 21.93402099609375,
+        "max": 21.93402099609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_benchmarks/llama31_8b_instruct_awq_marlin_artifact/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -62.65783012610532,
+        "output_tokens_per_sec_percent": -167.79635536511168,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.24100216734587995,
+        "prompt_nll_percent": 2.851376934251417
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6599346583894422,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_quality/llama31_8b_instruct_awq_marlin_artifact/quality.json"
+      },
+      "pareto_non_dominated": true
+    },
+    {
+      "policy_name": "bf16_default",
+      "workload_name": "prefill_heavy",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.3393690347050627,
+        "stdev": 0.001818985163078988,
+        "min": 0.3376113143749535,
+        "max": 0.3412436465732753
+      },
+      "output_tokens_per_sec": {
+        "mean": 47.14721925948904,
+        "stdev": 0.2525781032339411,
+        "min": 46.887319839270084,
+        "max": 47.39177663409197
+      },
+      "total_tokens_per_sec": {
+        "mean": 3353.345969831158,
+        "stdev": 17.964617592514255,
+        "min": 3334.8606235680845,
+        "max": 3370.7401130997914
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.87933349609375,
+        "stdev": 0.0,
+        "min": 21.87933349609375,
+        "max": 21.87933349609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_benchmarks/bf16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.0,
+        "output_tokens_per_sec_percent": -0.0,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.0
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6416391088388742,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_quality/bf16_default/quality.json"
+      },
+      "pareto_non_dominated": true
+    },
+    {
+      "policy_name": "fp16_default",
+      "workload_name": "prefill_heavy",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.33959625847637653,
+        "stdev": 0.0022733157706109155,
+        "min": 0.3380540432408452,
+        "max": 0.34220697032287717
+      },
+      "output_tokens_per_sec": {
+        "mean": 47.116173568991044,
+        "stdev": 0.31424897000414387,
+        "min": 46.7553305092055,
+        "max": 47.329710500166584
+      },
+      "total_tokens_per_sec": {
+        "mean": 3351.137845094488,
+        "stdev": 22.35095799154478,
+        "min": 3325.472882467241,
+        "max": 3366.325659324348
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.87933349609375,
+        "stdev": 0.0,
+        "min": 21.87933349609375,
+        "max": 21.87933349609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_benchmarks/fp16_default/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": 0.06695477432445165,
+        "output_tokens_per_sec_percent": 0.06584840205978602,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.0,
+        "prompt_nll_percent": 0.009738261474567193
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.641701593333016,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_quality/fp16_default/quality.json"
+      },
+      "pareto_non_dominated": false
+    },
+    {
+      "policy_name": "llama31_8b_instruct_awq_marlin_artifact",
+      "workload_name": "prefill_heavy",
+      "status": "completed",
+      "hardware_label": "rtx3090-lab",
+      "model_name": "/nfs/home/s314511048/mixed_precision/models/hf_quantized/hugging-quants__Meta-Llama-3.1-8B-Instruct-AWQ-INT4",
+      "runtime": "vllm",
+      "n_runs": 3,
+      "latency_sec": {
+        "mean": 0.14031779036546746,
+        "stdev": 0.010621783668900663,
+        "min": 0.13251159992069006,
+        "max": 0.15241355495527387
+      },
+      "output_tokens_per_sec": {
+        "mean": 114.44811374354629,
+        "stdev": 8.348937496900776,
+        "min": 104.97753959413413,
+        "max": 120.74414624513032
+      },
+      "total_tokens_per_sec": {
+        "mean": 8140.12209000973,
+        "stdev": 593.818179467068,
+        "min": 7466.527503632789,
+        "max": 8587.927401684894
+      },
+      "peak_reserved_gib": {
+        "mean": 0.0,
+        "stdev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "used_gib_from_mem_get_info": {
+        "mean": 21.93402099609375,
+        "stdev": 0.0,
+        "min": 21.93402099609375,
+        "max": 21.93402099609375
+      },
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_benchmarks/llama31_8b_instruct_awq_marlin_artifact/benchmark.json",
+      "delta_vs_baseline": {
+        "latency_percent": -58.653331324876405,
+        "output_tokens_per_sec_percent": -142.74626487226388,
+        "peak_reserved_gib_percent": null,
+        "used_gib_from_mem_get_info_percent": 0.24995048413958174,
+        "prompt_nll_percent": 2.851376934251417
+      },
+      "quality": {
+        "status": "completed",
+        "mean_prompt_nll": 0.6599346583894422,
+        "tokens_scored": 1202,
+        "artifact_path": "experiments/h9-transformer-inference-policy-search/results/instruct_awq_marlin_quality/llama31_8b_instruct_awq_marlin_artifact/quality.json"
+      },
+      "pareto_non_dominated": true
+    }
+  ],
+  "failures": [],
+  "note": "Quality metrics are included when quality artifacts exist. Pareto marking uses latency, output throughput, and memory; memory falls back to cuda mem_get_info used GiB when PyTorch allocator stats do not capture vLLM worker allocations."
+}

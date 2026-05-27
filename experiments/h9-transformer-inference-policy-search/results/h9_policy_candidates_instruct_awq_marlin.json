@@ -1,0 +1,331 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-27T13:13:44.803806+00:00",
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "runtime": "vllm",
+  "profile": "h9_1_default",
+  "search_objective": "pareto_latency_memory_quality",
+  "candidate_policies": [
+    {
+      "policy_name": "bf16_default",
+      "description": "Default bf16 vLLM baseline with automatic KV-cache dtype.",
+      "expected_role": "baseline",
+      "llm_kwargs": {
+        "dtype": "bfloat16",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "bfloat16",
+        "quantization": "none",
+        "kv_cache_dtype": "auto",
+        "runtime_mode": "default"
+      }
+    },
+    {
+      "policy_name": "fp16_default",
+      "description": "Default fp16 vLLM baseline with automatic KV-cache dtype.",
+      "expected_role": "baseline",
+      "llm_kwargs": {
+        "dtype": "float16",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "none",
+        "kv_cache_dtype": "auto",
+        "runtime_mode": "default"
+      }
+    },
+    {
+      "policy_name": "bf16_kv_fp8_e4m3",
+      "description": "bf16 model weights with FP8 E4M3 KV cache if supported.",
+      "expected_role": "kv_cache_memory_candidate",
+      "llm_kwargs": {
+        "dtype": "bfloat16",
+        "kv_cache_dtype": "fp8_e4m3",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "bfloat16",
+        "quantization": "none",
+        "kv_cache_dtype": "fp8_e4m3",
+        "runtime_mode": "default"
+      }
+    },
+    {
+      "policy_name": "fp16_kv_fp8_e4m3",
+      "description": "fp16 model weights with FP8 E4M3 KV cache if supported.",
+      "expected_role": "kv_cache_memory_candidate",
+      "llm_kwargs": {
+        "dtype": "float16",
+        "kv_cache_dtype": "fp8_e4m3",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "none",
+        "kv_cache_dtype": "fp8_e4m3",
+        "runtime_mode": "default"
+      }
+    },
+    {
+      "policy_name": "bf16_kv_fp8",
+      "description": "bf16 model weights with vLLM generic FP8 KV cache if supported.",
+      "expected_role": "kv_cache_memory_candidate",
+      "llm_kwargs": {
+        "dtype": "bfloat16",
+        "kv_cache_dtype": "fp8",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "bfloat16",
+        "quantization": "none",
+        "kv_cache_dtype": "fp8",
+        "runtime_mode": "default"
+      }
+    },
+    {
+      "policy_name": "fp16_kv_fp8",
+      "description": "fp16 model weights with vLLM generic FP8 KV cache if supported.",
+      "expected_role": "kv_cache_memory_candidate",
+      "llm_kwargs": {
+        "dtype": "float16",
+        "kv_cache_dtype": "fp8",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "none",
+        "kv_cache_dtype": "fp8",
+        "runtime_mode": "default"
+      }
+    },
+    {
+      "policy_name": "fp16_bitsandbytes",
+      "description": "vLLM bitsandbytes quantization path with fp16 compute dtype.",
+      "expected_role": "weight_quantization_candidate",
+      "llm_kwargs": {
+        "dtype": "float16",
+        "quantization": "bitsandbytes",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "bitsandbytes",
+        "kv_cache_dtype": "auto",
+        "runtime_mode": "default"
+      }
+    },
+    {
+      "policy_name": "fp16_torchao",
+      "description": "vLLM torchao quantization path placeholder; requires an explicit torchao_config before benchmarking.",
+      "expected_role": "requires_backend_config",
+      "llm_kwargs": {
+        "dtype": "float16",
+        "quantization": "torchao",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "torchao",
+        "kv_cache_dtype": "auto",
+        "runtime_mode": "default"
+      }
+    },
+    {
+      "policy_name": "fp16_torchao_int8wo",
+      "description": "vLLM TorchAO int8 weight-only online quantization with fp16 activation dtype.",
+      "expected_role": "weight_quantization_candidate",
+      "llm_kwargs": {
+        "dtype": "float16",
+        "quantization": "torchao",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true,
+        "hf_overrides": {
+          "quantization_config_dict_json": "{\"_type\": \"Int8WeightOnlyConfig\", \"_version\": 1, \"_data\": {\"group_size\": null, \"granularity\": {\"_type\": \"PerRow\", \"_version\": 1, \"_data\": {\"dim\": -1}}, \"set_inductor_config\": true}}"
+        }
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "torchao",
+        "kv_cache_dtype": "auto",
+        "runtime_mode": "default"
+      }
+    },
+    {
+      "policy_name": "fp16_torchao_int8dyn_int8w",
+      "description": "vLLM TorchAO int8 dynamic-activation/int8-weight online quantization with fp16 dtype.",
+      "expected_role": "weight_quantization_candidate",
+      "llm_kwargs": {
+        "dtype": "float16",
+        "quantization": "torchao",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true,
+        "hf_overrides": {
+          "quantization_config_dict_json": "{\"_type\": \"Int8DynamicActivationInt8WeightConfig\", \"_version\": 1, \"_data\": {\"layout\": {\"_type\": \"PlainLayout\", \"_version\": 1, \"_data\": {}}, \"act_mapping_type\": {\"_type\": \"MappingType\", \"_data\": \"SYMMETRIC\"}, \"weight_only_decode\": false, \"granularity\": {\"_type\": \"PerRow\", \"_version\": 1, \"_data\": {\"dim\": -1}}, \"set_inductor_config\": true}}"
+        }
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "torchao",
+        "kv_cache_dtype": "auto",
+        "runtime_mode": "default"
+      }
+    },
+    {
+      "policy_name": "fp16_torchao_int4wo_g128",
+      "description": "vLLM TorchAO int4 weight-only online quantization with group size 128 and fp16 activation dtype.",
+      "expected_role": "weight_quantization_candidate",
+      "llm_kwargs": {
+        "dtype": "float16",
+        "quantization": "torchao",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true,
+        "hf_overrides": {
+          "quantization_config_dict_json": "{\"_type\": \"Int4WeightOnlyConfig\", \"_version\": 2, \"_data\": {\"group_size\": 128, \"set_inductor_config\": true, \"int4_packing_format\": {\"_type\": \"Int4PackingFormat\", \"_data\": \"PLAIN\"}, \"int4_choose_qparams_algorithm\": {\"_type\": \"Int4ChooseQParamsAlgorithm\", \"_data\": \"TINYGEMM\"}}}"
+        }
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "torchao",
+        "kv_cache_dtype": "auto",
+        "runtime_mode": "default"
+      }
+    },
+    {
+      "policy_name": "bf16_eager",
+      "description": "bf16 eager-mode control for separating compile/runtime effects.",
+      "expected_role": "diagnostic_control",
+      "llm_kwargs": {
+        "dtype": "bfloat16",
+        "enforce_eager": true,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "bfloat16",
+        "quantization": "none",
+        "kv_cache_dtype": "auto",
+        "runtime_mode": "eager"
+      }
+    },
+    {
+      "policy_name": "fp16_eager",
+      "description": "fp16 eager-mode control for separating compile/runtime effects.",
+      "expected_role": "diagnostic_control",
+      "llm_kwargs": {
+        "dtype": "float16",
+        "enforce_eager": true,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "none",
+        "kv_cache_dtype": "auto",
+        "runtime_mode": "eager"
+      }
+    },
+    {
+      "policy_name": "llama31_8b_instruct_awq_marlin_artifact",
+      "model_name": "/nfs/home/s314511048/mixed_precision/models/hf_quantized/hugging-quants__Meta-Llama-3.1-8B-Instruct-AWQ-INT4",
+      "description": "Artifact-backed AWQ-Marlin policy for Llama-3.1-8B-Instruct AWQ.",
+      "expected_role": "artifact_backed_quantization_candidate",
+      "llm_kwargs": {
+        "dtype": "float16",
+        "quantization": "awq_marlin",
+        "enforce_eager": false,
+        "gpu_memory_utilization": 0.88,
+        "max_model_len": 4096,
+        "block_size": 16,
+        "trust_remote_code": true
+      },
+      "search_tags": {
+        "dtype": "float16",
+        "quantization": "awq_marlin",
+        "kv_cache_dtype": "auto",
+        "runtime_mode": "default",
+        "artifact_backed": "true"
+      },
+      "artifact_notes": "Same AWQ artifact as llama31_8b_instruct_awq_artifact, using vLLM awq_marlin backend."
+    }
+  ],
+  "workloads": [
+    {
+      "name": "prefill_heavy",
+      "max_tokens": 16,
+      "prompts": [
+        "Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. "
+      ],
+      "description": "Long prompt and short generation; prefill-dominated latency proxy."
+    },
+    {
+      "name": "decode_heavy",
+      "max_tokens": 128,
+      "prompts": [
+        "Explain hardware-aware mixed precision for LLM serving in one paragraph."
+      ],
+      "description": "Short prompt and long generation; decode-throughput proxy."
+    },
+    {
+      "name": "mixed",
+      "max_tokens": 64,
+      "prompts": [
+        "Define KV cache quantization.",
+        "Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. Summarize the following technical context for a systems researcher. Transformer inference has separate prefill and decode phases. Prefill is dominated by processing the prompt through attention and MLP blocks, while decode repeatedly reads and updates the KV cache. Precision choices for model weights, activations, attention kernels, and KV cache can change latency, memory, and output quality. ",
+        "List two risks of low-precision attention."
+      ],
+      "description": "Small varied batch mixing prompt and generation lengths."
+    }
+  ],
+  "notes": [
+    "Policies are launch configurations, not claims of support.",
+    "Run inspect_h9_backend_inventory.py before benchmarking.",
+    "A policy is reportable only after vLLM instantiates it on the target hardware."
+  ]
+}

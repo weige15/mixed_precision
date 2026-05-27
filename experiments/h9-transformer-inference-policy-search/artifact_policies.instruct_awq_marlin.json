@@ -1,0 +1,13 @@
+  {
+    "artifact_policies": [
+      {
+        "policy_name": "llama31_8b_instruct_awq_marlin_artifact",
+        "model_name": "/nfs/home/s314511048/mixed_precision/models/hf_quantized/hugging-quants__Meta-Llama-3.1-8B-Instruct-AWQ-INT4",
+        "quantization": "awq_marlin",
+        "dtype": "float16",
+        "expected_role": "artifact_backed_quantization_candidate",
+        "description": "Artifact-backed AWQ-Marlin policy for Llama-3.1-8B-Instruct AWQ.",
+        "notes": "Same AWQ artifact as llama31_8b_instruct_awq_artifact, using vLLM awq_marlin backend."
+      }
+    ]
+  }

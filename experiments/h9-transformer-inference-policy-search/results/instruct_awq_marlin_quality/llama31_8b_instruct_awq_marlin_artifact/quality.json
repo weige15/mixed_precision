@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-27T13:20:07.059913+00:00",
+  "status": "completed",
+  "policy_name": "llama31_8b_instruct_awq_marlin_artifact",
+  "policy": {
+    "policy_name": "llama31_8b_instruct_awq_marlin_artifact",
+    "model_name": "/nfs/home/s314511048/mixed_precision/models/hf_quantized/hugging-quants__Meta-Llama-3.1-8B-Instruct-AWQ-INT4",
+    "description": "Artifact-backed AWQ-Marlin policy for Llama-3.1-8B-Instruct AWQ.",
+    "expected_role": "artifact_backed_quantization_candidate",
+    "llm_kwargs": {
+      "dtype": "float16",
+      "quantization": "awq_marlin",
+      "enforce_eager": false,
+      "gpu_memory_utilization": 0.88,
+      "max_model_len": 4096,
+      "block_size": 16,
+      "trust_remote_code": true
+    },
+    "search_tags": {
+      "dtype": "float16",
+      "quantization": "awq_marlin",
+      "kv_cache_dtype": "auto",
+      "runtime_mode": "default",
+      "artifact_backed": "true"
+    },
+    "artifact_notes": "Same AWQ artifact as llama31_8b_instruct_awq_artifact, using vLLM awq_marlin backend."
+  },
+  "model_name": "/nfs/home/s314511048/mixed_precision/models/hf_quantized/hugging-quants__Meta-Llama-3.1-8B-Instruct-AWQ-INT4",
+  "baseline_model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "runtime": "vllm",
+  "hardware_label": "rtx3090-lab",
+  "seed": 42,
+  "num_prompts": 6,
+  "quality_batch_size": 1,
+  "gpu_memory_utilization_override": 0.78,
+  "cuda_visible_devices": "6",
+  "load_time_sec": 42.51282854611054,
+  "quality_time_sec": 4.959733922034502,
+  "prompt_results": [
+    {
+      "prompt_indices": [
+        0
+      ],
+      "prompt_chars": [
+        104
+      ],
+      "quality_time_sec": 4.538147483021021,
+      "mean_prompt_nll": 5.036039063159158,
+      "tokens_scored": 17,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        1
+      ],
+      "prompt_chars": [
+        122
+      ],
+      "quality_time_sec": 0.020400980953127146,
+      "mean_prompt_nll": 4.480020245575967,
+      "tokens_scored": 24,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        2
+      ],
+      "prompt_chars": [
+        111
+      ],
+      "quality_time_sec": 0.01918561616912484,
+      "mean_prompt_nll": 6.222376456856727,
+      "tokens_scored": 20,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        3
+      ],
+      "prompt_chars": [
+        6336
+      ],
+      "quality_time_sec": 0.3530301940627396,
+      "mean_prompt_nll": 0.30541462810664843,
+      "tokens_scored": 1121,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        4
+      ],
+      "prompt_chars": [
+        72
+      ],
+      "quality_time_sec": 0.01480472320690751,
+      "mean_prompt_nll": 6.112617717257568,
+      "tokens_scored": 14,
+      "tokens_missing_logprob": 0
+    },
+    {
+      "prompt_indices": [
+        5
+      ],
+      "prompt_chars": [
+        29
+      ],
+      "quality_time_sec": 0.014130436815321445,
+      "mean_prompt_nll": 7.952389021714528,
+      "tokens_scored": 6,
+      "tokens_missing_logprob": 0
+    }
+  ],
+  "mean_prompt_nll": 0.6599346583894422,
+  "tokens_scored": 1202,
+  "tokens_missing_logprob": 0
+}
