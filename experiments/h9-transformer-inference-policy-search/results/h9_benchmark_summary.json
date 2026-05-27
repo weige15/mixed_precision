@@ -1,9 +1,9 @@
 {
   "results_dir": "experiments/h9-transformer-inference-policy-search/results/benchmarks",
   "baseline_policy": "bf16_default",
-  "n_artifacts": 10,
+  "n_artifacts": 13,
   "n_completed_policy_workloads": 21,
-  "n_failed_policies": 1,
+  "n_failed_policies": 4,
   "n_quality_artifacts": 7,
   "completed": [
     {
@@ -1146,7 +1146,33 @@
       "policy_name": "fp16_torchao",
       "hardware_label": "rtx3090-lab",
       "error": "Invalid H9 policy: vLLM torchao quantization requires an explicit torchao_config; skip fp16_torchao until a concrete torchao_config is added.",
+      "known_failure": null,
+      "failure_interpretation": null,
       "artifact_path": "experiments/h9-transformer-inference-policy-search/results/benchmarks/fp16_torchao/benchmark.json"
+    },
+    {
+      "policy_name": "fp16_torchao_int4wo_g128",
+      "hardware_label": "rtx3090-lab",
+      "error": "RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}",
+      "known_failure": null,
+      "failure_interpretation": null,
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/benchmarks/fp16_torchao_int4wo_g128/benchmark.json"
+    },
+    {
+      "policy_name": "fp16_torchao_int8dyn_int8w",
+      "hardware_label": "rtx3090-lab",
+      "error": "RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}",
+      "known_failure": null,
+      "failure_interpretation": null,
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/benchmarks/fp16_torchao_int8dyn_int8w/benchmark.json"
+    },
+    {
+      "policy_name": "fp16_torchao_int8wo",
+      "hardware_label": "rtx3090-lab",
+      "error": "RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}",
+      "known_failure": null,
+      "failure_interpretation": null,
+      "artifact_path": "experiments/h9-transformer-inference-policy-search/results/benchmarks/fp16_torchao_int8wo/benchmark.json"
     }
   ],
   "note": "Quality metrics are included when quality artifacts exist. Pareto marking uses latency, output throughput, and memory; memory falls back to cuda mem_get_info used GiB when PyTorch allocator stats do not capture vLLM worker allocations."

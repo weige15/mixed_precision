@@ -308,6 +308,54 @@
     "failure_reason": "Invalid H9 policy: vLLM torchao quantization requires an explicit torchao_config; skip fp16_torchao until a concrete torchao_config is added."
   },
   {
+    "candidate_action": "fp16_torchao_int4wo_g128",
+    "workload_name": "",
+    "backend_feasible": false,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "backend_infeasible",
+      "missing_quality",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": null,
+    "latency_delta_pct_vs_bf16": null,
+    "output_tokens_per_sec_delta_pct_vs_bf16": null,
+    "memory_delta_gib_vs_bf16": null,
+    "failure_reason": "RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}"
+  },
+  {
+    "candidate_action": "fp16_torchao_int8dyn_int8w",
+    "workload_name": "",
+    "backend_feasible": false,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "backend_infeasible",
+      "missing_quality",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": null,
+    "latency_delta_pct_vs_bf16": null,
+    "output_tokens_per_sec_delta_pct_vs_bf16": null,
+    "memory_delta_gib_vs_bf16": null,
+    "failure_reason": "RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}"
+  },
+  {
+    "candidate_action": "fp16_torchao_int8wo",
+    "workload_name": "",
+    "backend_feasible": false,
+    "accepted_before_pareto": false,
+    "rejection_reasons": [
+      "backend_infeasible",
+      "missing_quality",
+      "no_deployment_metric_improves"
+    ],
+    "predicted_quality_risk": null,
+    "latency_delta_pct_vs_bf16": null,
+    "output_tokens_per_sec_delta_pct_vs_bf16": null,
+    "memory_delta_gib_vs_bf16": null,
+    "failure_reason": "RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}"
+  },
+  {
     "candidate_action": "bf16_default",
     "workload_name": "batch_mixed_long",
     "backend_feasible": true,
