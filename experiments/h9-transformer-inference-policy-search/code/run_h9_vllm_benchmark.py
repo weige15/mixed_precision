@@ -17,6 +17,7 @@ from typing import Any
 
 DEFAULT_POLICIES = Path("experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates.json")
 DEFAULT_OUTPUT_DIR = Path("experiments/h9-transformer-inference-policy-search/results/benchmarks")
+DEFAULT_RUNTIME_CACHE_DIR = Path("tmp/h9_vllm_runtime_cache")
 
 
 def parse_args() -> argparse.Namespace:
@@ -30,8 +31,31 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--warmup-runs", type=int, default=1)
     parser.add_argument("--workload-name", action="append", default=[], help="Run only selected workload name(s) from the policy grid.")
     parser.add_argument("--smoke", action="store_true", help="Use one tiny prompt/workload for fast policy instantiation checks.")
+    parser.add_argument(
+        "--runtime-cache-dir",
+        type=Path,
+        default=DEFAULT_RUNTIME_CACHE_DIR,
+        help="Repo-local cache/temp root for TorchInductor, Triton, CUDA, XDG, and compiler TMPDIR.",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Write the planned benchmark configs without loading vLLM.")
     return parser.parse_args()
+
+
+def configure_runtime_cache(runtime_cache_dir: Path | None) -> None:
+    if runtime_cache_dir is None:
+        return
+    runtime_cache = runtime_cache_dir.expanduser().resolve()
+    runtime_cache.mkdir(parents=True, exist_ok=True)
+    for child in ["tmp", "torchinductor", "triton", "cuda", "xdg", "vllm"]:
+        (runtime_cache / child).mkdir(parents=True, exist_ok=True)
+    os.environ["TMPDIR"] = str(runtime_cache / "tmp")
+    os.environ["TEMP"] = str(runtime_cache / "tmp")
+    os.environ["TMP"] = str(runtime_cache / "tmp")
+    os.environ["TORCHINDUCTOR_CACHE_DIR"] = str(runtime_cache / "torchinductor")
+    os.environ["TRITON_CACHE_DIR"] = str(runtime_cache / "triton")
+    os.environ["CUDA_CACHE_PATH"] = str(runtime_cache / "cuda")
+    os.environ["XDG_CACHE_HOME"] = str(runtime_cache / "xdg")
+    os.environ["VLLM_CACHE_ROOT"] = str(runtime_cache / "vllm")
 
 
 def load_policy_grid(path: Path) -> dict[str, Any]:
@@ -300,6 +324,7 @@ def run_policy(
 
 def main() -> None:
     args = parse_args()
+    configure_runtime_cache(args.runtime_cache_dir)
     grid = load_policy_grid(args.policies)
     policies = select_policies(grid, args.policy_name)
     workloads = smoke_workloads() if args.smoke else select_workloads(grid.get("workloads", []), args.workload_name)
