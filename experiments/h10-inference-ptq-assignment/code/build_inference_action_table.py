@@ -53,7 +53,25 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--h9-summary", type=Path, default=DEFAULT_H9_SUMMARY)
     parser.add_argument("--h9-long-summary", type=Path, default=DEFAULT_H9_LONG_SUMMARY)
+    parser.add_argument(
+        "--extra-h9-summary",
+        action="append",
+        default=[],
+        metavar="LABEL=PATH",
+        help=(
+            "Additional H9 summary to ingest, for example "
+            "h9_instruct_awq_marlin=experiments/.../h9_instruct_awq_marlin_summary.json. "
+            "May be repeated."
+        ),
+    )
     parser.add_argument("--policy-candidates", type=Path, default=DEFAULT_POLICY_CANDIDATES)
+    parser.add_argument(
+        "--extra-policy-candidates",
+        action="append",
+        default=[],
+        type=Path,
+        help="Additional H9 policy-candidate JSON files needed by extra summaries. May be repeated.",
+    )
     parser.add_argument("--backend-inventory", type=Path, default=DEFAULT_BACKEND_INVENTORY)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
@@ -96,6 +114,24 @@ def policy_map(policy_candidates: dict[str, Any]) -> dict[str, dict[str, Any]]:
         for policy in policy_candidates.get("candidate_policies", [])
         if policy.get("policy_name")
     }
+
+
+def merge_policy_maps(policy_candidate_payloads: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    policies: dict[str, dict[str, Any]] = {}
+    for payload in policy_candidate_payloads:
+        policies.update(policy_map(payload))
+    return policies
+
+
+def parse_extra_summary(value: str) -> tuple[str, Path]:
+    if "=" not in value:
+        path = Path(value)
+        return (path.stem, path)
+    label, raw_path = value.split("=", 1)
+    label = label.strip()
+    if not label:
+        raise SystemExit(f"Invalid --extra-h9-summary label in {value!r}")
+    return (label, Path(raw_path))
 
 
 def backend_for_policy(policy: dict[str, Any] | None) -> str:
@@ -294,16 +330,21 @@ def main() -> None:
     args = parse_args()
     h9_summary = load_json(args.h9_summary)
     h9_long_summary = load_json(args.h9_long_summary)
-    policy_candidates = load_json(args.policy_candidates)
+    policy_candidate_payloads = [load_json(args.policy_candidates)]
+    policy_candidate_payloads.extend(load_json(path) for path in args.extra_policy_candidates)
     backend_inventory = load_json(args.backend_inventory)
-    policies = policy_map(policy_candidates)
+    policies = merge_policy_maps(policy_candidate_payloads)
     inventory_reasons = load_inventory_reasons(backend_inventory)
+    policy_candidates = policy_candidate_payloads[0]
     default_model_name = str(policy_candidates.get("model_name") or backend_inventory.get("model_name") or "")
+    summaries = [
+        ("h9_1_default", h9_summary),
+        ("h9_2_long_context", h9_long_summary),
+    ]
+    for label, path in [parse_extra_summary(value) for value in args.extra_h9_summary]:
+        summaries.append((label, load_json(path)))
     rows = build_rows(
-        [
-            ("h9_1_default", h9_summary),
-            ("h9_2_long_context", h9_long_summary),
-        ],
+        summaries,
         policies,
         inventory_reasons,
         default_model_name,
