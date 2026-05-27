@@ -134,6 +134,27 @@ This complements prompt-NLL scoring with a small deterministic exact-match
 screen. Treat it as a regression check, not a replacement for a full downstream
 benchmark suite.
 
+If the RTX 3090 host is occupied, an A100 run is acceptable as a separate
+hardware stratum. Do not mix A100 latency or memory numbers with the RTX 3090
+claim. For A100, write into a separate run label and compare GPTQ-Marlin only
+against A100 bf16/fp16 outputs:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h10-inference-ptq-assignment/code/run_h10_task_quality.py \
+  --policies experiments/h9-transformer-inference-policy-search/results/h9_policy_candidates_instruct_gptq_marlin.json \
+  --policy-name bf16_default \
+  --policy-name fp16_default \
+  --policy-name llama31_8b_instruct_gptq_marlin_artifact \
+  --hardware-label a100-lab \
+  --run-label a100-lab
+```
+
+If task quality passes on A100, it is useful robustness evidence for the
+selected policy. It is not a replacement for the matched RTX 3090 deployment
+frontier unless the H9 benchmark and prompt-NLL summaries are also rerun on
+A100 and stored as A100-specific artifacts.
+
 ## One-Command Artifact PTQ Path
 
 You do not need to train a model to test artifact-backed PTQ. Use an existing

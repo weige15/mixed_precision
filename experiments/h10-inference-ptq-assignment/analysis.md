@@ -184,3 +184,14 @@ experiments/h10-inference-ptq-assignment/results/task_quality/
 
 This is only a scaffold until executed on a CUDA host. The intended next run is
 the matched bf16/fp16/GPTQ-Marlin task-quality check recorded in the README.
+
+If the RTX 3090 host is unavailable, running this task-quality screen on A100 is
+methodologically acceptable as a separate robustness check. The boundary is
+important: A100 task quality should be compared only across A100 bf16, fp16, and
+GPTQ-Marlin rows. It should not be merged with RTX 3090 latency or memory
+claims. The task-quality runner now supports `--run-label`, so A100 outputs can
+be stored separately under:
+
+```text
+experiments/h10-inference-ptq-assignment/results/task_quality/a100-lab/
+```

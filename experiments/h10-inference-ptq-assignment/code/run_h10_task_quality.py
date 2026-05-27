@@ -64,6 +64,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--policies", type=Path, default=DEFAULT_POLICIES)
     parser.add_argument("--policy-name", action="append", default=[])
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument(
+        "--run-label",
+        default=None,
+        help="Optional subdirectory label, e.g. a100-lab, to keep hardware-specific task-quality outputs separate.",
+    )
     parser.add_argument("--hardware-label", default=os.environ.get("HARDWARE_LABEL", "unknown"))
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--max-tokens", type=int, default=8)
@@ -155,8 +160,9 @@ def package_snapshot() -> dict[str, dict[str, Any]]:
     return packages
 
 
-def write_result(output_dir: Path, policy_name: str, payload: dict[str, Any]) -> Path:
-    path = output_dir / policy_name / "task_quality.json"
+def write_result(output_dir: Path, policy_name: str, payload: dict[str, Any], run_label: str | None) -> Path:
+    root = output_dir / run_label if run_label else output_dir
+    path = root / policy_name / "task_quality.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return path
@@ -188,6 +194,7 @@ def run_policy(grid: dict[str, Any], policy: dict[str, Any], args: argparse.Name
         "baseline_model_name": grid["model_name"],
         "runtime": grid.get("runtime", "vllm"),
         "hardware_label": args.hardware_label,
+        "run_label": args.run_label,
         "seed": args.seed,
         "max_tokens": args.max_tokens,
         "num_tasks": len(TASKS),
@@ -263,7 +270,7 @@ def main() -> None:
     policies = select_policies(grid, args.policy_name)
     for policy in policies:
         payload = run_policy(grid, policy, args)
-        path = write_result(args.output_dir, policy["policy_name"], payload)
+        path = write_result(args.output_dir, policy["policy_name"], payload, args.run_label)
         print(f"{policy['policy_name']}: {payload['status']} -> {path}")
 
 
