@@ -83,6 +83,38 @@ results/solver_trace.json
 You do not need to train a model to test artifact-backed PTQ. Use an existing
 quantized checkpoint from Hugging Face or a local path that vLLM can load.
 
+List built-in downloadable candidates:
+
+```bash
+python experiments/h10-inference-ptq-assignment/code/download_quantized_artifact.py \
+  --list-candidates
+```
+
+Download the default base-model GPTQ candidate:
+
+```bash
+python experiments/h10-inference-ptq-assignment/code/download_quantized_artifact.py
+```
+
+Download and immediately run the CUDA smoke test:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h10-inference-ptq-assignment/code/download_quantized_artifact.py \
+  --run-smoke \
+  --hardware-label rtx3090-lab
+```
+
+Download and run the full benchmark, quality scoring, H9 summary, H10
+action-table build, and H10 solver:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+python experiments/h10-inference-ptq-assignment/code/download_quantized_artifact.py \
+  --run-full \
+  --hardware-label rtx3090-lab
+```
+
 Default smoke test, using `shuyuej/Meta-Llama-3.1-8B-GPTQ`:
 
 ```bash
