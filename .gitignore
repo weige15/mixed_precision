@@ -43,3 +43,6 @@ tmp/
 data/raw/
 data/cache/
 models/
+
+# pptx
+.pptx
