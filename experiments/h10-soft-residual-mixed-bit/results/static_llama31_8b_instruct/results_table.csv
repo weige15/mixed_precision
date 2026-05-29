@@ -1,0 +1,7 @@
+method,average bits per parameter,metadata bits per parameter,effective bits per parameter,prompt NLL,prompt NLL delta versus bf16,storage redundancy,notes
+bf16 baseline,16.000000,0.000000,16.000000,0.641639,0.000000,,"Imported from matched current H10/H9 Instruct GPTQ-Marlin summary because local Instruct model is not cached."
+existing GPTQ-Marlin 4-bit baseline,4.000000,,,0.646604,0.004965,,"Backend baseline only; imported from current H10 artifacts. Metadata was not audited here."
+uniform 2-bit residual,,,,,,,"Pending exact prompt-NLL run; runner implemented but local execution is blocked by missing cached Meta-Llama-3.1-8B-Instruct and no CUDA."
+uniform 4-bit residual,,,,,,,"Pending exact prompt-NLL run; single progressive residual representation, not separate 4-bit checkpoint."
+hard 0/4-bit pruning @ 3 avg bits,,,,,,,"Pending exact prompt-NLL run; binary prune-or-keep assignment at matched raw bit budget."
+soft 0/2/4/6-bit residual @ 3 avg bits,,,,,,,"Pending exact prompt-NLL run; progressive residual assignment at matched raw bit budget."

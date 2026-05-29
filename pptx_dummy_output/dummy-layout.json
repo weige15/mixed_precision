@@ -1,0 +1,195 @@
+{
+  "_meta": {
+    "type": "slide_layout_plan",
+    "version": "1.3",
+    "template": "user-template",
+    "slide_count": 6,
+    "warnings": [],
+    "notes": "user-template template.",
+    "parsing_issues": []
+  },
+  "template_summary": {
+    "max_body": 10,
+    "max_picture": 12,
+    "layout_count": 60
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "layout": {
+        "name": "3",
+        "index": 18,
+        "match_type": "semantic",
+        "signature": "slide_number:1_title:1",
+        "placeholders": []
+      },
+      "content": {
+        "title": "Mixed Precision Progress Check",
+        "subtitle": null,
+        "headline": null,
+        "body": [],
+        "body_count": 0,
+        "metadata": []
+      },
+      "content_type": "closing",
+      "extras": {
+        "contact": {
+          "name": "Research team x Internal review",
+          "title": "May 2026"
+        }
+      },
+      "visual_type": "hero-statement"
+    },
+    {
+      "slide_number": 2,
+      "layout": {
+        "name": "OBJECT",
+        "index": 17,
+        "match_type": "semantic",
+        "signature": "body:3_slide_number:1_title:1",
+        "placeholders": []
+      },
+      "content": {
+        "title": "Executive Snapshot",
+        "subtitle": null,
+        "headline": "A compact status view for validating the template.",
+        "body": [
+          "Objective: confirm title, body, footer, and slide number behavior.",
+          "Scope: dummy content only; no research claims are intended.",
+          "Output: reusable template config plus generated PowerPoint."
+        ],
+        "body_count": 3,
+        "metadata": []
+      },
+      "content_type": "content",
+      "extras": {
+        "contact": {
+          "name": "A compact status view for validating the template.",
+          "title": "- Objective: confirm title, body, footer, and slide number behavior."
+        }
+      },
+      "visual_type": "bullets",
+      "headline_bold": true
+    },
+    {
+      "slide_number": 3,
+      "layout": {
+        "name": "OBJECT",
+        "index": 17,
+        "match_type": "semantic",
+        "signature": "body:3_slide_number:1_title:1",
+        "placeholders": []
+      },
+      "content": {
+        "title": "Workflow Shape",
+        "subtitle": null,
+        "headline": "Three simple steps for the template smoke test.",
+        "body": [
+          "Prepare: profile the template and route layout mappings.",
+          "Generate: fill template fields while preserving theme styling.",
+          "Validate: check for overflow, missing text, and warnings."
+        ],
+        "body_count": 3,
+        "metadata": []
+      },
+      "content_type": "content",
+      "extras": {
+        "contact": {
+          "name": "Three simple steps for the template smoke test.",
+          "title": "- Prepare: profile the template and route layout mappings."
+        }
+      },
+      "visual_type": "bullets",
+      "headline_bold": true
+    },
+    {
+      "slide_number": 4,
+      "layout": {
+        "name": "OBJECT",
+        "index": 17,
+        "match_type": "semantic",
+        "signature": "body:3_slide_number:1_title:1",
+        "placeholders": []
+      },
+      "content": {
+        "title": "Option Comparison",
+        "subtitle": null,
+        "headline": "Two ways this template can be reviewed.",
+        "body": [
+          "Fast check: minimal content for typography and spacing review.",
+          "Full draft: richer content for a later presentation review.",
+          "Current output: dummy-only content using the supported body layout."
+        ],
+        "body_count": 3,
+        "metadata": []
+      },
+      "content_type": "content",
+      "extras": {
+        "contact": {
+          "name": "Two ways this template can be reviewed.",
+          "title": "- Fast check: minimal content for typography and spacing review."
+        }
+      },
+      "visual_type": "bullets",
+      "headline_bold": true
+    },
+    {
+      "slide_number": 5,
+      "layout": {
+        "name": "OBJECT",
+        "index": 17,
+        "match_type": "semantic",
+        "signature": "body:3_slide_number:1_title:1",
+        "placeholders": []
+      },
+      "content": {
+        "title": "Quality Signals",
+        "subtitle": null,
+        "headline": "Short copy keeps the generated deck easy to inspect.",
+        "body": [
+          "Template fit: title and body fields are populated directly.",
+          "Content risk: dummy copy is short enough to avoid overflow.",
+          "Validation target: zero errors and zero warnings."
+        ],
+        "body_count": 3,
+        "metadata": []
+      },
+      "content_type": "content",
+      "extras": {
+        "contact": {
+          "name": "Short copy keeps the generated deck easy to inspect.",
+          "title": "- Template fit: title and body fields are populated directly."
+        }
+      },
+      "visual_type": "bullets",
+      "headline_bold": true
+    },
+    {
+      "slide_number": 6,
+      "layout": {
+        "name": "3",
+        "index": 18,
+        "match_type": "semantic",
+        "signature": "slide_number:1_title:1",
+        "placeholders": []
+      },
+      "content": {
+        "title": "Close",
+        "subtitle": null,
+        "headline": null,
+        "body": [],
+        "body_count": 0,
+        "metadata": []
+      },
+      "content_type": "quote",
+      "extras": {
+        "quote": "This file is only a dummy deck for checking the PowerPoint template.",
+        "contact": {
+          "name": "> \"This file is only a dummy deck for checking the PowerPoint template.\"",
+          "title": "Template smoke test complete."
+        }
+      },
+      "visual_type": "quote-hero"
+    }
+  ]
+}

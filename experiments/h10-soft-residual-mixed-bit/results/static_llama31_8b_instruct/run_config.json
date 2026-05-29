@@ -1,0 +1,22 @@
+{
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "output_dir": "experiments/h10-soft-residual-mixed-bit/results/static_llama31_8b_instruct",
+  "seed": 42,
+  "seq_len": 512,
+  "calibration_prompts": 4,
+  "eval_prompts": 6,
+  "batch_size": 1,
+  "dtype": "bf16",
+  "device": "auto",
+  "group_cols": 128,
+  "matched_budget_bits": 3.0,
+  "metadata_scale_bits": 32,
+  "local_files_only": true,
+  "max_modules": 0,
+  "skip_eval": false,
+  "include_h10_gptq": true,
+  "h10_gptq_summary": "experiments/h9-transformer-inference-policy-search/results/h9_instruct_gptq_marlin_summary.json",
+  "toy_smoke": false,
+  "dry_run": false,
+  "generated_at_utc": "2026-05-29T20:31:09.389894+00:00"
+}

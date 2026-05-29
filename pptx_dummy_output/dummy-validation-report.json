@@ -1,0 +1,68 @@
+{
+  "file_path": "/home/kuotzuwei15/mixed_precision/pptx_dummy_output/dummy-template-check.pptx",
+  "slide_count": 6,
+  "score": 99.0,
+  "passed": true,
+  "summary": {
+    "errors": 0,
+    "warnings": 0,
+    "info": 1
+  },
+  "layout_coverage": {
+    "used": {
+      "3": 2,
+      "OBJECT": 4
+    },
+    "available_count": 19,
+    "used_count": 2,
+    "unused": [
+      "Slide 1 master",
+      "Slide 2 master",
+      "Slide 3 master",
+      "Slide 4 master",
+      "Slide 5 master",
+      "Slide 6 master",
+      "Slide 7 master",
+      "Slide 8 master",
+      "Slide 9 master",
+      "Slide 10 master"
+    ],
+    "coverage_pct": 10.5,
+    "suggestions": [],
+    "content_patterns": {
+      "error": "name 'LayoutCoverageAnalyzer' is not defined"
+    }
+  },
+  "recommendations": [
+    "Only using 2 of 19 layouts - explore more layout options for visual variety."
+  ],
+  "issues": [
+    {
+      "slide_number": 0,
+      "category": "layout_repetitiveness",
+      "severity": "info",
+      "message": "4 consecutive slides use 'OBJECT' (slides 2-5)",
+      "suggestion": "Consider using different layouts to add visual variety",
+      "details": {
+        "layout": "OBJECT",
+        "run_length": 4,
+        "start_slide": 2,
+        "end_slide": 5,
+        "tables_in_run": 0
+      }
+    }
+  ],
+  "heuristic_scoring": {
+    "composite_score": 99.0,
+    "components": {
+      "core_quality": 99
+    },
+    "weights": {
+      "core_quality": 40,
+      "typography_hierarchy": 15,
+      "whitespace_analysis": 15,
+      "visual_type": 15,
+      "column_balance": 15
+    }
+  }
+}

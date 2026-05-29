@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "status": "blocked",
+  "stage": "load_model_and_tokenizer",
+  "elapsed_sec": 2.663414427999669,
+  "error": "OSError: We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.\nCheck your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.",
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "local_files_only": true,
+  "gpu_note": "Default sandbox blocks GPU/NVML access. Escalated check sees NVIDIA GeForce RTX 4050 Laptop GPU with 6141 MiB VRAM and torch.cuda.is_available() == true.",
+  "blocker_interpretation": "The target Instruct checkpoint is not cached locally. The available GPU is real but too small for a plain bf16 8B run without CPU offload or a quantized loader."
+}

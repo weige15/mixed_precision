@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-05-29T20:32:02.991399+00:00",
+  "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+  "target_leaves": [
+    "down_proj",
+    "gate_proj",
+    "k_proj",
+    "o_proj",
+    "q_proj",
+    "up_proj",
+    "v_proj"
+  ],
+  "group_cols": 16,
+  "matched_budget_bits": 3.0,
+  "num_blocks": 4,
+  "num_target_params": 2048,
+  "policies": {
+    "uniform_2bit_residual": {
+      "bit_counts": {
+        "0": 0,
+        "2": 4,
+        "4": 0,
+        "6": 0
+      },
+      "assignments": {
+        "toy.linear:cols0-16": 2,
+        "toy.linear:cols16-32": 2,
+        "toy.linear:cols32-48": 2,
+        "toy.linear:cols48-64": 2
+      }
+    },
+    "uniform_4bit_residual": {
+      "bit_counts": {
+        "0": 0,
+        "2": 0,
+        "4": 4,
+        "6": 0
+      },
+      "assignments": {
+        "toy.linear:cols0-16": 4,
+        "toy.linear:cols16-32": 4,
+        "toy.linear:cols32-48": 4,
+        "toy.linear:cols48-64": 4
+      }
+    },
+    "hard_0_4_budget_3bit": {
+      "bit_counts": {
+        "0": 1,
+        "2": 0,
+        "4": 3,
+        "6": 0
+      },
+      "assignments": {
+        "toy.linear:cols0-16": 0,
+        "toy.linear:cols16-32": 4,
+        "toy.linear:cols32-48": 4,
+        "toy.linear:cols48-64": 4
+      }
+    },
+    "soft_0_2_4_6_budget_3bit": {
+      "bit_counts": {
+        "0": 1,
+        "2": 0,
+        "4": 3,
+        "6": 0
+      },
+      "assignments": {
+        "toy.linear:cols0-16": 0,
+        "toy.linear:cols16-32": 4,
+        "toy.linear:cols32-48": 4,
+        "toy.linear:cols48-64": 4
+      }
+    }
+  },
+  "status": "toy_smoke_completed"
+}

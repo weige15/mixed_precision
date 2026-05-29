@@ -1,0 +1,154 @@
+{
+  "file_path": "mobiquant_deck/mobiquant_summary.pptx",
+  "slide_count": 4,
+  "score": 84.0,
+  "passed": true,
+  "summary": {
+    "errors": 0,
+    "warnings": 5,
+    "info": 1
+  },
+  "layout_coverage": {
+    "used": {
+      "OBJECT": 4
+    },
+    "available_count": 19,
+    "used_count": 1,
+    "unused": [
+      "Slide 1 master",
+      "Slide 2 master",
+      "Slide 3 master",
+      "Slide 4 master",
+      "Slide 5 master",
+      "Slide 6 master",
+      "Slide 7 master",
+      "Slide 8 master",
+      "Slide 9 master",
+      "Slide 10 master"
+    ],
+    "coverage_pct": 5.3,
+    "suggestions": [],
+    "content_patterns": {
+      "error": "name 'LayoutCoverageAnalyzer' is not defined"
+    }
+  },
+  "recommendations": [
+    "Review 5 warning(s) - most should be addressed.",
+    "Several slides have text overflow - consider condensing content or using multiple slides.",
+    "Only using 1 of 19 layouts - explore more layout options for visual variety."
+  ],
+  "issues": [
+    {
+      "slide_number": 2,
+      "category": "text_overflow",
+      "severity": "warning",
+      "message": "Text exceeds shape bounds by 100.0% (2 lines, 1 fit)",
+      "suggestion": "Reduce text, shrink font, or enlarge shape",
+      "details": {
+        "text_length": 16,
+        "lines_needed": 2,
+        "lines_available": 1,
+        "overflow_ratio": 2.0,
+        "font_name": "Arial",
+        "font_size_pt": 12.0,
+        "text_preview": "3b cal -> 4b inf",
+        "using_pil": true
+      }
+    },
+    {
+      "slide_number": 2,
+      "category": "text_overflow",
+      "severity": "warning",
+      "message": "Text exceeds shape bounds by 100.0% (2 lines, 1 fit)",
+      "suggestion": "Reduce text, shrink font, or enlarge shape",
+      "details": {
+        "text_length": 14,
+        "lines_needed": 2,
+        "lines_available": 1,
+        "overflow_ratio": 2.0,
+        "font_name": "Arial",
+        "font_size_pt": 12.0,
+        "text_preview": "retain top 10%",
+        "using_pil": true
+      }
+    },
+    {
+      "slide_number": 2,
+      "category": "text_overflow",
+      "severity": "warning",
+      "message": "Text exceeds shape bounds by 100.0% (2 lines, 1 fit)",
+      "suggestion": "Reduce text, shrink font, or enlarge shape",
+      "details": {
+        "text_length": 16,
+        "lines_needed": 2,
+        "lines_available": 1,
+        "overflow_ratio": 2.0,
+        "font_name": "Arial",
+        "font_size_pt": 12.0,
+        "text_preview": "4b cal -> 4b inf",
+        "using_pil": true
+      }
+    },
+    {
+      "slide_number": 2,
+      "category": "text_overflow",
+      "severity": "warning",
+      "message": "Text exceeds shape bounds by 100.0% (2 lines, 1 fit)",
+      "suggestion": "Reduce text, shrink font, or enlarge shape",
+      "details": {
+        "text_length": 9,
+        "lines_needed": 2,
+        "lines_available": 1,
+        "overflow_ratio": 2.0,
+        "font_name": "Arial",
+        "font_size_pt": 12.0,
+        "text_preview": "MoBiQuant",
+        "using_pil": true
+      }
+    },
+    {
+      "slide_number": 2,
+      "category": "text_overflow",
+      "severity": "warning",
+      "message": "Text exceeds shape bounds by 200.0% (3 lines, 1 fit)",
+      "suggestion": "Reduce text, shrink font, or enlarge shape",
+      "details": {
+        "text_length": 12,
+        "lines_needed": 3,
+        "lines_available": 1,
+        "overflow_ratio": 3.0,
+        "font_name": "Arial",
+        "font_size_pt": 12.0,
+        "text_preview": "2.65 PPL gap",
+        "using_pil": true
+      }
+    },
+    {
+      "slide_number": 0,
+      "category": "layout_repetitiveness",
+      "severity": "info",
+      "message": "4 consecutive slides use 'OBJECT' (slides 1-4)",
+      "suggestion": "Consider using different layouts to add visual variety",
+      "details": {
+        "layout": "OBJECT",
+        "run_length": 4,
+        "start_slide": 1,
+        "end_slide": 4,
+        "tables_in_run": 0
+      }
+    }
+  ],
+  "heuristic_scoring": {
+    "composite_score": 84.0,
+    "components": {
+      "core_quality": 84
+    },
+    "weights": {
+      "core_quality": 40,
+      "typography_hierarchy": 15,
+      "whitespace_analysis": 15,
+      "visual_type": 15,
+      "column_balance": 15
+    }
+  }
+}

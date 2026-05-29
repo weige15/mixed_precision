@@ -44,5 +44,4 @@ data/raw/
 data/cache/
 models/
 
-# pptx
-.pptx
+to_human/

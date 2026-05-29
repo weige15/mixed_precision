@@ -1,0 +1,124 @@
+{
+  "template_name": "user-template",
+  "template_path": null,
+  "brand": {
+    "primary_color": "4472C4",
+    "secondary_color": "000000",
+    "accent_color": "44546A",
+    "header_font": "Arial",
+    "body_font": "Arial"
+  },
+  "layout_mappings": {
+    "master_base": {
+      "layout_index": 16,
+      "layout_name": "TITLE",
+      "use_case": "Branding slide"
+    },
+    "title_cover": {
+      "layout_index": 16,
+      "layout_name": "TITLE",
+      "use_case": "Cover page with title and subtitle"
+    },
+    "title_centered": {
+      "layout_index": 18,
+      "layout_name": "3",
+      "use_case": "Title-only section or closing slide"
+    },
+    "content_with_image": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Title plus body content"
+    },
+    "content_centered": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Title plus body content without image"
+    },
+    "story_card": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Title plus body content"
+    },
+    "column_2": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Compact comparison in body field"
+    },
+    "column_3": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Compact three-part content in body field"
+    },
+    "column_4": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Compact four-part content in body field"
+    },
+    "column_5": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Compact five-part content in body field"
+    },
+    "contact": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Contact information in body field"
+    },
+    "grid_3x2_3body": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Grid content flattened into body field"
+    },
+    "grid_3x2_6body": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Grid content flattened into body field"
+    },
+    "grid_2x2_2body": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Grid content flattened into body field"
+    },
+    "content_image_top_4body": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Four-part content flattened into body field"
+    },
+    "fallback": {
+      "layout_index": 17,
+      "layout_name": "OBJECT",
+      "use_case": "Fallback for unknown content types"
+    }
+  },
+  "content_type_routing": {
+    "title_slide": "title_cover",
+    "section_divider": "title_centered",
+    "closing": "title_centered",
+    "thank_you": "title_centered",
+    "quote": "title_centered",
+    "contact": "contact",
+    "framework_2col": "column_2",
+    "framework_3col": "column_3",
+    "framework_4col": "column_4",
+    "framework_5col": "column_5",
+    "framework_cards": "column_4",
+    "comparison": "column_2",
+    "content": "content_with_image",
+    "deliverables": "content_with_image",
+    "timeline": "content_with_image",
+    "content_no_image": "content_centered",
+    "table": "title_centered",
+    "pricing": "title_centered",
+    "comparison_tables": "title_centered",
+    "table_with_image": "content_with_image",
+    "story_card": "story_card",
+    "grid_3x2_3body": "grid_3x2_3body",
+    "grid_3x2_6body": "grid_3x2_6body",
+    "grid_2x2_2body": "grid_2x2_2body",
+    "content_image_top_4body": "content_image_top_4body"
+  },
+  "requires_branding_slide": false,
+  "branding_layout_index": 16,
+  "fallback_layout_index": 17,
+  "fallback_layout_name": "OBJECT"
+}

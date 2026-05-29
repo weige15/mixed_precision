@@ -1,0 +1,240 @@
+{
+  "_meta": {
+    "source": "/home/kuotzuwei15/mixed_precision/template.pptx",
+    "description": "Condensed template digest for layout matching.",
+    "slide_dimensions": {
+      "width_inches": 16.0,
+      "height_inches": 9.0
+    }
+  },
+  "layouts": [
+    {
+      "index": 0,
+      "name": "Slide 1 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 1,
+      "name": "Slide 2 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 2,
+      "name": "Slide 3 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 3,
+      "name": "Slide 4 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 4,
+      "name": "Slide 5 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 5,
+      "name": "Slide 6 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 6,
+      "name": "Slide 7 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 7,
+      "name": "Slide 8 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 8,
+      "name": "Slide 9 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 9,
+      "name": "Slide 10 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 10,
+      "name": "Slide 11 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 11,
+      "name": "Slide 12 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 12,
+      "name": "Slide 13 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 13,
+      "name": "Slide 14 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 14,
+      "name": "Slide 15 master",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 15,
+      "name": "DEFAULT",
+      "category": "content",
+      "signature": {}
+    },
+    {
+      "index": 16,
+      "name": "TITLE",
+      "category": "title",
+      "signature": {
+        "center_title": 1,
+        "subtitle": 1,
+        "date": 1,
+        "footer": 1,
+        "slide_number": 1
+      }
+    },
+    {
+      "index": 17,
+      "name": "OBJECT",
+      "category": "content",
+      "signature": {
+        "title": 1,
+        "body": 1,
+        "date": 1,
+        "footer": 1,
+        "slide_number": 1
+      }
+    },
+    {
+      "index": 18,
+      "name": "3",
+      "category": "content",
+      "signature": {
+        "title": 1,
+        "date": 1,
+        "footer": 1,
+        "slide_number": 1
+      }
+    }
+  ],
+  "signature_lookup": {
+    "empty": [
+      {
+        "index": 0,
+        "name": "Slide 1 master"
+      },
+      {
+        "index": 1,
+        "name": "Slide 2 master"
+      },
+      {
+        "index": 2,
+        "name": "Slide 3 master"
+      },
+      {
+        "index": 3,
+        "name": "Slide 4 master"
+      },
+      {
+        "index": 4,
+        "name": "Slide 5 master"
+      },
+      {
+        "index": 5,
+        "name": "Slide 6 master"
+      },
+      {
+        "index": 6,
+        "name": "Slide 7 master"
+      },
+      {
+        "index": 7,
+        "name": "Slide 8 master"
+      },
+      {
+        "index": 8,
+        "name": "Slide 9 master"
+      },
+      {
+        "index": 9,
+        "name": "Slide 10 master"
+      },
+      {
+        "index": 10,
+        "name": "Slide 11 master"
+      },
+      {
+        "index": 11,
+        "name": "Slide 12 master"
+      },
+      {
+        "index": 12,
+        "name": "Slide 13 master"
+      },
+      {
+        "index": 13,
+        "name": "Slide 14 master"
+      },
+      {
+        "index": 14,
+        "name": "Slide 15 master"
+      },
+      {
+        "index": 15,
+        "name": "DEFAULT"
+      }
+    ],
+    "center_title:1_date:1_footer:1_slide_number:1_subtitle:1": [
+      {
+        "index": 16,
+        "name": "TITLE"
+      }
+    ],
+    "body:1_date:1_footer:1_slide_number:1_title:1": [
+      {
+        "index": 17,
+        "name": "OBJECT"
+      }
+    ],
+    "date:1_footer:1_slide_number:1_title:1": [
+      {
+        "index": 18,
+        "name": "3"
+      }
+    ]
+  },
+  "capabilities": {
+    "max_body": 1,
+    "max_picture": 0,
+    "categories": [
+      "content",
+      "title"
+    ],
+    "body_counts_available": [
+      1
+    ]
+  }
+}
