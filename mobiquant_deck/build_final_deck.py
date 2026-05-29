@@ -4,8 +4,8 @@ from pptx import Presentation
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_AUTO_SHAPE_TYPE, MSO_CONNECTOR
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
-from pptx.oxml import OxmlElement
 from pptx.oxml.ns import qn
+from pptx.oxml.xmlchemy import OxmlElement
 from pptx.util import Inches, Pt
 
 
@@ -156,7 +156,7 @@ def slide_problem(slide):
     clear_generated_body(slide)
     add_textbox(
         slide, 1.18, 2.02, 9.4, 0.45,
-        "Goal: one quantized LLM should adapt precision online as latency and memory budgets change.",
+        "Goal: adapt one quantized LLM to changing latency and memory budgets.",
         font_size=17, bold=True, color=NAVY,
     )
     add_card(slide, 1.18, 2.72, 3.05, 3.0, "Past research: static PTQ", [

@@ -102,3 +102,5 @@ No single reviewed, open-source paper fully combines all of the following:
 
 That gap is exactly where this project can be positioned.
 
+For a stricter main-conference/open-source selection, see
+[Selected Reviewed + Open-Source MoBiQuant-Like Papers](selected_reviewed_open_source_mobiquant_like_2026-05-30.md).

@@ -1,0 +1,284 @@
+{
+  "slide-0": {
+    "shape-0": {
+      "left": 1.1,
+      "top": 0.48,
+      "width": 9.6,
+      "height": 1.74,
+      "placeholder_type": "TITLE",
+      "default_font_size": 54.0,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-1": 4.8
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "Problem: multi-precision deployment still behaves like multi-model deployment"
+        }
+      ]
+    },
+    "shape-1": {
+      "left": 0.25,
+      "top": 1.5,
+      "width": 12.83,
+      "height": 0.5,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-0": 4.8
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "Matryoshka Quantization targets the maintenance and quality gap created when each bit-width is optimized separately.",
+          "font_size": 11.0,
+          "bold": true,
+          "italic": false,
+          "color": "000000"
+        }
+      ]
+    },
+    "shape-2": {
+      "left": 1.1,
+      "top": 3.03,
+      "width": 9.6,
+      "height": 5.07,
+      "placeholder_type": "BODY",
+      "default_font_size": 36.0,
+      "paragraphs": [
+        {
+          "text": "1. Deployment pressure",
+          "font_name": "Aptos",
+          "bold": true
+        },
+        {
+          "text": "LLM decoding is often memory-bandwidth limited, so weight movement from HBM/SRAM becomes a major inference cost.",
+          "level": 1,
+          "font_name": "Aptos"
+        },
+        {
+          "text": "Weight quantization reduces communication cost and makes int8, int4, and int2 attractive serving formats.",
+          "level": 1,
+          "font_name": "Aptos"
+        }
+      ]
+    },
+    "shape-3": {
+      "left": 12.22,
+      "top": 8.34,
+      "width": 3.6,
+      "height": 0.48,
+      "paragraphs": [
+        {
+          "text": "1",
+          "font_size": 12.0,
+          "color": "595959"
+        }
+      ]
+    }
+  },
+  "slide-1": {
+    "shape-0": {
+      "left": 1.1,
+      "top": 0.48,
+      "width": 9.6,
+      "height": 1.74,
+      "placeholder_type": "TITLE",
+      "default_font_size": 54.0,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-1": 4.8
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "Core idea: train one parent integer model whose MSBs are useful slices"
+        }
+      ]
+    },
+    "shape-1": {
+      "left": 0.25,
+      "top": 1.5,
+      "width": 12.83,
+      "height": 0.5,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-0": 4.8
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "MatQuant uses the natural nested structure of integer bit planes: lower precision models are extracted from the most significant bits of the same quantized weights.",
+          "font_size": 11.0,
+          "bold": true,
+          "italic": false,
+          "color": "000000"
+        }
+      ]
+    },
+    "shape-2": {
+      "left": 1.1,
+      "top": 3.03,
+      "width": 9.6,
+      "height": 5.07,
+      "placeholder_type": "BODY",
+      "default_font_size": 36.0,
+      "paragraphs": [
+        {
+          "text": "1. Nest",
+          "font_name": "Aptos",
+          "bold": true
+        },
+        {
+          "text": "Start from a higher-precision integer representation, e.g. int8.",
+          "level": 1,
+          "font_name": "Aptos"
+        },
+        {
+          "text": "Slice the most significant bits to obtain int4 or int2 without storing a separate model.",
+          "level": 1,
+          "font_name": "Aptos"
+        }
+      ]
+    },
+    "shape-3": {
+      "left": 12.22,
+      "top": 8.34,
+      "width": 3.6,
+      "height": 0.48,
+      "paragraphs": [
+        {
+          "text": "2",
+          "font_size": 12.0,
+          "color": "595959"
+        }
+      ]
+    }
+  },
+  "slide-2": {
+    "shape-0": {
+      "left": 1.1,
+      "top": 0.48,
+      "width": 9.6,
+      "height": 1.74,
+      "placeholder_type": "TITLE",
+      "default_font_size": 54.0,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-1": 4.8
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "Observation: co-training changes how quantization buckets are used"
+        }
+      ]
+    },
+    "shape-1": {
+      "left": 0.25,
+      "top": 1.5,
+      "width": 12.83,
+      "height": 0.5,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-0": 4.8
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "The paper's main empirical observation is that MatQuant is not just truncating int8; training reshapes the quantized weight distribution.",
+          "font_size": 11.0,
+          "bold": true,
+          "italic": false,
+          "color": "000000"
+        }
+      ]
+    },
+    "shape-2": {
+      "left": 1.1,
+      "top": 3.03,
+      "width": 9.6,
+      "height": 5.07,
+      "placeholder_type": "BODY",
+      "default_font_size": 36.0,
+      "paragraphs": [
+        {
+          "text": "1. Right-shifted buckets",
+          "font_name": "Aptos",
+          "bold": true
+        },
+        {
+          "text": "MatQuant shifts quantized weights toward higher-valued buckets.",
+          "level": 1,
+          "font_name": "Aptos"
+        },
+        {
+          "text": "int8 and int4 have enough buckets that small shifts do not strongly hurt quality.",
+          "level": 1,
+          "font_name": "Aptos"
+        }
+      ]
+    },
+    "shape-3": {
+      "left": 12.22,
+      "top": 8.34,
+      "width": 3.6,
+      "height": 0.48,
+      "paragraphs": [
+        {
+          "text": "3",
+          "font_size": 12.0,
+          "color": "595959"
+        }
+      ]
+    }
+  },
+  "slide-3": {
+    "shape-0": {
+      "left": 1.1,
+      "top": 0.48,
+      "width": 9.6,
+      "height": 1.74,
+      "placeholder_type": "TITLE",
+      "default_font_size": 54.0,
+      "paragraphs": [
+        {
+          "text": "Results and takeaway: one checkpoint covers a denser accuracy-cost curve"
+        }
+      ]
+    },
+    "shape-1": {
+      "left": 1.1,
+      "top": 3.03,
+      "width": 9.6,
+      "height": 5.07,
+      "placeholder_type": "BODY",
+      "default_font_size": 36.0,
+      "paragraphs": [
+        {
+          "text": "MatQuant keeps high-bit quality near independently trained baselines while improving the lowest-bit slice, which is the hard case.",
+          "font_name": "Aptos",
+          "bold": true
+        },
+        {
+          "text": "Bottom line: MatQuant reframes multi-precision quantization from \"train and serve many models\" to \"train one nested parent model and slice it at deployment time.\"",
+          "level": 1,
+          "font_name": "Aptos"
+        }
+      ]
+    },
+    "shape-2": {
+      "left": 12.22,
+      "top": 8.34,
+      "width": 3.6,
+      "height": 0.48,
+      "paragraphs": [
+        {
+          "text": "4",
+          "font_size": 12.0,
+          "color": "595959"
+        }
+      ]
+    }
+  }
+}

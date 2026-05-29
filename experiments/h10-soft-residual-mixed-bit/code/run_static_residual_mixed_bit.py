@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import gc
 import json
 import math
 import os
@@ -150,6 +151,20 @@ def load_model_and_tokenizer(args: argparse.Namespace):
         model.to("cpu")
     model.eval()
     return model, tokenizer, device
+
+
+def cleanup_model(model: Any | None = None) -> None:
+    if model is not None:
+        del model
+    gc.collect()
+    try:
+        import torch
+
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            torch.cuda.ipc_collect()
+    except Exception:
+        return
 
 
 def encode_prompts(tokenizer: Any, prompts: list[str], seq_len: int) -> list[dict[str, Any]]:
@@ -366,6 +381,13 @@ def assignment_stats(
 def reconstruct_weight(weight: Any, assignments: dict[str, int], module_name: str, group_cols: int) -> Any:
     import torch
 
+    if getattr(weight, "is_meta", False):
+        raise RuntimeError(
+            f"Target weight is on the meta device for {module_name}. "
+            "This usually means the model was partially offloaded during reload. "
+            "Use a larger GPU, reduce other GPU memory pressure, or run with a "
+            "Transformers/Accelerate loading setup that materializes target projection weights."
+        )
     original_dtype = weight.dtype
     weight_f = weight.detach().cpu().float()
     out = torch.empty_like(weight_f)
@@ -590,7 +612,7 @@ def main() -> None:
             notes="Matched Transformers baseline for this runner.",
         )
     )
-    del model
+    cleanup_model(model)
 
     if args.include_h10_gptq:
         gptq = load_gptq_result(args.h10_gptq_summary, bf16_nll)
@@ -607,10 +629,12 @@ def main() -> None:
         nll = None
         if not args.skip_eval:
             model, _, device = load_model_and_tokenizer(args)
-            apply_assignment(model, assignment, args.group_cols, args.max_modules)
-            stats = prompt_nll(model, eval_batches, device)
-            nll = float(stats["mean_prompt_nll"])
-            del model
+            try:
+                apply_assignment(model, assignment, args.group_cols, args.max_modules)
+                stats = prompt_nll(model, eval_batches, device)
+                nll = float(stats["mean_prompt_nll"])
+            finally:
+                cleanup_model(model)
         results.append(
             MethodResult(
                 method=method,
