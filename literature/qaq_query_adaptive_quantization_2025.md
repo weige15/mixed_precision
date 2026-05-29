@@ -25,3 +25,14 @@ storage, and memory movement under a hardware constraint.
 - Its latency overhead is a warning: dynamic precision must be evaluated as a
   memory-latency-quality trade-off, not only as a compression ratio.
 
+## Recommendation
+
+Use QAQ as a highly aligned emerging related work, especially for the idea that
+prompt/query difficulty should decide how many stored bit planes are activated.
+It is closer to the proposed storage solution than Prompt-Adaptive Quantization
+because it decomposes weights into bit planes rather than routing to separate
+pre-quantized checkpoints.
+
+Do not use it as the strongest main evidence yet. The visible publication signal
+is a NeurIPS 2025 ML for Systems workshop page, and no public codebase was found
+in the current search pass.

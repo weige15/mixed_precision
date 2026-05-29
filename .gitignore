@@ -44,4 +44,7 @@ data/raw/
 data/cache/
 models/
 
-to_human/
+to_human/*_deck/
+*.pptx
+~
+*:Zone.Identifier

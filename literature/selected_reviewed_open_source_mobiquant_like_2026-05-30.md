@@ -29,6 +29,8 @@ perfect topical match.
 | Paper | Status | Why not core |
 |---|---|---|
 | MoBiQuant | arXiv 2026, no code found | Most conceptually aligned with token-adaptive residual bit slices, but lower review/reproducibility confidence. |
+| QAQ: Query-adaptive Mixed-precision Quantization | NeurIPS 2025 ML for Systems workshop, no code found | Very aligned with query-conditioned bit-plane activation and CPU/GPU loading, but workshop-level and not reproducible yet. |
+| Prompt-Adaptive Quantization | AAAI 2026 AIR-FM workshop, no code found | Useful prompt-router baseline over 2/4/8/16-bit model variants, but stores/routes separate quantized models rather than solving compact nested storage. |
 | MatGPTQ | arXiv 2026, code available | Strong storage/mixed-kernel idea, but currently preprint-level. |
 | ARKV | arXiv 2026, code available | Excellent soft-pruning analogy for KV cache states, but preprint-level and cache-side rather than weight-side. |
 | QAQ KV Cache | ICCV 2025 workshop, code available | Useful cache-side adaptive precision, but workshop-level. |
@@ -47,4 +49,3 @@ Use these as the main related-work spine:
 
 Then mention **MoBiQuant** as the closest emerging paper to the proposed idea,
 but be explicit that it currently appears weaker on review/code availability.
-

@@ -1,0 +1,3281 @@
+Bayesian Bits: Unifying Quantization and Pruning
+
+arXiv:2005.07093v3 [cs.LG] 27 Oct 2020
+
+Mart van Baalen∗, Christos Louizos∗, Markus Nagel, Rana Ali Amjad,
+Ying Wang, Tijmen Blankevoort, Max Welling
+Qualcomm AI Research†
+{mart,clouizos,markusn,ramjad,yinwan,tijmen,mwelling}@qti.qualcomm.com
+
+Abstract
+We introduce Bayesian Bits, a practical method for joint mixed precision quantization and pruning through gradient based optimization. Bayesian Bits employs a
+novel decomposition of the quantization operation, which sequentially considers
+doubling the bit width. At each new bit width, the residual error between the full
+precision value and the previously rounded value is quantized. We then decide
+whether or not to add this quantized residual error for a higher effective bit width
+and lower quantization noise. By starting with a power-of-two bit width, this
+decomposition will always produce hardware-friendly configurations, and through
+an additional 0-bit option, serves as a unified view of pruning and quantization.
+Bayesian Bits then introduces learnable stochastic gates, which collectively control
+the bit width of the given tensor. As a result, we can obtain low bit solutions by
+performing approximate inference over the gates, with prior distributions that encourage most of them to be switched off. We experimentally validate our proposed
+method on several benchmark datasets and show that we can learn pruned, mixed
+precision networks that provide a better trade-off between accuracy and efficiency
+than their static bit width equivalents.
+
+1
+
+Introduction
+
+To reduce the computational cost of neural network inference, quantization and compression techniques are often applied before deploying a model in real life. The former reduces the bit width of
+weight and activation tensors by quantizing floating-point values onto a regular grid, allowing the use
+of cheap integer arithmetic, while the latter aims to reduce the total number of multiply-accumulate
+(MAC) operations required. We refer the reader to [18] and [19] for overviews of hardware-friendly
+quantization and compression techniques, respectively.
+In quantization, the default assumption is that all layers should be quantized to the same bit width.
+While it has long been understood that low bit width quantization can be achieved by keeping the
+first and last layers of a network in higher precision [5, 34], recent work [7, 35, 36] has shown that
+carefully selecting the bit width of each tensor can yield a better trade-off between accuracy and
+complexity. Since the choice of quantization bit width for one tensor may affect the quantization
+sensitivity of all other tensors, the choice of bit width cannot be made without regarding the rest of
+the network.
+The number of possible bit width configurations for a neural network is exponential in the number of
+layers in the network. Therefore, we cannot exhaustively search all possible configurations and pick
+the best one. Several approaches to learning the quantization bit widths from data have been proposed,
+either during training [24, 35], or on pre-trained networks [6, 7, 36]. However, these works do not
+consider the fact that commercially available hardware typically only supports efficient computation
+∗
+†
+
+Equal contribution
+Qualcomm AI Research is an initiative of Qualcomm Technologies, Inc.
+
+34th Conference on Neural Information Processing Systems (NeurIPS 2020), Vancouver, Canada.
+
+in power-of-two bit widths (see, e.g., [13] for a mobile hardware overview and [26] for a method to
+perform four 4-bit multiplications in a 16-bit hardware multiplication unit.)
+In this paper, we introduce a novel decomposition of the quantization operation. This decomposition
+exposes all hardware-friendly (i.e., power-of-two) bit widths individually by recursively quantizing
+the residual error of lower bit width quantization. The quantized residual error tensors are then
+added together into a quantized approximation of the original tensor. This allows for the introduction
+of learnable gates: by placing a gate on each of the quantized residual error tensors, the effective
+bit width can be controlled, thus allowing for data-dependent optimization of the bit width of each
+tensor, which we learn jointly with the (quantization) scales and network parameters. We then extend
+the gating formulation such that not only the residuals, but the overall result of the quantization is
+gated as well. This facilitates for “zero bit” quantization and serves as a unified view of pruning
+and quantization. We cast the optimization of said gates as a variational inference problem with
+prior distributions that favor quantizers with low bit widths. Lastly, we provide an intuitive and
+practical approximation to this objective, that is amenable to efficient gradient-based optimization.
+We experimentally validate our method on several models and datasets and show encouraging results,
+both for end-to-end fine-tuning tasks as well as post-training quantization.
+
+2
+
+Unifying quantization and pruning with Bayesian Bits
+
+Consider having an input x in the range of [α, β] that is quantized with a uniform quantizer with an
+associated bit width b. Such a quantizer can be expressed as
+xq = sbx/se,
+
+s=
+
+β−α
+2b − 1
+
+(1)
+
+where xq is a quantized approximation of x, b·e indicates the round-to-nearest-integer function, and s
+is the step-size of the quantizer that depends on the given bit width b. How can we learn the number
+of bits b, while respecting the hardware constraint that b should be a power of two? One possible way
+would be via “decomposing” the quantization operation in a way that exposes all of the appropriate
+bit widths. In the following section, we will devise a simple and practical method that realizes such a
+procedure.
+2.1
+
+Mixed precision gating for quantization and pruning
+
+Consider initially quantizing x with b = 2:
+x2 = s2 bx/s2 e,
+
+s2 =
+
+β−α
+.
+22 − 1
+
+(2)
+
+How can we then “move” to the next hardware friendly bit width, i.e., b = 4? We know that the
+quantization error of this operation will be x − x2 , and it will be in [−s2 /2, s2 /2]. We can then
+consider encoding this residual error according to a fixed point grid that has a length of s2 and bins
+of size s2 /(22 + 1)
+s2
+.
+(3)
+4 = s4 b(x − x2 )/s4 e,
+s4 = 2
+2 +1
+By then adding this quantized residual to x2 , i.e. x4 = x2 + 4 we obtain a quantized tensor x4 that
+has double the precision of the previous tensor, i.e. an effective bit width of b = 4 with a step-size of
+β−α
+β−α
+s4 = (22 −1)(2
+2 +1) = 24 −1 . To understand why this is the case, we can proceed as follows: the output
+of s2 bx/s2 e will be an integer multiple of s4 , as s2 = s4 (22 + 1), thus it will be a part of the four bit
+quantization grid as well. Furthermore, the quantized residual is also an integer multiple of s4 , as
+b(x − x2 )/s4 e produces elements in {−2, −1, 0, 1, 2}, thus it corresponds to a simple re-assignment
+of x to a different point on the four bit grid. See Figure 1 for an illustration of this decomposition.
+This idea can be generalized to arbitrary power of two bit widths by sequentially doubling the
+precision of the quantized tensor through the addition of the, quantized, remaining residual error
+xq = x2 + 4 + 8 + 16 + 32
+
+(4)
+
+b/2
+where each quantized residual is b = sb b(x
+P − xb/2 )/sb e, with a step size sb = sb/2 /(2 + 1), and
+previously quantized value xb/2 = x2 + 2<j≤b/2 j for b ∈ {4, 8, 16, 32}. In this specific example,
+
+2
+
+s2
+
+s4
+
+(1)
+
+(4)
+
+(2)
+s4
+
+z4
+
++
+
+(3)
+
+x4 = x2 + z4ϵ4
+
+Figure 1: Illustration of our decomposition. The input floating point values x are clipped to the
+learned range [α, β] (dark blue histograms), and are quantized to 2 bits into x2 (green histograms)
+(1). To accommodate the 22 grid points of the 2 bit quantization grid, the range is divided into 22 − 1
+equal parts, hence s2 = 2β−α
+2 −1 . Next, the residual error x − x2 is computed (light blue histogram), and
+quantized onto the 4 bit grid (2), resulting in the quantized residual error tensor 4 . To accommodate
+the points of the 4 bit quantization grid, the range is divided into 24 − 1 equal parts. Note that
+(24 − 1) = (22 − 1)(22 + 1), thus we can compute s4 as s2 /(22 + 1). This can alternatively be seen
+as dividing the residual error, with range bounded by [−s2 /2, s2 /2], into 22 + 1 equal parts. Values in
+the quantized residual error equal to 0 correspond to points on the 2 bit grid, other values correspond
+to points on the 4 bit grid (orange histogram). Next, the quantized residual error is added to x2 if
+the 4-bit gate z4 is equal to 1 (3), resulting in the 4-bit quantized tensor x4 (4). NB: quantization
+histograms and floating point histograms are not on the same scale.
+xq will be quantized according to a 32-bit fixed point grid. Our lowest bit width is 2-bit to allow for
+the representation of 0, e.g. in the case of padding in convolutional layers.
+Having obtained this decomposition, we then seek to learn the appropriate bit width. We introduce
+gating variables zi , i.e. variables that take values in {0, 1}, for each residual error i . More specifically,
+we can express the quantized value as
+xq = x2 + z4 (4 + z8 (8 + z16 (16 + z32 32 ))).
+
+(5)
+
+If one of the gates zi takes the value of zero, it completely de-activates the addition of all of the
+higher bit width residuals, thus controlling the effective bit width of the quantized value xq . Actually,
+we can take this a step further and consider pruning as quantization with a zero bit width. We can
+thus extend Eq. 5 as follows:
+xq = z2 (x2 + z4 (4 + z8 (8 + z16 (16 + z32 32 )))),
+
+(6)
+
+where now we also introduce a gate for the lowest bit width possible, z2 . If that particular gate is
+switched off, then the input x is assigned the value of 0, thus quantized to 0-bit and pruned away.
+Armed with this modification, we can then perform, e.g., structured pruning by employing a separate
+quantizer of this form for each filter in a convolutional layer. To ensure that the elements of the
+tensor that survive the pruning will be quantized according to the same grid, we can share the gating
+variables for b > 2, along with the quantization grid step sizes.
+2.2
+
+Bayesian Bits
+
+We showed in Eq. 6 that quantizing to a specific bit width can be seen as a gated addition of quantized
+residuals. We want to incorporate a principled regularizer for the gates, such that it encourages gate
+configurations that prefer efficient neural networks. We also want a learning algorithm that allows
+us to apply efficient gradient based optimization for the binary gates z, which is not possible by
+directly considering Eq. 6. We show how to tackle both issues through the lens of Bayesian, and
+more specifically, variational inference; we derive a gate regularizer through a prior that favors low
+bit width configurations and a learning mechanism that allows for gradient based optimization.
+For simplicity, let us assume that we are working on a supervised learning problem, where we are provided with a dataset of N i.i.d. input-output pairs D = {(xi , yi )}N
+i=1 . Furthermore, let us assume that
+we have a neural network with parameters θ and a total of K quantizers that quantize up to 8-bit3 with
+3
+
+This is just for simplifying the exposition and not a limitation of our method.
+
+3
+
+associated gates z1:K , where zi = [z2i , z4i , z8i ]. We can then use the neural network for the condiQN
+tional distribution of the targets given the inputs, i.e. pθ (D|z1:K ) = i=1 pθ (yi |xi , z1:K ).Q
+Consider
+also positing a prior distribution (which we will discuss later) over the gates p(z1:K ) = k p(zk ).
+We can then perform
+variational inference with an approximate posterior that has parameters φ,
+Q
+qφ (z1:K ) =
+k qφ (zk ) by maximizing the following lower bound to the marginal likelihood
+pθ (D) [12, 31]
+X
+L(θ, φ) = Eqφ (z1:K ) [log pθ (D|z1:K )] −
+KL(qφ (zk )||p(zk )).
+(7)
+k
+
+The first term can be understood as the “reconstruction” term, which aims to obtain good predictive
+performance for the targets given the inputs. The second term is the “complexity” term that, through
+the KL divergence, aims to regularize the variational posterior distribution to be as close as possible to
+the prior p(z1:K ). Since each addition of the quantized residual doubles the bit width, let us assume
+that the gates z1:K are binary; we either double the precision of each quantizer or we keep it the
+same. We can then set up an autoregressive prior and variational posterior distribution for the next bit
+configuration of each quantizer k, conditioned on the previous, as follows:
+p(z2k ) = Bern(e−λ ), qφ (z2k ) = Bern(σ(φ2k )),
+−λ
+
+p(z4k |z2k = 1) = p(z8k |z4k = 1) = Bern(e ),
+qφ (z4k |z2k = 1) = Bern(σ(φ4k )), qφ (z8k |z4k = 1) = Bern(σ(φ8k ))
+p(z4k |z2k = 0) = p(z8k |z4k = 0) = Bern(0),
+q(z4k |z2k = 0) = q(z8k |z4k = 0) = Bern(0),
+
+(8)
+(9)
+(10)
+(11)
+(12)
+
+where e−λ with λ ≥ 0 is the prior probability of success and σ(φik ) is the posterior probability of
+success with sigmoid function σ(·) and φik the learnable parameters. This structure encodes the fact
+that when the gate for e.g. 4-bit is “switched off”, the gate for 8-bit will also be off. For brevity, we
+will refer to the variational distribution that conditions on an active previous bit as qφ (zik ) instead of
+qφ (zik |zi/2,k = 1), since the ones conditioned on a previously inactive bit, qφ (zik |zi/2,k = 0), are
+fixed. The KL divergence for each quantizer in the variational objective then decomposes to:
+KL(qφ (zk )||p(zk )) = KL(qφ (z2k )||p(z2k )) + qφ (z2k = 1)KL(qφ (z4k )||p(z4k |z2k = 1))+
+qφ (z2k = 1)qφ (z4k = 1)KL(qφ (z8k )||p(z8k |z4k = 1))
+(13)
+We can see that the posterior inclusion probabilities of the lower bit widths downscale the KL
+divergence of the higher bit widths. This is important, as the gates for the higher order bit widths
+can only contribute to the log-likelihood of the data when the lower ones are active due to their
+multiplicative interaction. Therefore, the KL divergence at Eq. 13 prevents the over-regularization
+that would have happened if we had assumed fully factorized distributions.
+2.3
+
+A simple approximation for learning the bit width
+
+So far we have kept the prior as an arbitrary Bernoulli with a specific form for the probability of
+inclusion, e−λ . How can we then enforce that the variational posterior will “prune away” as many
+gates as possible? The straightforward answer would be by choosing large values for λ; for example,
+if we are interested in networks that have low computational complexity, we can set λ proportional to
+the Bit Operation (BOP) count contribution of the particular object that is to be quantized. By writing
+out the KL divergence with this specific prior for a given KL term, we will have that
+KL(qφ (zik ))||p(zik )) = −H[qφ ] + λq(zik = 1) − log(1 − e−λ )(1 − q(zik = 1)),
+
+(14)
+
+where H[qφ ] corresponds to the entropy of the variational posterior qφ (zik ). Now, under the assumption that λ is sufficiently large, we have that (1 − e−λ ) ≈ 1, thus the third term of the r.h.s. vanishes.
+Furthermore, let us assume that we want to optimize a rescaled version of the objective at Eq. 7
+where, without changing the optima, we divide both the log-likelihood and the KL-divergence by the
+size of the dataset N . In this case the individual KL divergences will be
+1
+1
+λ
+KL(qφ (zik )||p(zik )) ≈ − H[qφ ] + qφ (zik = 1).
+(15)
+N
+N
+N
+For large N the contribution of the entropy term will then be negligible. Equivalently, we can consider
+doing MAP estimation on the objective of Eq. 7, which corresponds to simply ignoring the entropy
+4
+
+terms of the variational bound. Now consider scaling the prior with N , i.e. λ = N λ0 . This denotes
+that the number of gates that stay active is constant irrespective of the size of the dataset. As a result,
+whereas for large N the entropy term is negligible the contribution from the prior is still significant.
+Thus, putting everything together, we arrive at a simple and intuitive objective function
+
+
+X X j≤i
+Y
+1
+F(θ, φ) := Eqφ (z1:K )
+log pθ (D|z1:K ) − λ0
+qφ (zjk = 1),
+(16)
+N
+k i∈B j∈B
+
+where B corresponds to the available bit widths of the quantizers.This objective can be understood
+as penalizing the probability of including the set of parameters associated with each quantizer and
+additional bits of precision assigned to them. The final objective reminisces the L0 norm regularization
+from [25]; indeed, under some assumptions in Bayesian Bits we recover the same objective. We
+discuss the relations between those two algorithms further in the Appendix.
+2.4
+
+Practical considerations
+
+The final objective we arrived at in Eq. 16 requires us to compute an expectation of the log-likelihood
+with respect to the stochastic gates. For a moderate amount of gates, this can be expensive to
+compute. One straightforward way to avoid it is to approximate the expectation with a Monte
+Carlo average by sampling from qφ (z1:K ) and using the REINFORCE estimator [37]. While this is
+straightforward to do, the gradients have high variance which, empirically, hampers the performance.
+To obtain a better gradient estimator with lower variance we exploit the connection of Bayesian Bits
+to L0 regularization and employ the hard-concrete relaxations of [25] as qφ (z1:K ), thus allowing for
+gradient-based optimization through the reparametrization trick [17, 32]. At test time, the authors
+of [25] propose a deterministic variant of the gates where the noise is switched off. As that can result
+into gates that are not in {0, 1}, thus not exactly corresponding to doubling the bits of precision, we
+take an alternative approach. We prune a gate whenever the probability of exact 0 under the relaxation
+exceeds a threshold t, otherwise we set it to 1. One could also hypothesize alternative ways to learn
+the gates, but we found that other approaches yielded inferior results. We provide all of the details
+about the Bayesian Bits optimization, test-time thresholding and alternative gating approaches in the
+Appendix.
+For the decomposition of the quantization operation that we previously described, we also need the
+inputs to be constrained within the quantization grid [α, β]. A simple way to do this would be to clip
+the inputs before pushing them through the quantizer. For this clipping we will use PACT [5], which
+in our case clips the inputs according to
+clip(x; α, β) = β − ReLU(β − α − ReLU(x − α))
+
+(17)
+
+where β, α can be trainable parameters. In practice we only learn β as we set α to zero for unsigned
+quantization (e.g. for ReLU activations), and for signed quantization we set α = −β. We subtract a
+small epsilon from β via (1 − 10−7 )β before we use it at Eq. 17, to ensure that we avoid the corner
+case in which a value of exactly β is rounded up to an invalid grid point. The step size of the initial
+grid is then parametrized as s2 = 2β−α
+2 −1 .
+Finally, for the gradients of the network parameters θ, we follow the standard practice and employ
+the straight-through estimator (STE) [2] for the rounding operation, i.e., we perform the rounding in
+the forward pass but ignore it in the backward pass by assuming that the operation is the identity.
+
+3
+
+Related work
+
+The method most closely related to our work is Differentiable Quantization (DQ) [35]. In this method,
+the quantization range and scale are learned from data jointly with the model weights, from which the
+bit width can be inferred. However, for a hardware-friendly application of this method, the learned bit
+widths must be rounded up to the nearest power-of-two. As a result, hypothetical efficiency gains will
+likely not be met in reality. Several other methods for finding mixed precision configurations have
+been introduced in the literature. [7] and follow-up work [6] use respectively the largest eigenvalue
+and the trace of the Hessian to determine a layer’s sensitivity to perturbations. The intuition is that
+strong curvature at the loss minimum implies that small changes to the weights will have a big impact
+on the loss. Similarly to this work, [24] takes a Bayesian approach and determines the bit width for
+each weight tensor through a heuristic based on the weight uncertainty in the variational posterior.
+5
+
+The drawback, similarly to [35], of such an approach is that there is no inherent control over the
+resulting bit widths.
+[38] frames the mixed precision search problem as an architecture search. For each layer in their
+network, the authors maintain a separate weight tensor for each bit width under consideration. A
+stochastic version of DARTS [22] is then used to learn the optimal bit width setting jointly with the
+network’s weights. [36] model the assignment of bit widths as a reinforcement learning problem.
+Their agent’s observation consists of properties of the current layer, and its action space is the possible
+bit widths for a layer. The agent receives the validation set accuracy after a short period of fine-tuning
+as a reward. Besides the reward, the agent receives direct hardware feedback from a target device.
+This feedback allows the agent to adapt to specific hardware directly, instead of relying on proxy
+measures.
+Learning the scale along with the model parameters for a fixed bit width network was independently
+introduced by [8] and [15]. Both papers redefine the quantization operation to expose the scale
+parameter to the learning process, which is then optimized jointly with the network’s parameters.
+Similarly, [5] reformulate the clipping operation such that the range of activations in a network can
+be learned from data, leading to activation ranges that are more amenable to quantization.
+The recursive decomposition introduced in this paper shares similarities with previous work on
+residual vector quantization [4], in which the residual error of vectors quantized using K-means
+is itself (recursively) quantized. [9] apply this method to neural network weight compression: the
+size of a network can be significantly reduced by only storing the centroids of K-means quantized
+vectors. Our decomposition also shares similarites with [21]. A crucial difference is that Bayesian bits
+produces valid fixed-point tensors by construction whereas for [21] this is not the case. Concurrent
+work [40] takes a similar approach to ours. The authors restrict themselves to what is essentially one
+step of our decomposition (without handling the scales), and to conditional gating during inference
+on activation tensors. The decomposition is not extended to multiple bit widths.
+
+4
+
+Experiments
+
+To evaluate our proposed method we conduct experiments on image classification tasks. In every
+model, we quantized all of the weights and activations (besides the output logits) using per-tensor
+quantization, and handled the batch norm layers as discussed in [18]. We initialized the parameters
+of the gates to a large value so that the model initially uses its full 32-bit capacity without pruning.
+We evaluate our method on two axes: test set classification accuracy, and bit operations (BOPs), as a
+hardware-agnostic proxy to model complexity. Intuitively the BOP count measures the number of
+multiplication operations multiplied by the bit widths of the operands. To compute the BOP count we
+use the formula introduced by [1], but ignore the terms corresponding to addition in the accumulator
+since its bit width is commonly fixed regardless of operand bit width. We refer the reader to the
+Appendix for details. We include pruning by performing group sparsity on the output channels of the
+weight tensors only, as pruning an output channel of the weight tensor corresponds to pruning that
+specific activation. Output channel group sparsity can often be exploited by hardware [11].
+Finally, we set the prior probability p(zjk = 1 | z(j/2)k = 1) = e−µλjk , where λjk is proportional to
+the contribution of gate zjk to the total model BOPs, which is a function of both the tensor k and the
+bit width j, and µ is a (positive) global regularization parameter. See the Appendix for details. It is
+worth noting that improvements in BOP count may not directly correspond to reduced latency on
+specific hardware. Instead, these results should be interpreted as an indication that our method can
+optimize towards a hardware-like target. One could alternatively encourage low memory networks by
+e.g. using the regularizer from [35] or even allow for hardware aware pruning and quantization by
+using e.g. latency timings from a hardware simulator, similar to [36].
+We compare the results of our proposed approach to literature that considers both static as well as
+mixed precision architectures. If BOP counts for a specific model are not provided by the original
+papers, we perform our own BOP computations, and in some cases we run our own baselines to allow
+for apples-to-apples comparison to alternative methods (details in Appendix). All tensors (weight
+and activation) in our networks are quantized, and the bit widths of all quantizers in our network are
+learned, contrary to common practice in literature to keep the first and last layers of the networks in a
+higher bit width (e.g. [5, 38]).
+6
+
+# bits W/A
+
+Acc. (%)
+
+MNIST
+Rel. GBOPs (%)
+
+Acc. (%)
+
+FP32
+TWN
+LR-Net
+RQ
+RQ
+RQ
+WAGE
+DQ*
+DQ - restricted*
+
+32/32
+2/32
+1/32
+8/8
+4/4
+2/8
+2/8
+Mixed
+Mixed
+
+99.36
+99.35
+99.47
+99.37
+99.60
+-
+
+100
+5.74
+2.99
+0.52
+1.56
+-
+
+93.05
+92.56
+93.18
+93.80
+92.04
+93.22
+91.59
+91.59
+
+100
+6.22
+3.11
+6.25
+1.56
+1.56
+0.48
+0.54
+
+Bayesian Bits µ = 0.01
+Bayesian Bits µ = 0.1
+
+Mixed
+Mixed
+
+99.30±0.03
+-
+
+0.36±0.01
+-
+
+93.23±0.10
+91.96±0.04
+
+0.51±0.03
+0.29±0.00
+
+Method
+
+CIFAR10
+Rel. GBOPs (%)
+
+Table 1: Results on the MNIST and CIFAR 10 tasks, mean and stderr over 3 runs. We compare
+against TWN [20], LR-Net [34], RQ [23], WAGE [39], and DQ [35]. * results run by the authors.
+Finally, while our proposed method facilitates an end-to-end gradient based optimization for pruning
+and quantization, in practical applications one might not have access to large datasets and the
+appropriate compute. For this reason, we perform a series of experiments on a consumer-grade GPU
+using a small dataset, in which only the quantization parameters are updated on a pre-trained model,
+while the pre-trained weights are kept fixed.
+4.1
+
+Toy experiments on MNIST & CIFAR 10
+
+For the first experiment, we considered the toy tasks of MNIST and CIFAR 10 classification using a
+LeNet-5 and a VGG-7 model, respectively, commonly employed in the quantization literature, e.g.,
+[20]. We provide the experimental details in the Appendix. For the CIFAR 10 experiment, we also
+implemented the DQ method from [35] with a BOP regularizer instead of a weight size regularizer so
+that results can directly be compared to Bayesian Bits. We considered two cases for DQ: one where
+the bit widths are unconstrained and one where we round up to the nearest bit width that is a power
+of two (DQ-restricted).
+As we can see from the results in Table 1, our proposed method provides better trade-offs between
+the computational complexity of the resulting architecture and the final accuracy on the test set than
+the baselines which we compare against, both for the MNIST and the CIFAR 10 experiments. In
+results for the CIFAR 10 experiments we see that varying the regularization strength can be used to
+control the trade-off between accuracy and complexity: stronger regularization yields lower accuracy,
+but also a less complex model.
+In the Appendix we plot the learned sparsity and bit widths for our models. There we observe that
+in the aggressive regularization regimes, Bayesian Bits quantizes almost all of the tensors to 2-bit,
+but usually keeps the first and last layers to higher bit-precision, which is in line with common
+practice in literature. In the case of moderate regularization at VGG, we observe that Bayesian Bits
+hardly prunes, it removed 2 channels in the last 256 output convolutional layer and 8 channels at the
+penultimate weight tensor, and prefers to keep most weight tensors at 2-bit whereas the activations
+range from 2-bit to 16-bit.
+4.2
+
+Experiments on Imagenet
+
+We ran an ablation study on ResNet18 [10] which is common in the quantization literature [5, 14, 23].
+We started from the pretrained PyTorch model [30]. We fine-tuned the model’s weights jointly with
+the quantization parameters for 30 epochs using Bayesian Bits. During the last epochs of Bayesian
+Bits training, BOP count remains stable but validation scores fluctuate due to the stochastic gates,
+so we fixed the gates and fine-tuned the weights and quantization ranges for another 10 epochs. To
+explore generalization to different architectures we experimented with the MobileNetV2 architecture
+[33], an architecture that is challenging to quantize [27, 28]. The Appendix contains full experimental
+details, additional results, and a comparison of the results before and after fine-tuning.
+In Figure 2a we compare Bayesian Bits against a number of strong baselines and show better trade offs
+between accuracy and complexity. We find different trade-offs by varying the global regularization
+7
+
+Bayesian Bits
+BB quantization only
+BB fixed w4a8, pruning only
+BB fixed w8a8, pruning only
+
+LSQ w8a8*
+LSQ w4a8*
+LSQ w4a4 (8 in/out)*
+LSQ w4a4*
+
+PACT w4a4 (32 in/out)
+PACT w2a2 (32 in/out)
+DQ*
+DQ - restricted*
+
+RQ
+TWN
+LR-Net
+
+Bayesian Bits
+FP32 accuracy
+
+Comparison of Bayesian Bits and baseline methods, ResNet18
+
+% Top-1 accuracy
+
+LSQ 4/4*
+
+TQT 8/8
+
+Bayesian Bits result for MobileNetV2 on ImageNet and baselines
+72
+
+70
+69
+
+71
+
+68
+
+70
+
+67
+
+69
+
+66
+65
+
+68
+
+64
+
+67
+
+63
+
+66
+
+62
+
+65
+
+61
+
+64
+
+60
+0.0
+
+AdaRound 4/8
+LSQ 4/8*
+
+0.5
+
+1.0
+
+1.5
+
+2.0
+
+2.5
+
+3.0
+
+3.5
+
+4.0
+
+% BOP of 32 bit model
+
+4.5
+
+5.0
+
+5.5
+
+6.0
+
+63
+
+(a) ResNet18 Imagenet results
+
+1.0
+
+1.5
+
+2.0
+
+2.5
+
+3.0
+
+3.5
+
+4.0
+
+4.5
+
+5.0
+
+5.5
+
+6.0
+
+(b) MobileNet V2 ImageNet results
+
+Figure 2: Imagenet Results. (a) Bayesian Bits Imagenet validation accuracy on ResNet18.
+Bayesian Bits an BB Quantization only use µ ∈ {0.03, 0.05, 0.07, 0.2}. BB pruning only uses
+µ ∈ {0.05, 0.2, 0.5, 0.7, 1} The Bayesian Bits results show the mean over 3 training runs. The
+quantization only and pruning only results show the mean over 2 training results. The BOP count per
+model is presented in the Appendix. The notation ‘wXaY’ indicates a fixed bit width architecture
+with X bit weights and Y bit activations. ‘Z in/out’ indicates that the weights of the first layer as well
+as the inputs and weights of the last layer are kept in Z bits. In this plot we additionally compare to
+PACT [5]. Note that PACT uses 32 bit input and output layers, which negatively affects their BOP
+count. In the Appendix we compare against a hypothetical setting in which PACT with 8 bit input
+and output layers yields the same results. * results run by the authors. (b) Bayesian Bits results on
+MobileNet V2, compared to AdaRound [27], LSQ [8], and TQT [15] * results run by the authors.
+
+parameter µ. Due to differences in experimental setup, we ran our own baseline experiments to obtain
+results for LSQ [8]. Full details of the differences between the published experiments and ours, as
+well as experimental setup for baseline experiments can be found in the Appendix.
+Besides experiments with combined pruning and quantization, we ran two sets of ablation experiments
+in which Bayesian Bits was used for pruning a fixed bit width model, and for mixed precision
+quantization only, without pruning. This was achieved through learning only the 4 bit and higher
+gates for the quantization only experiment, and only the zero bit gates for the pruning only experiment.
+In 2a we see that combining pruning with quantization yields superior results.
+We provide the tables of the results in the Appendix along with visualizations of the learned architectures. Overall, we observe that Bayesian Bits provides better trade-offs between accuracy and
+efficiency compared to the baselines. NB: we cannot directly compare our results to those of [36],
+[6, 7] and [38], for reasons outlined in the Appendix, and therefore omit these results in this paper.
+A note on computational cost Bayesian Bits requires the computation of several residual error
+tensors for each weight and activation tensor in a network. While the computational overhead of these
+operations is very small compared to the computational overhead of the convolutions and matrix
+multiplications in a network, we effectively need to store N copies of the model for each forward pass,
+for N possible quantization levels. To alleviate the resulting memory pressure and allow training
+with reasonable batch sizes, we use gradient checkpointing [3]. Gradient checkpointing itself incurs
+extra computational overhead. The resulting total runtime for one ResNet18 experiment, consisting
+of 30 epochs of training with Bayesian Bits and 10 epochs of fixed-gate fine-tuning, is approximately
+70 hours on a single Nvidia TeslaV100. This is a slowdown of approximately 2X compared to 40
+epochs of quantization aware training.
+4.2.1
+
+Post-training mixed precision
+
+In this experiment, we evaluate the ability of our method to find sensible mixed precision settings by
+running two sets of experiments on a pre-trained ResNet18 model and a small version of ImageNet.
+In the first experiment only the values of the gates are learned, while in the second experiment both
+the values of the gates and the quantization ranges are learned. In both experiments the weights
+are not updated. We compare this method to an iterative baseline, in which weights and activation
+8
+
+Bayesian Bits Post-training, gates only
+Bayesian Bits Post-training, gates and scales
+Baseline Mixed 16/8/4
+Baseline Mixed 16/8
+
+Baseline Mixed 16/4
+Baseline Fixed 8/8
+FP32 Baseline
+
+3
+
+7
+
+Post-training mixed precision on ResNet18
+
+70
+68
+
+% Top-1 Accuracy
+
+66
+64
+62
+60
+58
+56
+1
+
+2
+
+4
+
+5
+
+6
+
+% BOP of 32 bit model
+
+8
+
+9
+
+10
+
+Figure 3: Pareto fronts of Bayesian Bits post-training and the baseline method, as well as a fixed 8/8
+baseline
+tensors are cumulatively quantized based on their sensitivity to quantization. We compare against
+this baseline since it works similarly to Bayesian Bits, and note that this approach could be combined
+with other post-training methods such as Adaptive Rounding [27] after a global bit width setting is
+found. Full experimental details can be found in the Appendix. Figure 3 compares the Pareto front of
+post-training Bayesian Bits with that of the baseline method and an 8/8 fixed bit width baseline [28].
+These results show that Bayesian Bits can serve as a method in-between ‘push-button’ post-training
+methods that do not require backpropagation, such as [28], and methods in which the full model is
+fine-tuned, due to the relatively minor data and compute requirements.
+
+5
+
+Conclusion
+
+In this work we introduced Bayesian Bits, a practical method that can effectively learn appropriate bit
+widths for efficient neural networks in an end-to-end fashion through gradient descent. It is realized
+via a novel decomposition of the quantization operation that sequentially considers additional bits
+via a gated addition of quantized residuals. We show how to optimize said gates while incorporating
+principled regularizers through the lens of sparsifying priors for Bayesian inference. We further show
+that such an approach provides a unifying view of pruning and quantization and is hardware friendly.
+Experimentally, we demonstrated that our approach finds more efficient networks than prior art.
+
+Broader Impact
+Bayesian Bits allows networks to run more efficiently during inference time. This technique could be
+applied to any network, regardless of the purpose of the network.
+A positive aspect of our method is that, by choosing appropriate priors, a reduction in inference time
+energy consumption can be achieved. This yields longer battery life on mobile devices and lower
+overall power consumption for models deployed in production on servers.
+A negative aspect is that quantization and compression could alter the behavior of the network in
+subtle, unpredictable ways. For example, [29] notes that pruning a neural network may not affect
+aggregate statistics, but can have different effects on different classes, thus potentially creating
+unfair models as a result. We have not investigated the results of our method on the fairness of the
+predictions of a model.
+
+Acknowledgments and Disclosure of Funding
+This work was funded by Qualcomm Technologies, Inc.
+
+References
+[1] Chaim Baskin, Eli Schwartz, Evgenii Zheltonozhskii, Natan Liss, Raja Giryes, Alex M Bronstein, and Avi Mendelson. Uniq: Uniform noise injection for non-uniform quantization of
+9
+
+neural networks. arXiv preprint arXiv:1804.10969, 2018.
+[2] Yoshua Bengio, Nicholas Léonard, and Aaron Courville. Estimating or propagating gradients
+through stochastic neurons for conditional computation. arXiv preprint arXiv:1308.3432, 2013.
+[3] Tianqi Chen, Bing Xu, Chiyuan Zhang, and Carlos Guestrin. Training deep nets with sublinear
+memory cost. arXiv preprint arXiv:1604.06174, 2016.
+[4] Yongjian Chen, Tao Guan, and Cheng Wang. Approximate nearest neighbor search by residual
+vector quantization. Sensors, 10(12):11259–11273, 2010.
+[5] Jungwook Choi, Zhuo Wang, Swagath Venkataramani, Pierce I-Jen Chuang, Vijayalakshmi
+Srinivasan, and Kailash Gopalakrishnan. Pact: Parameterized clipping activation for quantized
+neural networks. arXiv preprint arXiv:1805.06085, 2018.
+[6] Zhen Dong, Zhewei Yao, Yaohui Cai, Daiyaan Arfeen, Amir Gholami, Michael W Mahoney,
+and Kurt Keutzer. Hawq-v2: Hessian aware trace-weighted quantization of neural networks.
+arXiv preprint arXiv:1911.03852, 2019.
+[7] Zhen Dong, Zhewei Yao, Amir Gholami, Michael W. Mahoney, and Kurt Keutzer. HAWQ:
+hessian aware quantization of neural networks with mixed-precision. International Conference
+on Computer Vision (ICCV), 2019.
+[8] Steven K. Esser, Jeffrey L. McKinstry, Bablani Deepika, Rathinakumar Appuswamy, and
+Dharmendra S. Modha. Learned step size quantization. International Conference on Learning
+Representations (ICLR), 2020.
+[9] Yunchao Gong, Liu Liu, Ming Yang, and Lubomir Bourdev. Compressing deep convolutional
+networks using vector quantization. International Conference on Learning Representations
+(ICLR), 2015.
+[10] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for image
+recognition. Conference on Computer Vision and Pattern Recognition (CVPR), 2016.
+[11] Yihui He, Xiangyu Zhang, and Jian Sun. Channel pruning for accelerating very deep neural
+networks. In Proceedings of the IEEE International Conference on Computer Vision, pages
+1389–1397, 2017.
+[12] Geoffrey E Hinton and Drew Van Camp. Keeping the neural networks simple by minimizing
+the description length of the weights. In Conference on Computational learning theory (COLT),
+1993.
+[13] Andrey Ignatov, Radu Timofte, Andrei Kulik, Seungsoo Yang, Ke Wang, Felix Baum, Max Wu,
+Lirong Xu, and Luc Van Gool. Ai benchmark: All about deep learning on smartphones in 2019.
+International Conference on Computer Vision (ICCV) Workshops, 2019.
+[14] Benoit Jacob, Skirmantas Kligys, Bo Chen, Menglong Zhu, Matthew Tang, Andrew Howard,
+Hartwig Adam, and Dmitry Kalenichenko. Quantization and training of neural networks
+for efficient integer-arithmetic-only inference. Conference on Computer Vision and Pattern
+Recognition (CVPR), 2018.
+[15] Sambhav R. Jain, Albert Gural, Michael Wu, and Chris Dick. Trained uniform quantization
+for accurate and efficient neural network inference on fixed-point hardware. arxiv preprint
+arxiv:1903.08066, 2019.
+[16] Diederik P Kingma and Jimmy Ba. Adam: A method for stochastic optimization. International
+Conference on Learning Representations (ICLR), 2015.
+[17] Diederik P Kingma and Max Welling. Auto-encoding variational bayes. International Conference on Learning Representations (ICLR), 2014.
+[18] Raghuraman Krishnamoorthi. Quantizing deep convolutional networks for efficient inference:
+A whitepaper. arXiv preprint arXiv:1806.08342, 2018.
+[19] Andrey Kuzmin, Markus Nagel, Saurabh Pitre, Sandeep Pendyam, Tijmen Blankevoort, and
+Max Welling. Taxonomy and evaluation of structured compression of convolutional neural
+networks. arXiv preprint arXiv:1912.09802, 2019.
+[20] Fengfu Li, Bo Zhang, and Bin Liu. Ternary weight networks. International Conference on
+Learning Representations (ICLR), 2017.
+10
+
+[21] Zefan Li, Bingbing Ni, Wenjun Zhang, Xiaokang Yang, and Wen Gao. Performance guaranteed network acceleration via high-order residual quantization. In Proceedings of the IEEE
+International Conference on Computer Vision, pages 2584–2592, 2017.
+[22] Hanxiao Liu, Karen Simonyan, and Yiming Yang. Darts: Differentiable architecture search.
+International Conference on Learning Representations (ICLR), 2018.
+[23] Christos Louizos, Matthias Reisser, Tijmen Blankevoort, Efstratios Gavves, and Max Welling.
+Relaxed quantization for discretized neural networks. In International Conference on Learning
+Representations (ICLR), 2019.
+[24] Christos Louizos, Karen Ullrich, and Max Welling. Bayesian compression for deep learning.
+Neural Information Processing Systems (NeuRIPS), 2017.
+[25] Christos Louizos, Max Welling, and Diederik P Kingma. Learning sparse neural networks
+through l0 regularization. International Conference on Learning Representations (ICLR), 2018.
+[26] Bert Moons, Roel Uytterhoeven, Wim Dehaene, and Marian Verhelst. 14.5 envision: A 0.26-to10tops/w subword-parallel dynamic-voltage-accuracy-frequency-scalable convolutional neural
+network processor in 28nm fdsoi. In 2017 IEEE International Solid-State Circuits Conference
+(ISSCC), pages 246–247. IEEE, 2017.
+[27] Markus Nagel, Rana Ali Amjad, Mart van Baalen, Christos Louizos, and Tijmen Blankevoort.
+Up or down? adaptive rounding for post-training quantization, 2020.
+[28] Markus Nagel, Mart van Baalen, Tijmen Blankevoort, and Max Welling. Data-free quantization
+through weight equalization and bias correction. International Conference on Computer Vision
+(ICCV), 2019.
+[29] Michela Paganini. Prune responsibly, 2020.
+[30] Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan,
+Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, Alban Desmaison, Andreas
+Kopf, Edward Yang, Zachary DeVito, Martin Raison, Alykhan Tejani, Sasank Chilamkurthy,
+Benoit Steiner, Lu Fang, Junjie Bai, and Soumith Chintala. Pytorch: An imperative style,
+high-performance deep learning library. In Neural Information Processing Systems (NeuRIPS),
+2019.
+[31] Carsten Peterson. A mean field theory learning algorithm for neural networks. Complex systems,
+1:995–1019, 1987.
+[32] Danilo Jimenez Rezende, Shakir Mohamed, and Daan Wierstra. Stochastic backpropagation
+and approximate inference in deep generative models. International Conference on Machine
+Learning (ICML), 2014.
+[33] Mark Sandler, Andrew Howard, Menglong Zhu, Andrey Zhmoginov, and Liang-Chieh Chen.
+Mobilenetv2: Inverted residuals and linear bottlenecks. In Conference on Computer Vision and
+Pattern Recognition (CVPR), June 2018.
+[34] Oran Shayer, Dan Levi, and Ethan Fetaya. Learning discrete weights using the local reparameterization trick. International Conference on Learning Representations (ICLR), 2017.
+[35] Stefan Uhlich, Lukas Mauch, Kazuki Yoshiyama, Fabien Cardinaux, Javier Alonso Garcı́a,
+Stephen Tiedemann, Thomas Kemp, and Akira Nakamura. Mixed precision dnns: All you need
+is a good parametrization. International Conference on Learning Representations (ICLR), 2020.
+[36] Kuan Wang, Zhijian Liu, Yujun Lin, Ji Lin, and Song Han. Haq: Hardware-aware automated
+quantization with mixed precision. In Conference on Computer Vision and Pattern Recognition
+(CVPR), 2019.
+[37] Ronald J Williams. Simple statistical gradient-following algorithms for connectionist reinforcement learning. Machine learning, 8(3-4):229–256, 1992.
+[38] Bichen Wu, Yanghan Wang, Peizhao Zhang, Yuandong Tian, Peter Vajda, and Kurt Keutzer.
+Mixed precision quantization of convnets via differentiable neural architecture search. International Conference on Learning Represntations (ICLR), 2019.
+[39] Shuang Wu, Guoqi Li, Feng Chen, and Luping Shi. Training and inference with integers in
+deep neural networks. International Conference on Learning Representations (ICLR), 2018.
+[40] Yichi Zhang, Ritchie Zhao, Weizhe Hua, Nayun Xu, G. Edward Suh, and Zhiru Zhang. Precision gating: Improving neural network efficiency with dynamic dual-precision activations.
+International Conference on Learning Representations (ICLR), 2020.
+11
+
+A
+
+Further remarks on Bayesian Bits
+
+A.1
+
+Relationship to L0 norm regularization
+
+It is interesting to see that the overall objective that we arrive at is similar to the stochastic version of
+the L0 regularizer of [25]. By using the fact that
+
+
+X j≤i
+Y
+X j≤i
+Y
+qφ (zjk = 1) = Eqφ (zk ) 
+I[zjk 6= 0] ,
+(18)
+i∈B j∈B
+
+i∈B j∈B
+
+we can rewrite Eq. 16 as follows:
+"
+F(θ, φ) := Eqφ (z1:K )
+
+#
+X X j≤i
+Y
+1
+0
+log pθ (D|z1:K ) − λ
+I[zjk 6= 0] .
+N
+k i∈B j∈B
+
+Now by assuming that the parameters will not be quantized, i.e. z4 = z8 = z16 = z32 = 1 the
+objective becomes
+"
+#
+X
+1
+0
+Eqφ (z2,1:K )
+log pθ (D|z2,1:K ) − λ |B|
+I[z2k 6= 0] ,
+(19)
+N
+k
+
+which corresponds to regularizing with a specific strength the expected L0 norm of the vector that
+determines the group of parameters that will be included in the model.
+A.2
+
+Optimizing the Bayesian bits objective
+
+For optimization, we can exploit the alternative formulation of the Bayesian bits objective, presented
+at Eq. 19, to use the hard-concrete relaxation of [25]. More specifically, the hard concrete distribution
+has the following sampling process:
+
+
+ujk
+gjk + φjk
+ujk ∼U [0, 1], gjk = log
+, sjk = σ
+1 − ujk
+τ
+zjk = min(1, max(0, sjk (ζ − γ) + γ))
+(20)
+where σ(·) corresponds to the sigmoid function, τ is a temperature hyperparameter and ζ, γ are
+hyperaparameters that ensure z has support for exact 0, 1. Essentially, it corresponds to a mixture
+distribution that has three components: one that corresponds to zero, one that corresponds to one and
+one that produces values in (0, 1). Under this relaxation, the objective in Eq. 19 will be converted to
+
+F(θ, φ) := Erφ (z1:K )
+
+
+X X j≤i
+Y
+1
+log pθ (D|z1:K ) − λ0
+Rφ (zjk > 0).
+N
+k i∈B j∈B
+
+where Rφ (·) corresponds to complementary cumulative distribution function, i.e. 1 − Rφ (·) is
+the cumulative distribution function (CDF), of the density rφ (z) induced by the sampling process
+described at Eq. 20. The Rφ (zjk > 0) now corresponds to the probability of activating the gate zjk
+and has the following simple form
+
+
+−γ
+Rφ (zi > 0) = σ φ − τ log
+.
+(21)
+ζ
+For the configuration of the gates at test time we use the following expression which results into
+z ∈ {0, 1}
+ 
+
+
+
+
+γ
+z = I σ τ log −
+−φ <t ,
+(22)
+ζ
+where we set t = 0.34. This threshold value corresponds to the case when the probability of the
+mixture component corresponding to exact zero is higher than the other two.
+12
+
+Table 2: Results of experiments on Bayesian Bits with deterministic gates. For the first phase
+of training we lowered the learning rate of the gate parameters to 10−4 , and initialized the gate
+parameters to 2, which is much closer to the saturation point of the HardSigmoid function, and kept
+the other hyperparameters the same. Pre-FT results of the deterministic gate experiments and post-FT
+Bayesian Bits results are included for comparison.
+Experiment
+
+Gating type
+
+Acc. (%)
+
+Rel. GBOPs (%)
+
+CE Loss
+
+CIFAR10, VGG, µ = 0.01
+CIFAR10, VGG, µ = 0.01
+
+Stochastic
+Deterministic
+
+93.23±0.10
+92.82
+
+0.51±0.03
+0.42
+
+0.00±0.00
+0.00
+
+ImageNet, ResNet18, µ = 0.03
+ImageNet, ResNet18, µ = 0.2
+ImageNet, ResNet18, µ = 0.03 (Pre-FT)
+ImageNet, ResNet18, µ = 0.03
+ImageNet, ResNet18, µ = 0.03 (Pre-FT)
+ImageNet, ResNet18, µ = 0.03
+ImageNet, ResNet18, µ = 0.03 (Pre-FT)
+ImageNet, ResNet18, µ = 0.03
+
+Stochastic
+Stochastic
+Deterministic
+Deterministic
+Deterministic
+Deterministic
+Deterministic
+Deterministic
+
+69.36±0.11
+63.76±0.36
+0.24
+56.81
+6.74
+68.03
+54.61
+60.18
+
+1.93±0.05
+0.68±0.03
+0.30
+0.30
+24.09
+24.09
+0.48
+0.48
+
+1.26±0.00
+1.64±0.03
+1.88
+1.88
+1.49
+1.49
+1.96
+1.96
+
+A.3
+
+Alternative gating approaches
+
+We experimented with several other gating approaches. In this section we describe these approaches,
+their downsides when compared to the approach described in section 2, and results to support our
+claims where possible.
+Deterministic gates We experimented with deterministic gates. Results of preliminary experiments
+with deterministic gates can be found in Table 2. Here we can see that while deterministic gates do
+not significantly hurt results on the CIFAR 10 experiments, ImageNet experiments do not fare so well.
+We attribute this to the following observations: 1) Gates getting “stuck”: once a deterministic gate
+parameter assumes a value in the saturated 0 part of the hardsigmoid function, it no longer receives
+any gradients from the cross-entropy loss. Due to the stochasticity in our gates there is always a
+nonzero probability that a gate will be (partially) on and receive a gradient from the loss. 2) The
+model can learn to keep deterministic gates fixed at a value between 0 and 1 during training, and
+essentially use it as a free parameter to reduce the cross-entropy loss, while simulatenously lowering
+the regularization loss. This creates a disconnect between the training and the inference models, as
+during inference we fix the gates to either 0 or 1, as described in Section 2. This effect can be seen in
+Table 2: for the ResNet experiments we see (pre fine-tuning) training loss values usually associated
+with much higher validation accuracies. The model can compensate for this through additional
+fine-tuning, but we note that for the deterministic gate experiments the same hyperparameters gave
+strongly differing results, which we did not observe for the stochastic gates. We experienced the same
+issues for deterministic non-saturating sigmoid gates.
+REINFORCE We experimented with vanilla REINFORCE, and REINFORCE enhanced with
+several standard baselines, but found that the high variance of the estimated gradients posed difficulties
+for optimization of our networks, and abandoned this route.
+A.4
+
+Bayesian Bits algorithm
+
+At Figure 4 we provide the algorithm for the forward pass with a Bayesian Bits quantizer.
+A.5
+
+Decomposed quantization for non-doubling bit widths
+
+Consider the general case of moving from bit width a to bit width b, where 0 < a < b, for a given
+range [α, β]. Using the equation of section 2.1, i.e. sb = sa /2b−a − 1 yields a value of (β − α)/N ,
+where N = 2b + 2a − 2b−a − 1. If b = 2a then this simplifies to N = 2b − 1, which is the desired
+result. However, if b 6= 2a then there are two cases to distinguish:
+1. b > 2a, in this case we can write N = 22a+c + 2a − 2a+c − 1, where c = b − 2a. There
+are 2a+c − 2a bins more than desired in the range.
+13
+
+Algorithm 1 Forward pass with Bayesian bits
+Require: Input x, α, β, φ
+clip(x, min = α, max = β)
+x
+s2 ← 2β−α
+2 −1 , x2 ← s2 b s e
+2
+z2 ← get gate(φ2 ), xq ← z2 x2
+for b in {4, 8, 16, 32} do
+sb/2
+, zb ← get gate(φb )
+sb ← 2b/2
+ +1
+
+P
+x−(x2 + j<b j )
+b ← sb
+sb
+Q
+
+xq ← xq + zb
+j<b zj b
+end for
+return xq
+
+Algorithm 2 Getting the gate during training and
+inference
+Require: Input φ, ζ, γ, β, t, training
+if training then
+u
+u ∼ U [0, 1], g ← log 1−u
+, s ← σ((g +
+φ)/b)
+z ← min(1, max(0, s(ζ − γ) + γ))
+else
+
+i
+h 
+ 
+z ← I σ β log − γζ − φ < t
+end if
+return z
+
+Figure 4: Pseudo-code for the forward pass of the Bayesian Bits quantizer.
+2. b < 2a, in this case we can write N = 22a−c + 2a − 2a−c − 1, where c = 2a − b. There
+are 2a − 2a−c fewer bins than desired.
+In these cases α and β must be scaled according to the difference between the expected and the true
+number of bins.
+
+B
+
+Experimental details
+
+B.1
+
+Experimental setup
+
+The LeNet-5 model is realized as 32C5 - MP2 - 64C5 - MP2 - 512FC - Softmax, whereas the VGG
+is realized as 2x(128C3) - MP2 - 2x(256C3) - MP2 - 2x(512C3) - MP2 - 1024FC - Softmax. The
+notations is as follows: 128C3 corresponds to a convolutional layer of 128 feature maps with 3x3
+kernels, MP2 corresponds to max-pooling with 2x2 kernels and a stride of 2, 1024FC corresponds to a
+fully connected layer with 1024 hidden units and Softmax corresponds to the classifier. Both models
+used ReLU nonlinearities, whereas for the VGG we also employed Batch-normalization for every
+layer except the last one. The weights, biases, gates, and ranges were optimized with Adam [16]
+using the default hyper-parameters for 100 epochs with a batch size of 128 on MNIST, 300 epochs
+with a batch size of 128 on CIFAR 10 and during the last 1/3 epochs we linearly decayed the learning
+rate to zero. For CIFAR 10, we also performed standard data augmentation: random horizontal flips,
+random crops of 4 pixel padded images, and channel standardization. For the test images, we only
+performed channel standardization. We do not perform additional fine-tuning with fixed gates for the
+MNIST and CIFAR 10 epxeriments, as we found this did not improve results.
+For the ResNet18 we used SGD with a learning rate of 3e-3 and Nesterov momentum of 0.9 for the
+network parameters and used Adam with the default hyperparameters for the optimization of the gate
+parameters and ranges. The learning rates for all of the optimizers were decayed by a factor of 10
+after every 10 epochs. We did not employ any weight decay and used a batch-size of 384 distributed
+across four Tesla V100 GPUs. After training we fixed the gates using the thresholding described in
+Eq A.2, and fine-tuned the weights and scale parameter β for 10 epochs. In this stage we used SGD
+Nesterov momentum of 0.9 for the weights, and Adam for the scales, both starting at a learning rate
+of 10−4 and annealed to 0 using cosine learning rate annealing at each iteration.
+B.2
+
+BOP and MAC count
+
+The BOP count of a layer l is computed as:
+BOPs(l) = MACs(l)bw ba ,
+where bw is the bit width of the weights and ba is the bit width of the (input) activations.
+14
+
+(23)
+
+B.2.1
+
+BOP-aware regularization
+
+We set the regularization strength for each gate zjk to be µλ0jk , where λ0jk is proportional to the BOP
+count corresponding to the bit width j and the MAC count of the layer lk that the quantizer k operates
+on. Specifically, we set λ0jk = bj MACs(lk )/ max([MACs(1), . . . , MACs(L)]), where bj is the bit
+width that gate j controls and L corresponds to the total number of layers.
+In practical applications, one would experiment with a range of regularization strengths to generate a
+Pareto curve, and pick a model that achieves a suitable tradeoff between target task performance and
+BOP. We leave targeting a specific BOP count for future work.
+B.2.2
+
+BOP and MAC count under sparsity
+
+Since the sparsification only affects a layer’s MAC count and not its bit width, Eq B.2 holds for
+sparsified networks as well. However, it is insightful to see how sparsity affects a layer’s BOP count
+through its effect on the layer’s MAC count.
+The MAC count of a convolutional layer can be derived as follows. For each output pixel in a feature
+map we know that Wf × Wh × B computations were performed, where Wf and Wh are the filter
+width and height, and B is the convulational block size (e.g. for dense convolutions B is equal to
+the number of input channels, for depthwise separable convolutions B is equal to 1). There are
+Co × W × H output pixels, where Co is the number of output channels, and W and H are the width
+and height of the output map. Henceforth we only consider dense convolutional layers, i.e. layers
+where B = Ci where Ci is the number of input channels. Thus, the MAC count of a convolutional
+layer l can be computed as MACs(l) = Co × W × H × Ci × Wf × Hf . Note that in this formulation,
+no special care needs to be taken in considering padding, stride, or dilations.
+As stated earlier, pruning output channels of layer l − 1 corresponds to pruning the associated
+activations, which in turn corresponds to pruning input channels of layer l. If we assume that Ci0
+output channels are maintained in layer l − 1, and Co0 output channels are maintained in layer l, the
+pruned MAC count can be computed as:
+MACspruned (l) = pi Ci po Co W HWf Hf
+= pi po MACs(l)
+
+(24)
+(25)
+
+where pi = Ci0 /Ci , po = Co0 /Co , and MACs(l) is used to denote the MAC count of the unpruned
+layer. As a result, if we know the input and output pruning ratios pi and po , the BOP count can be
+computed without recomputing the MAC count for the pruned layers with a slight modification of
+equation 23:
+BOPspruned (l) = MACspruned (l)bw ba
+= pi po MACs(l)bw ba
+B.2.3
+
+(26)
+(27)
+
+ResNet18 MAC count computation
+
+To compute the BOP count for ResNet18 models, we need to be careful with our application of
+equation 27, due to the presence of residual connections: to turn off an input channel at the input
+of a residual block, it must be turned off both in the output of the previous block as well as in the
+residual connection. We circumenvent this issue by only considering pi for the inputs of the second
+convolutional layer in each of the residual blocks, where there is no residual connection. Elsewhere,
+pi is always assumed to be 1. Output pruning is treated as in any other network, since the removal of
+output channels always leads to reduced MAC count. Thus, the BOP counts reported for ResNet18
+models must be interpreted as an upper bound; the real BOP count may be lower.
+B.2.4
+
+ResNet18 regularization
+
+In ResNet architectures, the presence of downsample layers means that certain quantized activation
+tensors feed into two multiple convolution operations, i.e. the downsample layer and the input layer of
+the corresponding block. As a result, we need to slightly modify the computation of λ0jk as introduced
+15
+
+in Section 4 for these activation quantizers. For an activation quantizer k for which this is the case,
+we compute λ0jk as follows:
+λ0jk = bj
+
+(MACs(ld ) + MACs(lc ))
+max ([MACs(1) . . . , MACs(L)])
+
+(28)
+
+where ld and lc denote the downsample layer and the first convolutional layer in the corresponding
+block respectively.
+
+C
+
+Baselines
+
+C.1
+
+Differences between baselines and our experimental setup
+
+Table 3: Differences in experimental setup between the LSQ [8] and PACT[5] baselines and ours
+Experiment
+LSQ [8]
+. PACT [5]
+LSQ (our impl)
+Bayesian Bits
+
+ResNet18 type
+
+BN
+
+Act quant
+
+Grad scaling
+
+FP32 acc
+
+Pre
+Pre
+
+Not folded
+?
+
+Input
+Input
+
+Yes
+No
+
+70.5%
+70.2%
+
+Post
+Post
+
+Folded [18]
+Folded [18]
+
+Output
+Output
+
+No
+No
+
+69.7%
+69.7%
+
+In Table 3 we show the differences in experimental setup between our experiments and the experimental setup as used in LSQ and PACT. In Table 3 we compare along the following axes: usage of pre- or
+post-activation ResNet18; pre-activation ResNet18 gives higher baseline accuracy. Handling of batch
+normalization layers; not folding BN parameters into the associated weight tensors is identical to
+using per-channel quantization, instead of per tensor quantization. Per-channel quantization gives
+higher accuracy than per-tensor quantization. Input or output quantization: Using input quantization
+implies that activation tensors are not quantized until they are used as input to an operation. This in
+turn implies that high-precision activation tensors need to be stored and thus transported between
+operations. This does not affect network BOP count but might yield increased latency for hardware
+deployment. FP32 accuracy: higher FP accuracy on the same architecture is likely to yield higher
+quantized accuracy. Gradient scaling: this is a technique introduced by [8].
+There are several works of note to which we cannot directly compare our results. [36] only present
+ImageNet results on ResNet50 [10] and MobileNet [33] architectures. Furthermore, the authors
+do not provide BOP counts for their models, making direct comparison to our results impossible.
+[6, 7] and [38] do present Imagenet results on ResNet18, but do not provide the mixed precision
+configuration for their reported results. While [38] provide the BOP count of the resulting ResNet18
+network, it is not mentioned whether the fact that the first and last layers are in full precision is taken
+into account in determining the compute reduction. Furthermore, they include a 3-bit configuration in
+their search space, which is not efficiently implemented in hardware. This makes it hard to compute
+the BOP count using Eq. B.2. Furthermore, their models are optimized for weight size reduction, not
+compute reduction.
+LSQ Experimental Details A fair comparison between the published results of [8] and our results
+is not possible due to the differences in experimental setup highlighted in Table 3. To ensure that we
+would still do the baseline method of [8] justice, we ran an extensive suite of experiments to optimize
+the experimental hyperparameters. The results presented in Figure 2a and Table 4 are obtained as
+follows: we trained the network parameters and scales with Adam optimizers, with the same learning
+rate for the parameters and the scales. We performed grid search over the learning rate. The best
+learning rates were 10−3 for the w8a8 experiment, 10−5 for w4a8, 10−4 for w4a4 with 8 bit inputs
+and outputs, and 3 · 10−5 for full w4a4. We experimented with using SGD for the network parameters
+while using Adam with a lower learning rate for the scales, but found that using Adam for both
+consistently yielded better performance. We trained for 40 epochs, and decayed all learning rates
+using cosine decay to 10−3 times the original learning rate, except for the w8a8 experiment where
+we trained for 20 epochs and annealed to 10−2 times the original learning rate. In experiments with
+8 bit weights we initialized the weight quantization ranges using the minimum and maximum of
+16
+
+the weight tensor. For 8 bit activations we initialized the quantization ranges using an exponential
+moving average of the per-tensor minimum and maximum over a small number of batches. For 4 bit
+quantization we performed grid search over ranges to find the range that minimizes the mean squared
+error between the FP32 and quantized values of the weight and activation tensors. We applied a
+weight decay of 10−4 in all our experiments.1 We folded Batch normalization parameters into the
+preceding weight tensors prior to training. We did not use gradient scaling as we did not use it in our
+own experiments.
+
+D
+
+Further Results
+
+D.1
+
+Updated ImageNet results
+
+The ResNet18 model used in the experiments of Figure 2a and Table 4 quantized the activations that
+feed into residual connections. Since the bit-widths of these quantizers do not affect the BOP count,
+the quantizers were effectively over-regularized. To assess what the effect of over-regularization on
+these quantizers was, we ran a new set of experiments in which these activations were not quantized.
+The results of these experiments are plotted in 5 and included in 4 (experiments labeled Updated).
+This change only affects the Bayesian Bits and BB Quant only results. Note that for this arguably
+more realistic scenario, our method more clearly outperforms the baselines.
+Bayesian Bits
+BB quantization only
+BB fixed w4a8, pruning only
+BB fixed w8a8, pruning only
+
+LSQ w4a4*
+LSQ w4a8*
+LSQ w4a4 (8 in/out)*
+LSQ w4a4*
+
+PACT w4a4 (32 in/out)
+PACT w2a2 (32 in/out)
+PACT w4a4 (hypothetical)
+PACT w2a2 (hypothetical)
+
+DQ*
+DQ - restricted*
+
+Updated ResNet18 results on ImageNet
+70
+69
+
+% Top-1 Accuracy
+
+68
+67
+66
+65
+64
+63
+0
+
+1
+
+2
+
+3
+
+% BOP of 32 bit model
+
+4
+
+5
+
+6
+
+Figure 5: Bayesian Bits ResNet18 ImageNet results. In these experiments the activations feeding into
+a residual connection were not quantized, contrary to the results presented in 2a.
+D.2
+
+MNIST and CIFAR 10
+
+Figure 6 shows the learned bit width and sparsity per quantizer. Note that structural sparsity is only
+applied to weight quantizers, which implicitly applies it to activation tensors as well.
+D.3
+
+Effect of fine-tuning
+
+The effects of fine-tuning on final model accuracy are presented in Figure 7 and in Table 4.
+17
+
+8
+
+h1
+
+w2
+fc_
+
+w1
+
+fc_
+
+fc_
+
+2
+
+2
+
+_h
+
+_w
+
+nv
+
+nv
+
+co
+
+co
+
+1
+
+1
+
+_h
+
+_w
+
+nv
+
+nv
+
+co
+
+co
+
+Quantized tensors
+
+8
+
+Quantized tensors
+
+(a)
+
+Bitwidth
+Sparsity
+
+4
+2
+0.0
+0.2
+0.4
+
+8
+
+0.4
+
+pruned
+total
+
+pruned
+total
+
+0.2
+
+4
+2
+0.0
+0.1
+
+con
+v_
+con w1
+v
+con _h1
+v_
+con w2
+v
+con _h2
+v_
+con w3
+v
+con _h3
+v_
+con w4
+v
+con _h4
+v_
+con w5
+v
+con _h5
+v_
+con w6
+v_
+fc_wh6
+fc_h7
+fc_w7
+
+2
+0.0
+pruned
+total
+
+Bitwidth
+
+4
+
+16
+
+Bitwidth
+Sparsity
+
+con
+v_
+con w1
+v
+con _h1
+v_
+con w2
+v
+con _h2
+v_
+con w3
+v
+con _h3
+v_
+con w4
+v
+con _h4
+v_
+con w5
+v
+con _h5
+v_
+con w6
+v_
+fc_wh6
+fc_h7
+fc_w7
+
+16
+
+Bitwidth
+Sparsity
+
+Bitwidth
+
+Bitwidth
+
+8
+
+Quantized tensors
+
+(b)
+
+(c)
+
+Figure 6: Learned LeNet-5 and VGG architectures. (a) Illustrates the bit-allocation and sparsity
+levels for the LeNet-5 whereas (b) illustrates the bit-allocation and sparsity levels for the best performing VGG, accuracy wise. (c) Illustrates a VGG model trained with more aggressive regularization,
+resulting into less BOPs and more quantization / sparsity. With the dashed lines we show the implied
+sparsity on the activations due to the sparsity in the (preceding) weight tensors.
+Effect of Fine-tuning, ResNet18
+
+Effect of Fine-tuning, ResNet18 (Detail)
+
+70
+
+70
+68
+
+% Top-1 accuracy
+
+% Top-1 accuracy
+
+68
+
+66
+
+64
+After FT
+Before FT
+Full BB
+BB quantization only
+BB fixed w4a8, prune only
+BB fixed w8a8, prune only
+
+62
+
+1
+
+2
+
+3
+
+4
+
+% BOP of 32 bit model
+(a)
+
+5
+
+6
+
+66
+
+64
+
+After FT
+Before FT
+Full BB
+BB quantization only
+
+62
+
+0.5
+
+1.0
+
+1.5
+
+2.0
+
+% BOP of 32 bit model
+(b)
+
+2.5
+
+3.0
+
+Figure 7: Bayesian Bits Imagenet validation accuracy on ResNet18 before and after final 10 epochs
+of fine-tuning for µ ∈ {0.03, 0.05, 0.07, 0.2}. Means and individual runs of 3 training runs for each
+µ. Plot (b) contains a close-up of results of the full Bayesian Bits, quantization only, w4a8 prune only
+experiments.
+D.4
+
+ImageNet
+
+Full results for Bayesian Bits are provided in table 4, Figure 8 the corresponding plot, whereas
+Figures 15, 16, 17 and 18 provide the learned ResNet18 architectures using various regularization
+strengths. It is interesting to see that the learned architectures tend to have higher bit precision for the
+first and last layers as well as on the weights that correspond to some of the shortcut connections.
+D.4.1
+
+ImageNet ResNet18 gate evolution
+
+The evolution of the gates for three experiments, with µ = 0.05 are plotted in Figure 10.
+D.4.2
+
+ImageNet post-training
+
+Full results from the post-training quantization experiment are provided in Table 5 as well as in the
+updated plot in Figure 9. In the baseline experiment we first measured quantization sensitivity for
+each quantizer in the network by keeping the network in INT16, while setting the target quantizer to a
+lower bit-width. We then sorted all quantizers in order of increasing sensitivity, and set the quantizer
+to the lower bit width cumulatively, measuring the accuracy after each step. Figure 7 shows the Pareto
+front of these results, as results do not monotonically decrease with more quantizers turned on.
+
+18
+
+70
+
+% Top-1 accuracy
+
+68
+
+Mean and covariance of Bayesian Bits Experiments, ResNet18
+
+Bayesian Bits
+BB quantization only
+BB fixed w4a8, pruning only
+LSQ w4a4 (8 in/out)*
+LSQ w4a4*
+PACT w2a2 (paper, 32 in/out)
+PACT w2a2 (hypothetical, 8 in/out)
+PACT w4a4 (hypothetical, 8 in/out)
+DQ*
+
+66
+
+64
+
+62
+0.6
+
+0.8
+
+1.0
+
+1.2
+
+1.4
+
+% BOP of 32 bit model
+
+1.6
+
+1.8
+
+2.0
+
+2.2
+
+Figure 8: Bayesian Bits Imagenet validation accuracy on ResNet18 for µ ∈ {0.03, 0.05, 0.07, 0.2}.
+Means and individual runs of 3 training runs for each µ. The PACT [5] marked with ’hypothetical’ are
+hypothetical results, in which the BOP count was computed using 8 bit input and output layers, instead
+of the full precision input and output layers used in [5], and we make the optimistic assumption that
+this would not produce different results.
+
+Post-training mixed precision on ResNet18
+
+70
+68
+
+% Top-1 Accuracy
+
+66
+64
+62
+60
+
+Bayesian Bits Post-training, gates only
+Bayesian Bits Post-training, gates and scales
+Baseline Mixed 16/8/4
+Baseline Mixed 16/8
+Baseline Mixed 16/4
+Baseline Fixed 8/8
+FP32 Baseline
+
+58
+56
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+% BOP of 32 bit model
+
+7
+
+8
+
+9
+
+10
+
+Figure 9: Bayesian Bits Imagenet validation accuracy on ResNet18 for µ ∈ {0.03, 0.05, 0.07, 0.2}.
+Means and individual runs of 3 training runs for each µ.
+
+19
+
+Table 4: Results on the Imagenet task with the ResNet18 architecture. We compare against methods
+from the previous experiments as well as PACT [5], [14] and DQ [35]. * indicates first and last
+layers in full precision. ** first and last layers in 8 bits. NB: for [5] these results are hypothetical
+and based on the assumption that changing the first and last layers in 8 bits does not harm accuracy.
+LSQ [8] results are run by us. QO, PO48 and PO8 indicate ablation study results. The experiments
+labeled ‘Updated’ indicate experiments in which activations feeding into residual connections are not
+quantized. See section D.1 for details.
+Method
+
+# bits W/A
+
+Top-1 Acc. (%)
+
+Rel. GBOPs (%)
+
+Full precision
+QT [14]
+TWN [20]
+LR-Net [34]*
+RQ [23]
+PACT [5]
+PACT [5]
+PACT [5]
+PACT [5]
+LSQ [8]
+LSQ [8]
+LSQ [8]
+LSQ [8]
+DQ [35]
+DQ - restricted [35]
+
+32/32
+8/8
+2/32
+1/32
+5/5
+4/4*
+2/2*
+4/4**
+2/2**
+8/8
+4/8
+4/4**
+4/4
+Mixed
+Mixed
+
+69.68
+70.38
+61.80
+59.90
+65.10
+69.20
+64.40
+69.20
+64.40
+70.48
+3.13
+1.87
+1.56
+68.40
+68.40
+
+100
+6.25
+5.95
+4.58
+2.54
+3.12
+2.02
+1.87
+0.77
+6.25
+69.7
+68.87
+68.38
+2.10
+3.09
+
+Bayesian Bits µ = 0.01 (Pre-FT)
+Bayesian Bits µ = 0.01
+Bayesian Bits µ = 0.03 (Pre-FT)
+Bayesian Bits µ = 0.03
+Bayesian Bits µ = 0.05 (Pre-FT)
+Bayesian Bits µ = 0.05
+Bayesian Bits µ = 0.07 (Pre-FT)
+Bayesian Bits µ = 0.07
+Bayesian Bits µ = 0.2 (Pre-FT)
+Bayesian Bits µ = 0.2
+
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+
+69.70±0.03
+69.84±0.02
+69.16±0.10
+69.39±0.05
+67.96±0.22
+68.21±0.23
+66.27±0.15
+66.81±0.13
+62.32±0.71
+63.76±0.34
+
+2.85±0.04
+2.85±0.04
+1.93±0.05
+1.93±0.05
+1.44±0.05
+1.44±0.05
+1.06±0.02
+1.06±0.02
+0.68±0.03
+0.68±0.03
+
+Bayesian Bits, QO; µ = 0.01
+Bayesian Bits, QO; µ = 0.03
+Bayesian Bits, QO; µ = 0.05
+Bayesian Bits, QO; µ = 0.07
+
+Mixed
+Mixed
+Mixed
+Mixed
+
+69.85 ± 0.06
+68.80 ± 0.37
+67.70 ± 0.53
+67.59 ± 0.02
+
+3.00 ± 0.03
+1.78 ± 0.11
+1.42 ± 0.10
+1.19 ± 0.01
+
+Bayesian Bits, Updated; µ = 0.01
+Bayesian Bits, Updated; µ = 0.02
+Bayesian Bits, Updated; µ = 0.03
+Bayesian Bits, Updated; µ = 0.05
+Bayesian Bits, Updated; µ = 0.07
+Bayesian Bits, Updated; µ = 0.1
+Bayesian Bits, Updated; µ = 0.2
+
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+
+69.82 ± 0.07
+69.61 ± 0.08
+69.18 ± 0.08
+68.17 ± 0.18
+66.85 ± 0.17
+65.89 ± 0.13
+62.73 ± 0.10
+
+2.41 ± 0.03
+1.99 ± 0.00
+1.70 ± 0.03
+1.38 ± 0.03
+1.07 ± 0.01
+0.81 ± 0.00
+0.52 ± 0.00
+
+Bayesian Bits, Updated, QO; µ = 0.01
+Bayesian Bits, Updated, QO; µ = 0.02
+Bayesian Bits, Updated, QO; µ = 0.03
+Bayesian Bits, Updated, QO; µ = 0.05
+Bayesian Bits, Updated, QO; µ = 0.07
+Bayesian Bits, Updated, QO; µ = 0.2
+
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+
+69.88 ± 0.03
+69.62 ± 0.04
+69.16 ± 0.11
+68.21 ± 0.07
+67.09 ± 0.16
+63.56 ± 0.17
+
+2.51 ± 0.04
+2.11 ± 0.05
+1.80 ± 0.01
+1.44 ± 0.01
+1.02 ± 0.01
+0.62 ± 0.00
+
+Bayesian Bits, PO48; µ = 0.01
+Bayesian Bits, PO48; µ = 0.2
+Bayesian Bits, PO48; µ = 0.5
+Bayesian Bits, PO48; µ = 0.7
+Bayesian Bits, PO48; µ = 1.0
+
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+
+69.79 ± 0.02
+69.69 ± 0.04
+67.72 ± 0.05
+66.08 ± 0.01
+63.09 ± 0.06
+
+3.10 ± 0.00
+2.86 ± 0.01
+1.86 ± 0.00
+1.51 ± 0.00
+1.17 ± 0.00
+
+Bayesian Bits, PO8; µ = 0.01
+Bayesian Bits, PO8; µ = 0.2
+Bayesian Bits, PO8; µ = 0.5
+Bayesian Bits, PO8; µ = 0.7
+Bayesian Bits, PO8; µ = 1.0
+
+Mixed
+Mixed
+Mixed
+Mixed
+Mixed
+
+70.54 ± 0.02
+70.28 ± 0.05
+68.37 ± 0.05
+67.02 ± 0.02
+64.34 ± 0.05
+
+6.20 ± 0.00
+5.65 ± 0.01
+3.68 ± 0.01
+3.00 ± 0.01
+2.29 ± 0.01
+
+20
+
+Gates only
+Top-1 Acc. (%) Rel. GBOPs (%)
+
+Regularization
+
+Gates and scales
+Top-1 Acc. (%) Rel. GBOPs (%)
+
+µ = 0.0001
+69.73 ± 0.06
+12.05 ± 0.68
+69.72 ± 0.05
+10.87 ± 0.40
+µ = 0.0005
+69.69 ± 0.03
+7.34 ± 0.34
+69.67 ± 0.03
+6.97 ± 0.12
+µ = 0.001
+69.63 ± 0.04
+6.57 ± 0.14
+69.57 ± 0.02
+6.43 ± 0.13
+µ = 0.0025
+69.46 ± 0.09
+6.14 ± 0.05
+69.47 ± 0.12
+5.87 ± 0.21
+µ = 0.005
+69.14 ± 0.11
+5.45 ± 0.12
+69.28 ± 0.04
+4.76 ± 0.06
+µ = 0.01
+67.98 ± 0.47
+4.55 ± 0.15
+68.31 ± 0.16
+3.96 ± 0.00
+µ = 0.02
+64.32 ± 0.95
+3.74 ± 0.10
+65.44 ± 0.68
+2.78 ± 0.15
+µ = 0.05
+51.31 ± 1.93
+2.90 ± 0.02
+60.20 ± 1.49
+1.84 ± 0.06
+Table 5: Results on learning only the gates (left) and both the gates and the scales (right) on a small
+dataset for various regularization strengths. Means and standard errors are computed over 3 training
+runs for each value of µ.
+
+1
+
+0
+
+0
+
+5
+
+0
+
+10
+
+20
+
+30
+
+2.1.0.activation_quantizer
+
+5
+
+2
+
+3
+2
+1
+
+0
+
+10
+
+20
+
+30
+
+3.0.0.activation_quantizer
+
+5
+
+0
+
+10
+
+20
+
+3.0.1.weight_quantizer
+
+30
+
+2
+
+3
+2
+
+30
+
+0
+
+3
+2
+
+0
+
+10
+
+20
+
+2.1.activation_quantizer
+
+30
+
+5
+
+5
+
+4
+
+4
+
+3
+2
+1
+
+0
+
+10
+
+20
+
+0
+
+30
+
+3.0.activation_quantizer
+
+log2Eq[b]
+
+3
+
+20
+
+1
+
+4
+
+log2Eq[b]
+
+4
+
+0
+
+10
+
+4
+
+log2Eq[b]
+
+4
+
+3
+
+0
+
+2.1.1.weight_quantizer
+
+log2Eq[b]
+
+30
+
+5
+
+5
+
+4
+
+4
+
+3
+2
+
+0
+
+10
+
+20
+
+3.1.0.weight_quantizer
+
+30
+
+3
+2
+
+1
+
+1
+
+1
+
+0
+
+0
+
+0
+
+0
+
+2
+1
+
+5
+
+3
+2
+1
+
+0
+
+10
+
+20
+
+4.1.0.weight_quantizer
+
+30
+
+0
+5
+
+0
+
+10
+
+20
+
+3
+2
+
+10
+
+20
+
+30
+
+0
+
+10
+
+20
+
+30
+
+5
+
+5
+
+5
+
+4
+
+4
+
+4
+
+3
+2
+0
+
+30
+
+4.1.0.activation_quantizer
+
+5
+
+4
+
+log2Eq[b]
+
+4
+
+0
+
+1
+
+3
+2
+
+3
+2
+1
+
+0
+
+10
+
+20
+
+4.1.1.weight_quantizer
+
+30
+
+3
+2
+
+0
+
+0
+
+10
+
+20
+
+30
+
+5
+
+5
+
+4
+
+4
+
+3
+2
+
+1
+
+1
+
+1
+
+0
+
+0
+
+0
+
+0
+
+3
+2
+1
+0
+
+20
+
+30
+
+3
+2
+1
+
+0
+
+10
+
+20
+
+5.1.activation_quantizer
+5
+
+30
+
+0
+
+0
+
+10
+
+20
+
+5.0.activation_quantizer
+
+30
+
+5
+
+5
+
+4
+
+4
+
+3
+2
+1
+
+0
+
+10
+
+20
+
+30
+
+0
+
+10
+
+20
+
+30
+
+fc.weight_quantizer
+
+0
+
+0
+
+10
+
+20
+
+5.1.0.weight_quantizer
+
+30
+
+5
+
+2
+1
+
+0
+
+10
+
+20
+
+30
+
+0
+
+log2Eq[b]
+10
+
+20
+
+30
+
+5
+
+10
+
+20
+
+30
+
+20
+
+30
+
+0
+
+10
+
+20
+
+30
+
+0
+
+10
+
+20
+
+30
+
+5.1.1.weight_quantizer
+
+0
+
+10
+
+20
+
+30
+
+0
+
+10
+
+20
+
+30
+
+3
+2
+0
+
+4.0.activation_quantizer
+4
+3
+2
+1
+
+0
+
+10
+
+20
+
+30
+
+0
+
+5.0.0.weight_quantizer 5.0.downsample.0.weight_quantizer
+5
+4
+3
+2
+1
+0
+
+10
+
+20
+
+30
+
+5.1.0.activation_quantizer
+
+0
+5
+4
+
+3
+2
+0
+
+10
+
+5
+
+1
+0
+
+0
+
+2
+0
+
+30
+
+4
+
+3
+
+3.1.1.weight_quantizer
+
+3
+
+3
+2
+1
+
+0
+
+10
+
+20
+
+30
+
+0
+
+5
+4
+
+log2Eq[b]
+
+4
+3
+2
+1
+0
+
+10
+
+4
+
+log2Eq[b]
+
+4
+
+5
+
+0
+
+5.0.1.weight_quantizer
+
+log2Eq[b]
+
+30
+
+log2Eq[b]
+
+20
+
+log2Eq[b]
+
+5
+
+10
+
+30
+
+1
+0
+
+4.0.1.weight_quantizer
+
+2
+
+1
+
+20
+
+4
+
+3
+
+0
+
+0
+
+20
+
+2
+
+1
+
+5.0.0.activation_quantizer
+
+10
+
+3
+
+0
+
+10
+
+1
+0
+
+3.1.0.activation_quantizer
+
+1
+
+4.1.activation_quantizer
+
+4
+
+log2Eq[b]
+
+0
+
+30
+
+log2Eq[b]
+
+4
+
+3
+
+20
+
+log2Eq[b]
+
+4
+
+10
+
+log2Eq[b]
+
+5
+
+log2Eq[b]
+
+5
+
+0
+
+4.0.0.weight_quantizer 4.0.downsample.0.weight_quantizer4.0.0.activation_quantizer
+
+log2Eq[b]
+
+30
+
+log2Eq[b]
+
+20
+
+0
+
+4
+
+2
+
+1
+10
+
+0
+
+30
+
+5
+
+3
+
+0
+
+0
+
+20
+
+4
+
+1
+
+3.1.activation_quantizer
+
+10
+
+2
+
+5
+
+2
+1
+
+0
+
+3
+
+0
+
+3
+
+3.0.0.weight_quantizer 3.0.downsample.0.weight_quantizer
+
+1
+
+log2Eq[b]
+
+20
+
+log2Eq[b]
+
+10
+
+log2Eq[b]
+
+0
+
+5
+
+log2Eq[b]
+
+1
+
+log2Eq[b]
+
+log2Eq[b]
+
+2
+
+0
+
+5
+
+log2Eq[b]
+
+2
+
+1
+
+2.1.0.weight_quantizer
+
+2.0.activation_quantizer
+4
+
+3
+
+0
+
+0
+
+log2Eq[b]
+
+3
+
+1
+
+1
+
+log2Eq[b]
+
+2
+
+2.0.1.weight_quantizer
+
+4
+
+0
+
+4
+
+log2Eq[b]
+
+3
+
+5
+
+1
+
+5
+
+log2Eq[b]
+
+2
+
+2.0.0.activation_quantizer
+
+4
+
+log2Eq[b]
+
+2
+
+3
+
+5
+
+log2Eq[b]
+
+log2Eq[b]
+
+log2Eq[b]
+
+3
+
+2.0.0.weight_quantizer
+
+log2Eq[b]
+
+4
+
+log2Eq[b]
+
+5
+
+4
+
+log2Eq[b]
+
+5
+
+log2Eq[b]
+
+0.activation_quantizer
+
+4
+
+5
+
+log2Eq[b]
+
+0.weight_quantizer
+
+3
+2
+1
+
+0
+
+10
+
+20
+
+30
+
+0
+
+Figure 10: The evolution of gates for three ResNet18 ImageNet experiments with µ = 0.05
+
+21
+
+Figure 11: Evolution of validation accuracy and (per epoch average) cross-entropy loss during training
+of ResNet18 on ImageNet, first run for µ ∈ {0.03, 0.05, 0.07, 0.2}
+
+Figure 12: Left plot: Pareto front of final model efficiency vs accuracy trade-offs, including evolution
+towards final trade-offs. Right plot: Co-evolution of cross-entropy and gate loss per epoch. Both
+plots show results of training ResNet18 on Imagenet, first run for µ ∈ {0.03, 0.05, 0.07, 0.2}
+
+Figure 13: Evolution of training of ResNet18 ImageNet experiments, first run for µ ∈ {0.03, 0.05}.
+Mean gate probability with shaded area indicating 1 standard deviation.
+
+22
+
+Figure 14: Evolution of training of ResNet18 ImageNet experiments, first run for µ ∈ {0.07, 0.2}.
+Mean gate probability with shaded area indicating 1 standard deviation.
+
+Quantized tensors
+
+Bitwidth
+Sparsity
+fc.weight_quantizer
+features.5.1.activation_quantizer
+features.5.1.features.1.weight_quantizer
+features.5.1.features.0.activation_quantizer
+features.5.1.features.0.weight_quantizer
+features.5.0.activation_quantizer
+features.5.0.features.1.weight_quantizer
+features.5.0.features.0.activation_quantizer
+features.5.0.downsample.0.weight_quantizer
+features.5.0.features.0.weight_quantizer
+features.4.1.activation_quantizer
+features.4.1.features.1.weight_quantizer
+features.4.1.features.0.activation_quantizer
+features.4.1.features.0.weight_quantizer
+features.4.0.activation_quantizer
+features.4.0.features.1.weight_quantizer
+features.4.0.features.0.activation_quantizer
+features.4.0.downsample.0.weight_quantizer
+features.4.0.features.0.weight_quantizer
+features.3.1.activation_quantizer
+features.3.1.features.1.weight_quantizer
+features.3.1.features.0.activation_quantizer
+features.3.1.features.0.weight_quantizer
+features.3.0.activation_quantizer
+features.3.0.features.1.weight_quantizer
+features.3.0.features.0.activation_quantizer
+features.3.0.downsample.0.weight_quantizer
+features.3.0.features.0.weight_quantizer
+features.2.1.activation_quantizer
+features.2.1.features.1.weight_quantizer
+features.2.1.features.0.activation_quantizer
+features.2.1.features.0.weight_quantizer
+features.2.0.activation_quantizer
+features.2.0.features.1.weight_quantizer
+features.2.0.features.0.activation_quantizer
+features.2.0.features.0.weight_quantizer
+features.0.activation_quantizer
+features.0.weight_quantizer
+
+0.4
+
+0.2
+
+0.0
+
+2
+
+pruned
+total
+
+4
+
+Bitwidth
+
+Figure 15: Learned ResNet18 architecture for first run with µ = 0.03.
+
+23
+
+8
+
+Quantized tensors
+
+Bitwidth
+Sparsity
+fc.weight_quantizer
+features.5.1.activation_quantizer
+features.5.1.features.1.weight_quantizer
+features.5.1.features.0.activation_quantizer
+features.5.1.features.0.weight_quantizer
+features.5.0.activation_quantizer
+features.5.0.features.1.weight_quantizer
+features.5.0.features.0.activation_quantizer
+features.5.0.downsample.0.weight_quantizer
+features.5.0.features.0.weight_quantizer
+features.4.1.activation_quantizer
+features.4.1.features.1.weight_quantizer
+features.4.1.features.0.activation_quantizer
+features.4.1.features.0.weight_quantizer
+features.4.0.activation_quantizer
+features.4.0.features.1.weight_quantizer
+features.4.0.features.0.activation_quantizer
+features.4.0.downsample.0.weight_quantizer
+features.4.0.features.0.weight_quantizer
+features.3.1.activation_quantizer
+features.3.1.features.1.weight_quantizer
+features.3.1.features.0.activation_quantizer
+features.3.1.features.0.weight_quantizer
+features.3.0.activation_quantizer
+features.3.0.features.1.weight_quantizer
+features.3.0.features.0.activation_quantizer
+features.3.0.downsample.0.weight_quantizer
+features.3.0.features.0.weight_quantizer
+features.2.1.activation_quantizer
+features.2.1.features.1.weight_quantizer
+features.2.1.features.0.activation_quantizer
+features.2.1.features.0.weight_quantizer
+features.2.0.activation_quantizer
+features.2.0.features.1.weight_quantizer
+features.2.0.features.0.activation_quantizer
+features.2.0.features.0.weight_quantizer
+features.0.activation_quantizer
+features.0.weight_quantizer
+
+0.4
+
+0.2
+
+0.0
+
+2
+
+pruned
+total
+
+4
+
+Bitwidth
+
+Figure 16: Learned ResNet18 architecture for first run with µ = 0.05.
+
+24
+
+8
+
+Quantized tensors
+
+Bitwidth
+Sparsity
+fc.weight_quantizer
+features.5.1.activation_quantizer
+features.5.1.features.1.weight_quantizer
+features.5.1.features.0.activation_quantizer
+features.5.1.features.0.weight_quantizer
+features.5.0.activation_quantizer
+features.5.0.features.1.weight_quantizer
+features.5.0.features.0.activation_quantizer
+features.5.0.downsample.0.weight_quantizer
+features.5.0.features.0.weight_quantizer
+features.4.1.activation_quantizer
+features.4.1.features.1.weight_quantizer
+features.4.1.features.0.activation_quantizer
+features.4.1.features.0.weight_quantizer
+features.4.0.activation_quantizer
+features.4.0.features.1.weight_quantizer
+features.4.0.features.0.activation_quantizer
+features.4.0.downsample.0.weight_quantizer
+features.4.0.features.0.weight_quantizer
+features.3.1.activation_quantizer
+features.3.1.features.1.weight_quantizer
+features.3.1.features.0.activation_quantizer
+features.3.1.features.0.weight_quantizer
+features.3.0.activation_quantizer
+features.3.0.features.1.weight_quantizer
+features.3.0.features.0.activation_quantizer
+features.3.0.downsample.0.weight_quantizer
+features.3.0.features.0.weight_quantizer
+features.2.1.activation_quantizer
+features.2.1.features.1.weight_quantizer
+features.2.1.features.0.activation_quantizer
+features.2.1.features.0.weight_quantizer
+features.2.0.activation_quantizer
+features.2.0.features.1.weight_quantizer
+features.2.0.features.0.activation_quantizer
+features.2.0.features.0.weight_quantizer
+features.0.activation_quantizer
+features.0.weight_quantizer
+
+0.4
+
+0.2
+
+0.0
+
+2
+
+pruned
+total
+
+4
+
+Bitwidth
+
+Figure 17: Learned ResNet18 architecture for first run with µ = 0.07.
+
+25
+
+8
+
+Quantized tensors
+
+Bitwidth
+Sparsity
+fc.weight_quantizer
+features.5.1.activation_quantizer
+features.5.1.features.1.weight_quantizer
+features.5.1.features.0.activation_quantizer
+features.5.1.features.0.weight_quantizer
+features.5.0.activation_quantizer
+features.5.0.features.1.weight_quantizer
+features.5.0.features.0.activation_quantizer
+features.5.0.downsample.0.weight_quantizer
+features.5.0.features.0.weight_quantizer
+features.4.1.activation_quantizer
+features.4.1.features.1.weight_quantizer
+features.4.1.features.0.activation_quantizer
+features.4.1.features.0.weight_quantizer
+features.4.0.activation_quantizer
+features.4.0.features.1.weight_quantizer
+features.4.0.features.0.activation_quantizer
+features.4.0.downsample.0.weight_quantizer
+features.4.0.features.0.weight_quantizer
+features.3.1.activation_quantizer
+features.3.1.features.1.weight_quantizer
+features.3.1.features.0.activation_quantizer
+features.3.1.features.0.weight_quantizer
+features.3.0.activation_quantizer
+features.3.0.features.1.weight_quantizer
+features.3.0.features.0.activation_quantizer
+features.3.0.downsample.0.weight_quantizer
+features.3.0.features.0.weight_quantizer
+features.2.1.activation_quantizer
+features.2.1.features.1.weight_quantizer
+features.2.1.features.0.activation_quantizer
+features.2.1.features.0.weight_quantizer
+features.2.0.activation_quantizer
+features.2.0.features.1.weight_quantizer
+features.2.0.features.0.activation_quantizer
+features.2.0.features.0.weight_quantizer
+features.0.activation_quantizer
+features.0.weight_quantizer
+
+0.4
+
+0.2
+
+0.0
+
+2
+
+pruned
+total
+
+4
+
+Bitwidth
+
+Figure 18: Learned ResNet18 architecture for first run with µ = 0.2.
+
+26
+
+8
+
+

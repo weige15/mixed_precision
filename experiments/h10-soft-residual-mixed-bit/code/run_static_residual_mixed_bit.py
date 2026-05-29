@@ -378,6 +378,19 @@ def assignment_stats(
     return raw_bits, metadata_bpp, raw_bits + metadata_bpp
 
 
+def snapshot_target_weights(modules: list[tuple[str, Any]]) -> dict[str, Any]:
+    snapshots = {}
+    for module_name, module in modules:
+        weight = module.weight
+        if getattr(weight, "is_meta", False):
+            raise RuntimeError(
+                f"Cannot snapshot target weight on meta device for {module_name}. "
+                "Load the model with a device map/offload setup that materializes target projection weights."
+            )
+        snapshots[module_name] = weight.detach().cpu().clone()
+    return snapshots
+
+
 def reconstruct_weight(weight: Any, assignments: dict[str, int], module_name: str, group_cols: int) -> Any:
     import torch
 
@@ -401,11 +414,24 @@ def reconstruct_weight(weight: Any, assignments: dict[str, int], module_name: st
     return out.to(dtype=original_dtype)
 
 
-def apply_assignment(model: Any, assignments: dict[str, int], group_cols: int, max_modules: int) -> dict[str, Any]:
+def apply_assignment(
+    model: Any,
+    assignments: dict[str, int],
+    group_cols: int,
+    max_modules: int,
+    original_weights: dict[str, Any],
+) -> dict[str, Any]:
     modules = target_linear_modules(model, max_modules=max_modules)
     applied = []
     for module_name, module in modules:
-        reconstructed = reconstruct_weight(module.weight, assignments, module_name, group_cols)
+        if getattr(module.weight, "is_meta", False):
+            raise RuntimeError(
+                f"Target module parameter is on the meta device before applying {module_name}. "
+                "The runner now avoids policy reloads, so this means the initial model itself "
+                "was offloaded to meta by Accelerate. Use a larger GPU or explicit CPU/disk "
+                "offload loading that supports materializing target weights before mutation."
+            )
+        reconstructed = reconstruct_weight(original_weights[module_name], assignments, module_name, group_cols)
         module.weight.data.copy_(reconstructed.to(module.weight.device))
         applied.append(module_name)
     return {"num_modules": len(applied), "modules": applied[:10], "truncated_modules": max(len(applied) - 10, 0)}
@@ -582,6 +608,7 @@ def main() -> None:
     modules = target_linear_modules(model, max_modules=args.max_modules)
     input_moments = collect_input_second_moments(model, modules, calibration_batches, device)
     specs = build_block_specs(model, modules, input_moments, args.group_cols)
+    original_target_weights = snapshot_target_weights(modules)
     policies = {
         "uniform 2-bit residual": assign_uniform(specs, 2),
         "uniform 4-bit residual": assign_uniform(specs, 4),
@@ -612,7 +639,6 @@ def main() -> None:
             notes="Matched Transformers baseline for this runner.",
         )
     )
-    cleanup_model(model)
 
     if args.include_h10_gptq:
         gptq = load_gptq_result(args.h10_gptq_summary, bf16_nll)
@@ -628,13 +654,9 @@ def main() -> None:
         )
         nll = None
         if not args.skip_eval:
-            model, _, device = load_model_and_tokenizer(args)
-            try:
-                apply_assignment(model, assignment, args.group_cols, args.max_modules)
-                stats = prompt_nll(model, eval_batches, device)
-                nll = float(stats["mean_prompt_nll"])
-            finally:
-                cleanup_model(model)
+            apply_assignment(model, assignment, args.group_cols, args.max_modules, original_target_weights)
+            stats = prompt_nll(model, eval_batches, device)
+            nll = float(stats["mean_prompt_nll"])
         results.append(
             MethodResult(
                 method=method,
@@ -648,6 +670,7 @@ def main() -> None:
             )
         )
 
+    cleanup_model(model)
     write_table(args.output_dir / "results_table.csv", results)
     payload = {
         "schema_version": 1,

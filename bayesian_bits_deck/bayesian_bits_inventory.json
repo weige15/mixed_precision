@@ -1,0 +1,716 @@
+{
+  "slide-0": {
+    "shape-0": {
+      "left": 1.1,
+      "top": 0.48,
+      "width": 9.6,
+      "height": 1.74,
+      "placeholder_type": "TITLE",
+      "default_font_size": 54.0,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-1": 1.9
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "Bayesian Bits: Problem and Research Gap"
+        }
+      ]
+    },
+    "shape-1": {
+      "left": 1.18,
+      "top": 2.02,
+      "width": 9.75,
+      "height": 0.45,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-0": 1.9
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "Goal: learn an accuracy-efficiency policy instead of hand-picking pruning and bit-width settings."
+        }
+      ]
+    },
+    "shape-2": {
+      "left": 1.18,
+      "top": 2.75,
+      "width": 3.05,
+      "height": 2.85,
+      "paragraphs": [
+        {
+          "text": "Deployment bottleneck",
+          "alignment": "CENTER"
+        },
+        {
+          "text": "Inference cost depends on arithmetic and data movement.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Quantization lowers operand width; pruning removes operations.",
+          "space_before": 4.0
+        },
+        {
+          "text": "The useful target is a Pareto trade-off, not one compressed model.",
+          "space_before": 4.0
+        }
+      ]
+    },
+    "shape-3": {
+      "left": 4.45,
+      "top": 2.75,
+      "width": 3.05,
+      "height": 2.85,
+      "paragraphs": [
+        {
+          "text": "Past direction",
+          "alignment": "CENTER"
+        },
+        {
+          "text": "Fixed-bit QAT optimizes one selected precision.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Mixed precision searches layer or tensor bit-widths.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Pruning is usually treated as a separate compression task.",
+          "space_before": 4.0
+        }
+      ]
+    },
+    "shape-4": {
+      "left": 7.72,
+      "top": 2.75,
+      "width": 3.05,
+      "height": 2.85,
+      "paragraphs": [
+        {
+          "text": "Missing capability",
+          "alignment": "CENTER"
+        },
+        {
+          "text": "The bit-width search space is exponential.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Continuous learned bits may not map to power-of-two hardware.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Pruning and quantization need one trainable formulation.",
+          "space_before": 4.0
+        }
+      ]
+    },
+    "shape-5": {
+      "left": 2.25,
+      "top": 6.28,
+      "width": 7.6,
+      "height": 0.52,
+      "paragraphs": [
+        {
+          "text": "Bayesian Bits turns bit allocation and pruning into gated optimization",
+          "alignment": "CENTER"
+        }
+      ]
+    },
+    "shape-6": {
+      "left": 1.18,
+      "top": 8.18,
+      "width": 10.0,
+      "height": 0.26,
+      "paragraphs": [
+        {
+          "text": "Source: van Baalen et al., Bayesian Bits: Unifying Quantization and Pruning, NeurIPS 2020 / arXiv:2005.07093"
+        }
+      ]
+    },
+    "shape-7": {
+      "left": 15.42,
+      "top": 8.28,
+      "width": 0.42,
+      "height": 0.3,
+      "paragraphs": [
+        {
+          "text": "1",
+          "alignment": "CENTER"
+        }
+      ]
+    }
+  },
+  "slide-1": {
+    "shape-0": {
+      "left": 1.1,
+      "top": 0.48,
+      "width": 9.6,
+      "height": 1.74,
+      "placeholder_type": "TITLE",
+      "default_font_size": 54.0,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-1": 1.9
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "Why Existing Mixed Precision Was Not Enough"
+        }
+      ]
+    },
+    "shape-1": {
+      "left": 1.18,
+      "top": 2.02,
+      "width": 9.5,
+      "height": 0.42,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-0": 1.9
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "Earlier methods improved quantization, but each left a deployment gap."
+        }
+      ]
+    },
+    "shape-2": {
+      "left": 1.18,
+      "top": 2.72,
+      "width": 2.32,
+      "height": 3.15,
+      "paragraphs": [
+        {
+          "text": "Fixed-bit QAT",
+          "alignment": "CENTER"
+        },
+        {
+          "text": "PACT, LSQ, and TQT learn clipping or step sizes.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Strong at one precision.",
+          "space_before": 4.0
+        },
+        {
+          "text": "They do not decide where each tensor should spend bits.",
+          "space_before": 4.0
+        }
+      ]
+    },
+    "shape-3": {
+      "left": 3.72,
+      "top": 2.72,
+      "width": 2.32,
+      "height": 3.15,
+      "paragraphs": [
+        {
+          "text": "Sensitivity search",
+          "alignment": "CENTER"
+        },
+        {
+          "text": "HAWQ-style methods use Hessian signals to rank layers.",
+          "space_before": 4.0
+        },
+        {
+          "text": "They expose sensitivity.",
+          "space_before": 4.0
+        },
+        {
+          "text": "A discrete assignment step is still needed.",
+          "space_before": 4.0
+        }
+      ]
+    },
+    "shape-4": {
+      "left": 6.26,
+      "top": 2.72,
+      "width": 2.32,
+      "height": 3.15,
+      "paragraphs": [
+        {
+          "text": "NAS / RL search",
+          "alignment": "CENTER"
+        },
+        {
+          "text": "Search methods can include hardware feedback.",
+          "space_before": 4.0
+        },
+        {
+          "text": "They optimize bit policies.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Cost and policy complexity grow with model size.",
+          "space_before": 4.0
+        }
+      ]
+    },
+    "shape-5": {
+      "left": 8.8,
+      "top": 2.72,
+      "width": 2.32,
+      "height": 3.15,
+      "paragraphs": [
+        {
+          "text": "Differentiable bits",
+          "alignment": "CENTER"
+        },
+        {
+          "text": "DQ learns continuous bit-widths.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Real hardware needs rounded widths.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Rounding can erase expected savings.",
+          "space_before": 4.0
+        }
+      ]
+    },
+    "shape-6": {
+      "left": 2.15,
+      "top": 6.45,
+      "width": 7.9,
+      "height": 0.5,
+      "paragraphs": [
+        {
+          "text": "The paper targets hardware-friendly power-of-two widths by construction",
+          "alignment": "CENTER"
+        }
+      ]
+    },
+    "shape-7": {
+      "left": 1.18,
+      "top": 8.18,
+      "width": 10.0,
+      "height": 0.26,
+      "paragraphs": [
+        {
+          "text": "Source: van Baalen et al., Bayesian Bits: Unifying Quantization and Pruning, NeurIPS 2020 / arXiv:2005.07093"
+        }
+      ]
+    },
+    "shape-8": {
+      "left": 15.42,
+      "top": 8.28,
+      "width": 0.42,
+      "height": 0.3,
+      "paragraphs": [
+        {
+          "text": "2",
+          "alignment": "CENTER"
+        }
+      ]
+    }
+  },
+  "slide-2": {
+    "shape-0": {
+      "left": 1.1,
+      "top": 0.48,
+      "width": 9.6,
+      "height": 1.74,
+      "placeholder_type": "TITLE",
+      "default_font_size": 54.0,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-1": 2.28
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "Core Idea: Gated Residual Quantization"
+        }
+      ]
+    },
+    "shape-1": {
+      "left": 1.18,
+      "top": 1.98,
+      "width": 9.6,
+      "height": 0.42,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-0": 2.28
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "A tensor is represented as a low-bit value plus optional quantized residuals."
+        }
+      ]
+    },
+    "shape-2": {
+      "left": 1.18,
+      "top": 3.05,
+      "width": 1.3,
+      "height": 0.46,
+      "paragraphs": [
+        {
+          "text": "2-bit base",
+          "alignment": "CENTER"
+        }
+      ]
+    },
+    "shape-3": {
+      "left": 3.08,
+      "top": 3.05,
+      "width": 1.45,
+      "height": 0.46,
+      "paragraphs": [
+        {
+          "text": "+ residual 4",
+          "alignment": "CENTER"
+        }
+      ]
+    },
+    "shape-4": {
+      "left": 5.13,
+      "top": 3.05,
+      "width": 1.45,
+      "height": 0.46,
+      "paragraphs": [
+        {
+          "text": "+ residual 8",
+          "alignment": "CENTER"
+        }
+      ]
+    },
+    "shape-5": {
+      "left": 7.18,
+      "top": 3.05,
+      "width": 1.65,
+      "height": 0.46,
+      "paragraphs": [
+        {
+          "text": "+ residual 16",
+          "alignment": "CENTER"
+        }
+      ]
+    },
+    "shape-6": {
+      "left": 9.43,
+      "top": 3.05,
+      "width": 1.45,
+      "height": 0.46,
+      "paragraphs": [
+        {
+          "text": "+ residual 32",
+          "alignment": "CENTER"
+        }
+      ]
+    },
+    "shape-7": {
+      "left": 1.55,
+      "top": 3.78,
+      "width": 8.9,
+      "height": 0.38,
+      "paragraphs": [
+        {
+          "text": "xq = z2 · (x2 + z4 · (eps4 + z8 · (eps8 + z16 · (eps16 + z32 · eps32))))",
+          "alignment": "CENTER"
+        }
+      ]
+    },
+    "shape-8": {
+      "left": 1.18,
+      "top": 4.62,
+      "width": 2.32,
+      "height": 1.72,
+      "paragraphs": [
+        {
+          "text": "Start low",
+          "alignment": "CENTER"
+        },
+        {
+          "text": "Begin with a 2-bit grid.",
+          "space_before": 4.0
+        },
+        {
+          "text": "This is the lowest nonzero representation.",
+          "space_before": 4.0
+        }
+      ]
+    },
+    "shape-9": {
+      "left": 3.72,
+      "top": 4.62,
+      "width": 2.32,
+      "height": 1.72,
+      "paragraphs": [
+        {
+          "text": "Add residuals",
+          "alignment": "CENTER"
+        },
+        {
+          "text": "Each residual halves the quantization error scale.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Effective precision doubles.",
+          "space_before": 4.0
+        }
+      ]
+    },
+    "shape-10": {
+      "left": 6.26,
+      "top": 4.62,
+      "width": 2.32,
+      "height": 1.72,
+      "paragraphs": [
+        {
+          "text": "Learn gates",
+          "alignment": "CENTER"
+        },
+        {
+          "text": "Stochastic binary gates choose residuals.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Hard-concrete relaxation enables gradients.",
+          "space_before": 4.0
+        }
+      ]
+    },
+    "shape-11": {
+      "left": 8.8,
+      "top": 4.62,
+      "width": 2.32,
+      "height": 1.72,
+      "paragraphs": [
+        {
+          "text": "Unify pruning",
+          "alignment": "CENTER"
+        },
+        {
+          "text": "A 0-bit gate sits before the 2-bit value.",
+          "space_before": 4.0
+        },
+        {
+          "text": "Turning it off prunes the tensor group.",
+          "space_before": 4.0
+        }
+      ]
+    },
+    "shape-12": {
+      "left": 2.05,
+      "top": 6.85,
+      "width": 8.0,
+      "height": 0.5,
+      "paragraphs": [
+        {
+          "text": "Bayesian prior: penalize active gates, optionally in proportion to BOP cost",
+          "alignment": "CENTER"
+        }
+      ]
+    },
+    "shape-13": {
+      "left": 1.18,
+      "top": 8.18,
+      "width": 10.0,
+      "height": 0.26,
+      "paragraphs": [
+        {
+          "text": "Source: van Baalen et al., Bayesian Bits: Unifying Quantization and Pruning, NeurIPS 2020 / arXiv:2005.07093"
+        }
+      ]
+    },
+    "shape-14": {
+      "left": 15.42,
+      "top": 8.28,
+      "width": 0.42,
+      "height": 0.3,
+      "paragraphs": [
+        {
+          "text": "3",
+          "alignment": "CENTER"
+        }
+      ]
+    }
+  },
+  "slide-3": {
+    "shape-0": {
+      "left": 1.1,
+      "top": 0.48,
+      "width": 9.6,
+      "height": 1.74,
+      "placeholder_type": "TITLE",
+      "default_font_size": 54.0,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-1": 2.28
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "Observations, Results, and Takeaway"
+        }
+      ]
+    },
+    "shape-1": {
+      "left": 1.18,
+      "top": 1.98,
+      "width": 9.55,
+      "height": 0.42,
+      "overlap": {
+        "overlapping_shapes": {
+          "shape-0": 2.28
+        }
+      },
+      "paragraphs": [
+        {
+          "text": "The learned gates behave like a resource allocation policy over precision and channels."
+        }
+      ]
+    },
+    "shape-2": {
+      "left": 1.43,
+      "top": 2.76,
+      "width": 3.25,
+      "height": 0.77,
+      "paragraphs": [
+        {
+          "text": "Low-bit priors apply useful pressure"
+        }
+      ]
+    },
+    "shape-3": {
+      "left": 4.73,
+      "top": 2.76,
+      "width": 6.2,
+      "height": 0.77,
+      "paragraphs": [
+        {
+          "text": "The variational objective regularizes active gates; the prior can be scaled by BOP contribution."
+        }
+      ]
+    },
+    "shape-4": {
+      "left": 1.43,
+      "top": 3.63,
+      "width": 3.25,
+      "height": 0.77,
+      "paragraphs": [
+        {
+          "text": "Joint pruning + quantization wins"
+        }
+      ]
+    },
+    "shape-5": {
+      "left": 4.73,
+      "top": 3.63,
+      "width": 6.2,
+      "height": 0.77,
+      "paragraphs": [
+        {
+          "text": "ImageNet ResNet18 ablations show the combined curve beats pruning-only and quantization-only variants."
+        }
+      ]
+    },
+    "shape-6": {
+      "left": 1.43,
+      "top": 4.5,
+      "width": 3.25,
+      "height": 0.77,
+      "paragraphs": [
+        {
+          "text": "Known heuristics emerge"
+        }
+      ]
+    },
+    "shape-7": {
+      "left": 4.73,
+      "top": 4.5,
+      "width": 6.2,
+      "height": 0.77,
+      "paragraphs": [
+        {
+          "text": "Aggressive settings push most tensors to 2-bit while often preserving first and last layers at higher precision."
+        }
+      ]
+    },
+    "shape-8": {
+      "left": 1.43,
+      "top": 5.37,
+      "width": 3.25,
+      "height": 0.77,
+      "paragraphs": [
+        {
+          "text": "Post-training use is possible"
+        }
+      ]
+    },
+    "shape-9": {
+      "left": 4.73,
+      "top": 5.37,
+      "width": 6.2,
+      "height": 0.77,
+      "paragraphs": [
+        {
+          "text": "On pretrained ResNet18, the method can learn gates, or gates plus scales, without updating weights."
+        }
+      ]
+    },
+    "shape-10": {
+      "left": 1.43,
+      "top": 6.24,
+      "width": 3.25,
+      "height": 0.77,
+      "paragraphs": [
+        {
+          "text": "Cost remains a limitation"
+        }
+      ]
+    },
+    "shape-11": {
+      "left": 4.73,
+      "top": 6.24,
+      "width": 6.2,
+      "height": 0.77,
+      "paragraphs": [
+        {
+          "text": "One ResNet18 run used 30 Bayesian Bits epochs plus 10 fixed-gate fine-tuning epochs, about 70 hours on one Tesla V100."
+        }
+      ]
+    },
+    "shape-12": {
+      "left": 2.0,
+      "top": 7.32,
+      "width": 8.3,
+      "height": 0.5,
+      "paragraphs": [
+        {
+          "text": "Takeaway: pruning becomes 0-bit quantization; precision becomes a learnable budget",
+          "alignment": "CENTER"
+        }
+      ]
+    },
+    "shape-13": {
+      "left": 1.18,
+      "top": 8.18,
+      "width": 10.0,
+      "height": 0.26,
+      "paragraphs": [
+        {
+          "text": "Source: van Baalen et al., Bayesian Bits: Unifying Quantization and Pruning, NeurIPS 2020 / arXiv:2005.07093"
+        }
+      ]
+    },
+    "shape-14": {
+      "left": 15.42,
+      "top": 8.28,
+      "width": 0.42,
+      "height": 0.3,
+      "paragraphs": [
+        {
+          "text": "4",
+          "alignment": "CENTER"
+        }
+      ]
+    }
+  }
+}

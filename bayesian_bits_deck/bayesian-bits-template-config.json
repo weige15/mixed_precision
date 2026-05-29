@@ -1,0 +1,54 @@
+{
+  "template_name": "bayesian-bits-template",
+  "template_path": null,
+  "brand": {
+    "primary_color": "4472C4",
+    "secondary_color": "000000",
+    "accent_color": "44546A",
+    "header_font": "Arial",
+    "body_font": "Arial"
+  },
+  "layout_mappings": {
+    "master_base": {
+      "layout_index": 0,
+      "layout_name": "Slide 1 master",
+      "use_case": "Branding slide"
+    },
+    "fallback": {
+      "layout_index": 0,
+      "layout_name": "Slide 1 master",
+      "use_case": "Fallback for unknown content types"
+    }
+  },
+  "content_type_routing": {
+    "title_slide": "title_cover",
+    "section_divider": "title_centered",
+    "closing": "title_centered",
+    "thank_you": "title_centered",
+    "quote": "title_centered",
+    "contact": "contact",
+    "framework_2col": "column_2",
+    "framework_3col": "column_3",
+    "framework_4col": "column_4",
+    "framework_5col": "column_5",
+    "framework_cards": "column_4",
+    "comparison": "column_2",
+    "content": "content_with_image",
+    "deliverables": "content_with_image",
+    "timeline": "content_with_image",
+    "content_no_image": "content_centered",
+    "table": "title_centered",
+    "pricing": "title_centered",
+    "comparison_tables": "title_centered",
+    "table_with_image": "content_with_image",
+    "story_card": "story_card",
+    "grid_3x2_3body": "grid_3x2_3body",
+    "grid_3x2_6body": "grid_3x2_6body",
+    "grid_2x2_2body": "grid_2x2_2body",
+    "content_image_top_4body": "content_image_top_4body"
+  },
+  "requires_branding_slide": true,
+  "branding_layout_index": 0,
+  "fallback_layout_index": 0,
+  "fallback_layout_name": "Slide 1 master"
+}
