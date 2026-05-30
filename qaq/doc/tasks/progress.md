@@ -10,6 +10,7 @@
   - Implemented token-only features, oracle label selection, nearest-centroid policy-id routing, router artifact I/O, and trace emission.
 - [x] Evaluation Harness (`qaq/doc/tasks/evaluation-harness.md`)
   - Implemented argparse subcommands and synthetic smoke artifact paths for static, oracle, router, and dynamic-loader modes.
-  - Target-model weight preparation/evaluation remains a final-evidence path once local ML dependencies and gated model access are available.
+  - Added real model paths for `prepare-bitplanes`, `run-static`, `build-oracle-labels`, `train-router`, `run-router`, and `run-dynamic-loader` when dependencies, model access, and a prepared `--bitplanes-dir` are available.
+  - Real evaluation currently applies reconstructed weights synchronously inside a PyTorch/Transformers model and reports causal-LM loss, perplexity, latency, selected-bit distribution, bit-plane storage bytes, materialized weight bytes, and optional CUDA peak memory.
 - [x] Dynamic Loader (`qaq/doc/tasks/dynamic-loader.md`)
   - Implemented CPU-resident records, selected-plane materialization, device validation, reconstruction through shared bit-plane API, and loader metrics.
