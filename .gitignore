@@ -48,3 +48,5 @@ to_human/*_deck/
 *.pptx
 ~
 *:Zone.Identifier
+*_deck/
+~.pptx

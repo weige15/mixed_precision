@@ -49,3 +49,36 @@ Use these as the main related-work spine:
 
 Then mention **MoBiQuant** as the closest emerging paper to the proposed idea,
 but be explicit that it currently appears weaker on review/code availability.
+
+## Objective-Alignment Audit
+
+The user's objective is specifically soft-pruning-style mixed precision:
+
+```text
+importance signal -> number of retained bits -> storage/layout that supports
+heterogeneous or elastic bitwidths
+```
+
+Under that stricter definition, the papers should not be treated as equally
+central:
+
+| Paper | Objective fit | Use in the project |
+|---|---|---|
+| Bayesian Bits | Very high | Core conceptual anchor. It explicitly unifies pruning and quantization with a 0-bit option and learned residual-bit gates. |
+| SliM-LLM | Very high | Core LLM anchor. It assigns mixed precision from salience, which directly matches "important information gets more bits." |
+| DP-LLM | High | Dynamic precision anchor. It chooses layer bitwidth at runtime from input-conditioned error, but it is less explicitly a soft-pruning method and less focused on storage disentanglement. |
+| Any-Precision LLM | Medium-high | Storage/serving anchor. It solves the multi-bitwidth storage problem, but it does not decide bitwidth from prompt importance by itself. |
+| NestedFP | Medium | Systems/storage anchor for nested FP16/FP8 serving. Useful for layout, but only dual precision and not importance-based soft pruning. |
+| QuEPT | Medium-high | Elastic precision support. Useful if the proposal needs real-time multi-bit switching, but less directly tied to soft pruning or prompt importance. |
+| HAQ | Medium | Hardware-aware bit allocation baseline. Important history, but not LLM/prompt-adaptive and not soft pruning. |
+| Instance-Aware Dynamic Quantization | Medium | Input-conditioned bitwidth precedent. Strong review signal, but vision-focused and not LLM storage. |
+| DiffQ | High conceptually, medium empirically | Differentiable bit allocation is highly aligned, but it is not LLM-specific and should support rather than lead the LLM argument. |
+| MoBiQuant | Very high conceptually, lower confidence | Closest to token-adaptive residual-bit soft pruning, but currently lower review/code confidence. |
+
+The safest core for the objective is therefore:
+
+1. **Bayesian Bits**: soft pruning becomes bit allocation.
+2. **SliM-LLM**: LLM salience determines mixed precision.
+3. **DP-LLM**: runtime input-conditioned precision.
+4. **Any-Precision LLM / NestedFP**: storage systems for elastic precision.
+5. **MoBiQuant**: closest emerging target to beat or extend.

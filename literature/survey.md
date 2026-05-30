@@ -118,3 +118,14 @@ AWQ/GPTQ/Marlin or a TorchAO checkpoint saved in a serving-compatible form. A
 secondary route is to evaluate TorchAO through a supported integration such as
 Transformers or SGLang and record that backend separately in the H10 action
 table.
+
+## 2026-05-30 Focused Map: Soft Pruning As Prompt/Hardware-Aware Bit Allocation
+
+Added a targeted brief at
+[soft_pruning_prompt_hardware_paper_map_2026-05-30.md](soft_pruning_prompt_hardware_paper_map_2026-05-30.md).
+The map organizes papers around the user's proposed axes: prompt-conditioned
+importance, hardware-conditioned importance, and storage of heterogeneous
+bitwidths. The main synthesis is that the best formulation is not arbitrary
+per-weight bitwidths, but a structured low-bit base plus optional refinement:
+nested bit planes, residual slices, sparse high-precision exceptions, or
+block/group/channel assignments that existing kernels can consume.
